@@ -1,0 +1,44 @@
+{
+  "allow_create_epic": false,
+  "allow_create_story": false,
+  "epic": {
+    "summary": "Selection Controls",
+    "description": "Proposed grouping for selection controls. Reuse a suitable existing Epic if available."
+  },
+  "story": {
+    "summary": "Independent skill selection",
+    "description": "Users can select and deselect skills independently. Proposed parent; not an assertion that this Story already exists."
+  },
+  "test_cases": [
+    {
+      "summary": "Verify independent selection and deselection of skill checkboxes",
+      "description": "Proposed test design based on the supplied requirement. Page behaviour and initial state require review; no browser execution is claimed.",
+      "preconditions": [
+        "Open the application and navigate to the Skills section.",
+        "Ensure Selenium and Playwright are initially unchecked."
+      ],
+      "steps": [
+        {
+          "action": "Select Selenium.",
+          "expected": "Selenium is checked and Playwright remains unchecked."
+        },
+        {
+          "action": "Select Playwright while Selenium is still selected.",
+          "expected": "Both Playwright and Selenium are checked; selecting Playwright does not clear Selenium."
+        },
+        {
+          "action": "Deselect Selenium.",
+          "expected": "Selenium is unchecked and Playwright remains checked."
+        },
+        {
+          "action": "Deselect Playwright.",
+          "expected": "Both Selenium and Playwright are unchecked."
+        }
+      ],
+      "acceptance_criteria": [
+        "Selecting Playwright preserves an existing Selenium selection.",
+        "Deselecting Selenium preserves an existing Playwright selection."
+      ]
+    }
+  ]
+}

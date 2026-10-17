@@ -1,0 +1,11 @@
+[
+    {
+        "text": "Our automation project uses Playwright"
+    },
+    {
+        "text": "Our build tool is Gradle"
+    },
+    {
+        "text": "API automation uses REST Assured"
+    }
+]

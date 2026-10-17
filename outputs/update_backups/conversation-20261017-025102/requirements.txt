@@ -1,0 +1,16 @@
+
+# Phase 1 - AI Foundation and LLM
+langchain
+langchain-community
+langgraph
+
+# LLM Providers
+langchain-ollama
+# langchain-anthropic  # Optional: requires Anthropic API access
+
+# Phase 2 - RAG and Knowledge
+chromadb
+sentence-transformers
+
+# Phase 3 - Agent State and Persistent Memory
+langgraph-checkpoint-sqlite

@@ -1,0 +1,315 @@
+{
+    "evaluation": {
+        "total_tests": 8,
+        "retrieval_results": [
+            {
+                "id": 1,
+                "question": "What is Nagaraj's total professional experience?",
+                "retrieval": {
+                    "expected_rank": 1,
+                    "hit_at_1": true,
+                    "hit_at_3": true,
+                    "hit_at_5": true,
+                    "hit_at_8": true,
+                    "source_match": true,
+                    "page_match": true
+                },
+                "answer": {
+                    "text": "Nagaraj has 10+ years of professional experience.",
+                    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+                    "success": true,
+                    "error": null
+                },
+                "keywords": {
+                    "expected": [
+                        "10+ years",
+                        "experience"
+                    ],
+                    "matched": [
+                        "experience"
+                    ],
+                    "missing": [
+                        "10+ years"
+                    ],
+                    "score": 0.5
+                },
+                "retrieval_pass": true,
+                "answer_pass": false
+            },
+            {
+                "id": 2,
+                "question": "When did Nagaraj work at NTT DATA?",
+                "retrieval": {
+                    "expected_rank": 8,
+                    "hit_at_1": false,
+                    "hit_at_3": false,
+                    "hit_at_5": false,
+                    "hit_at_8": true,
+                    "source_match": true,
+                    "page_match": true
+                },
+                "answer": {
+                    "text": "Nagaraj worked at NTT DATA from October 2023 to August 2026.",
+                    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+                    "success": true,
+                    "error": null
+                },
+                "keywords": {
+                    "expected": [
+                        "NTT DATA",
+                        "Oct 2023",
+                        "Aug 2026"
+                    ],
+                    "matched": [],
+                    "missing": [
+                        "NTT DATA",
+                        "Oct 2023",
+                        "Aug 2026"
+                    ],
+                    "score": 0.0
+                },
+                "retrieval_pass": true,
+                "answer_pass": false
+            },
+            {
+                "id": 3,
+                "question": "What was Nagaraj's role at Altimetrik?",
+                "retrieval": {
+                    "expected_rank": null,
+                    "hit_at_1": false,
+                    "hit_at_3": false,
+                    "hit_at_5": false,
+                    "hit_at_8": false,
+                    "source_match": false,
+                    "page_match": false
+                },
+                "answer": {
+                    "text": "At Altimetrik, Nagaraj served as an **automation lead** (specifically for the Western Union engagement), where he architected hybrid test frameworks and Jenkins pipelines for parallel execution and validated mission‑critical money‑transfer flows.",
+                    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+                    "success": true,
+                    "error": null
+                },
+                "keywords": {
+                    "expected": [
+                        "Senior QE",
+                        "Automation Test Engineer",
+                        "Altimetrik"
+                    ],
+                    "matched": [
+                        "Altimetrik"
+                    ],
+                    "missing": [
+                        "Senior QE",
+                        "Automation Test Engineer"
+                    ],
+                    "score": 0.3333333333333333
+                },
+                "retrieval_pass": false,
+                "answer_pass": false
+            },
+            {
+                "id": 4,
+                "question": "Which client did Nagaraj work with at Altimetrik?",
+                "retrieval": {
+                    "expected_rank": 8,
+                    "hit_at_1": false,
+                    "hit_at_3": false,
+                    "hit_at_5": false,
+                    "hit_at_8": true,
+                    "source_match": true,
+                    "page_match": true
+                },
+                "answer": {
+                    "text": "Nagaraj worked with Western Union while at Altimetrik.",
+                    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+                    "success": true,
+                    "error": null
+                },
+                "keywords": {
+                    "expected": [
+                        "Western Union"
+                    ],
+                    "matched": [
+                        "Western Union"
+                    ],
+                    "missing": [],
+                    "score": 1.0
+                },
+                "retrieval_pass": true,
+                "answer_pass": true
+            },
+            {
+                "id": 5,
+                "question": "What technologies did Nagaraj use at Finnovation?",
+                "retrieval": {
+                    "expected_rank": 5,
+                    "hit_at_1": false,
+                    "hit_at_3": false,
+                    "hit_at_5": true,
+                    "hit_at_8": true,
+                    "source_match": true,
+                    "page_match": true
+                },
+                "answer": {
+                    "text": "The retrieved context does not contain any information about Nagaraj’s work at Finnovation or the technologies he used there. Therefore, the answer is not available in the provided material.",
+                    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+                    "success": true,
+                    "error": null
+                },
+                "keywords": {
+                    "expected": [
+                        "Java",
+                        "Appium",
+                        "Selenium",
+                        "Cucumber",
+                        "Rest Assured"
+                    ],
+                    "matched": [],
+                    "missing": [
+                        "Java",
+                        "Appium",
+                        "Selenium",
+                        "Cucumber",
+                        "Rest Assured"
+                    ],
+                    "score": 0.0
+                },
+                "retrieval_pass": true,
+                "answer_pass": false
+            },
+            {
+                "id": 6,
+                "question": "When did Nagaraj work at SanDisk?",
+                "retrieval": {
+                    "expected_rank": 8,
+                    "hit_at_1": false,
+                    "hit_at_3": false,
+                    "hit_at_5": false,
+                    "hit_at_8": true,
+                    "source_match": true,
+                    "page_match": true
+                },
+                "answer": {
+                    "text": "The provided context does not contain any information about Nagaraj working at SanDisk.",
+                    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+                    "success": true,
+                    "error": null
+                },
+                "keywords": {
+                    "expected": [
+                        "Aug 2016",
+                        "Jun 2018",
+                        "SanDisk"
+                    ],
+                    "matched": [
+                        "SanDisk"
+                    ],
+                    "missing": [
+                        "Aug 2016",
+                        "Jun 2018"
+                    ],
+                    "score": 0.3333333333333333
+                },
+                "retrieval_pass": true,
+                "answer_pass": false
+            },
+            {
+                "id": 7,
+                "question": "When did Nagaraj work at iDisha Info Labs?",
+                "retrieval": {
+                    "expected_rank": 9,
+                    "hit_at_1": false,
+                    "hit_at_3": false,
+                    "hit_at_5": false,
+                    "hit_at_8": false,
+                    "source_match": true,
+                    "page_match": true
+                },
+                "answer": {
+                    "text": "Nagaraj worked at iDisha Info Labs Pvt Ltd from January 2015 to July 2016.",
+                    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+                    "success": true,
+                    "error": null
+                },
+                "keywords": {
+                    "expected": [
+                        "Jan 2015",
+                        "Jul 2016",
+                        "iDisha"
+                    ],
+                    "matched": [
+                        "iDisha"
+                    ],
+                    "missing": [
+                        "Jan 2015",
+                        "Jul 2016"
+                    ],
+                    "score": 0.3333333333333333
+                },
+                "retrieval_pass": true,
+                "answer_pass": false
+            },
+            {
+                "id": 8,
+                "question": "What testing types does Nagaraj have experience with?",
+                "retrieval": {
+                    "expected_rank": 2,
+                    "hit_at_1": false,
+                    "hit_at_3": true,
+                    "hit_at_5": true,
+                    "hit_at_8": true,
+                    "source_match": true,
+                    "page_match": true
+                },
+                "answer": {
+                    "text": "Nagaraj Lakshatti has experience with the following testing types: Web, Mobile (Android/iOS), API, Performance, Regression, Smoke, Sanity, and Cross‑Platform testing. (Source: Nagaraj_Lakshatti_Final_ATS_Resume.pdf, “Testing Types: Web, Mobile (Android/iOS), API, Performance, Regression, Smoke, Sanity, Cross‑Platform”).",
+                    "model": "nvidia/nemotron-3-super-120b-a12b:free",
+                    "success": true,
+                    "error": null
+                },
+                "keywords": {
+                    "expected": [
+                        "Web",
+                        "Mobile",
+                        "API",
+                        "Performance",
+                        "Regression"
+                    ],
+                    "matched": [
+                        "Web",
+                        "Mobile",
+                        "API",
+                        "Performance",
+                        "Regression"
+                    ],
+                    "missing": [],
+                    "score": 1.0
+                },
+                "retrieval_pass": true,
+                "answer_pass": true
+            }
+        ]
+    },
+    "comparison": {
+        "bm25": {
+            "hit_at_1": 1,
+            "hit_at_3": 2,
+            "hit_at_5": 3,
+            "hit_at_8": 6,
+            "source_accuracy": 7,
+            "page_accuracy": 7
+        },
+        "hybrid": {
+            "name": "Hybrid + BGE Reranker",
+            "total_tests": 8,
+            "hit_at_1": 5,
+            "hit_at_3": 8,
+            "hit_at_5": 8,
+            "hit_at_8": 8,
+            "source_accuracy": 8,
+            "page_accuracy": 8,
+            "retrieval_passed": 8,
+            "retrieval_failed": 0
+        }
+    }
+}

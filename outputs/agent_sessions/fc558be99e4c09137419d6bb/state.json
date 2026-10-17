@@ -1,0 +1,8 @@
+{
+  "status": "draft",
+  "binding": {
+    "project": "QAP",
+    "site": "https://nagarajlakshatti11.atlassian.net",
+    "root": "D:\\PlayWrightDemoGradle"
+  }
+}

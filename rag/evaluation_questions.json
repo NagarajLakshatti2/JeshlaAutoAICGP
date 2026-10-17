@@ -1,0 +1,91 @@
+[
+    {
+        "id": 1,
+        "question": "What is Nagaraj's total professional experience?",
+        "expected_source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+        "expected_page": 1,
+        "expected_keywords": [
+            "10+ years",
+            "experience"
+        ]
+    },
+    {
+        "id": 2,
+        "question": "When did Nagaraj work at NTT DATA?",
+        "expected_source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+        "expected_page": 1,
+        "expected_keywords": [
+            "NTT DATA",
+            "Oct 2023",
+            "Aug 2026"
+        ]
+    },
+    {
+        "id": 3,
+        "question": "What was Nagaraj's role at Altimetrik?",
+        "expected_source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+        "expected_page": 1,
+        "expected_keywords": [
+            "Senior QE",
+            "Automation Test Engineer",
+            "Altimetrik"
+        ]
+    },
+    {
+        "id": 4,
+        "question": "Which client did Nagaraj work with at Altimetrik?",
+        "expected_source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+        "expected_page": 1,
+        "expected_keywords": [
+            "Western Union"
+        ]
+    },
+    {
+        "id": 5,
+        "question": "What technologies did Nagaraj use at Finnovation?",
+        "expected_source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+        "expected_page": 1,
+        "expected_keywords": [
+            "Java",
+            "Appium",
+            "Selenium",
+            "Cucumber",
+            "Rest Assured"
+        ]
+    },
+    {
+        "id": 6,
+        "question": "When did Nagaraj work at SanDisk?",
+        "expected_source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+        "expected_page": 1,
+        "expected_keywords": [
+            "Aug 2016",
+            "Jun 2018",
+            "SanDisk"
+        ]
+    },
+    {
+        "id": 7,
+        "question": "When did Nagaraj work at iDisha Info Labs?",
+        "expected_source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+        "expected_page": 1,
+        "expected_keywords": [
+            "Jan 2015",
+            "Jul 2016",
+            "iDisha"
+        ]
+    },
+    {
+        "id": 8,
+        "question": "What testing types does Nagaraj have experience with?",
+        "expected_source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+        "expected_page": 1,
+        "expected_keywords": [
+            "Web",
+            "Mobile",
+            "API",
+            "Performance",
+            "Regression"
+        ]
+    }
+]

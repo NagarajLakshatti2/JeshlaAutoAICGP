@@ -1,0 +1,10 @@
+Nagaraj Lakshatti is a Senior SDET and Automation Test Engineer.
+
+He has experience with Java, Python, TypeScript, Selenium, Playwright,
+Appium, REST Assured, Cucumber, TestNG and CI/CD.
+
+He has worked on projects involving Wells Fargo, Arsenal Football Club,
+UHL NHS Trust and Western Union.
+
+He has experience in web testing, mobile testing, API testing,
+performance testing and regression testing.

@@ -1,0 +1,5 @@
+python -m agent.langgraph.langgraph_agent
+python -m streamlit run streamlit_app.py --server.address 127.0.0.1
+
+python -m agent.langgraph.langgraph_agent
+streamlit run streamlit_app.py

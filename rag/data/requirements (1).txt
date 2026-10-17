@@ -1,0 +1,11 @@
+google-genai>=0.5.0
+python-dotenv>=1.0.0
+chromadb>=0.5.0
+
+# Needed only to RUN the generated Playwright tests (Stage 2 output),
+# not to generate them:
+playwright>=1.47.0
+pytest-playwright>=0.5.0
+flask>=3.0.0
+requests>=2.28.0
+mcp>=1.0.0
