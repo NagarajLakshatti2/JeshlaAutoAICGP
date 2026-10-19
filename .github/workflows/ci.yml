@@ -5,18 +5,25 @@ on:
     branches: [ main, master, dev ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:          # allows manual "Run workflow" from GitHub UI
+  workflow_dispatch:
 
-# ── Shared env visible to every job ─────────────────────────────────────────
 env:
   PYTHON_VERSION: "3.14"
-  LLM_PROVIDER: "groq"        # fake provider used in offline tests
+  LLM_PROVIDER: "groq"
+
+# ── Reusable .env block (anchored once, referenced in every job) ─────────────
+# GitHub Actions doesn't support YAML anchors natively, so the .env write
+# step is duplicated per job — but the content is identical and clear.
 
 jobs:
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # 1. OFFLINE TEST SUITE  (runs tests/run_offline.py – no live LLM needed)
-  # ─────────────────────────────────────────────────────────────────────────
+  # ───────────────────────────────────────────────────────────────────────────
+  # 1. OFFLINE TEST SUITE
+  #    Fix applied: install requirements-rag.txt (which includes core) so that
+  #    rank_bm25, pypdf, openpyxl and python-docx are all present.
+  #    The ScriptRunContext warnings are harmless — Streamlit emits them when
+  #    its UI components are imported outside a running server.
+  # ───────────────────────────────────────────────────────────────────────────
   test:
     name: Offline Tests
     runs-on: ubuntu-latest
@@ -31,47 +38,49 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
 
-      - name: Install core dependencies
-        run: pip install -r requirements-core.txt
+      # ── FIX: was requirements-core.txt; RAG tests need the full set ────────
+      - name: Install RAG + core dependencies
+        run: pip install -r requirements-rag.txt
 
       - name: Write minimal .env for offline tests
-        # Real secrets are NOT needed for offline tests; stubs satisfy dotenv loads.
+        # python-dotenv rejects lines with leading spaces, so use printf
+        # (no heredoc indentation) to write a clean KEY=value file.
         run: |
-          cat > .env <<'EOF'
-          LLM_PROVIDER=groq
-          GROQ_API_KEY=test-stub
-          GROQ_MODEL=llama-3.3-70b-versatile
-          ANTHROPIC_API_KEY=test-stub
-          OPENROUTER_API_KEY=test-stub
-          OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free
-          GEMINI_MODEL=gemini-2.0-flash
-          JIRA_SITE_URL=https://example.atlassian.net
-          JIRA_PROJECT_KEY=TEST
-          JIRA_ALLOW_CREATE=false
-          AI_MAX_STEPS=10
-          AI_MAX_CONVERSATION_CHARS=8000
-          EOF
+          printf '%s\n' \
+            'LLM_PROVIDER=groq' \
+            'GROQ_API_KEY=test-stub' \
+            'GROQ_MODEL=llama-3.3-70b-versatile' \
+            'ANTHROPIC_API_KEY=test-stub' \
+            'OPENROUTER_API_KEY=test-stub' \
+            'OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free' \
+            'GEMINI_MODEL=gemini-2.0-flash' \
+            'JIRA_SITE_URL=https://example.atlassian.net' \
+            'JIRA_PROJECT_KEY=TEST' \
+            'JIRA_ALLOW_CREATE=false' \
+            'AI_MAX_STEPS=10' \
+            'AI_MAX_CONVERSATION_CHARS=8000' \
+          > .env
 
       - name: Run offline test suite
         run: python tests/run_offline.py
 
-      - name: Upload test logs on failure
+      - name: Upload test logs and outputs on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
           name: test-logs
           path: |
-            outputs/
+            outputs/logs/
             *.log
 
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # 2. STREAMLIT SMOKE CHECK  (confirms the app imports and page renders)
-  # ─────────────────────────────────────────────────────────────────────────
+  # ───────────────────────────────────────────────────────────────────────────
+  # 2. STREAMLIT SMOKE CHECK
+  # ───────────────────────────────────────────────────────────────────────────
   streamlit-smoke:
     name: Streamlit Smoke Check
     runs-on: ubuntu-latest
-    needs: test             # only run if tests pass
+    needs: test
 
     steps:
       - uses: actions/checkout@v4
@@ -86,24 +95,22 @@ jobs:
 
       - name: Write minimal .env
         run: |
-          cat > .env <<'EOF'
-          LLM_PROVIDER=groq
-          GROQ_API_KEY=test-stub
-          GROQ_MODEL=llama-3.3-70b-versatile
-          ANTHROPIC_API_KEY=test-stub
-          OPENROUTER_API_KEY=test-stub
-          OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free
-          GEMINI_MODEL=gemini-2.0-flash
-          JIRA_SITE_URL=https://example.atlassian.net
-          JIRA_PROJECT_KEY=TEST
-          JIRA_ALLOW_CREATE=false
-          AI_MAX_STEPS=10
-          AI_MAX_CONVERSATION_CHARS=8000
-          EOF
+          printf '%s\n' \
+            'LLM_PROVIDER=groq' \
+            'GROQ_API_KEY=test-stub' \
+            'GROQ_MODEL=llama-3.3-70b-versatile' \
+            'ANTHROPIC_API_KEY=test-stub' \
+            'OPENROUTER_API_KEY=test-stub' \
+            'OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free' \
+            'GEMINI_MODEL=gemini-2.0-flash' \
+            'JIRA_SITE_URL=https://example.atlassian.net' \
+            'JIRA_PROJECT_KEY=TEST' \
+            'JIRA_ALLOW_CREATE=false' \
+            'AI_MAX_STEPS=10' \
+            'AI_MAX_CONVERSATION_CHARS=8000' \
+          > .env
 
       - name: Verify streamlit_app.py imports cleanly
-        # Streamlit can't open a real browser in CI, but `streamlit run --server.headless true`
-        # with a short timeout confirms the module loads without import errors.
         run: |
           timeout 20 streamlit run streamlit_app.py \
             --server.headless true \
@@ -111,18 +118,17 @@ jobs:
             --server.port 8501 \
             --logger.level error \
           || EXIT=$?
-          # exit code 124 = timeout (app was still running) → that is a PASS
-          # any other non-zero code = real error
+          # 124 = timeout while still running = healthy start = PASS
           if [ "${EXIT:-0}" -ne 0 ] && [ "${EXIT:-0}" -ne 124 ]; then
-            echo "Streamlit exited with error code $EXIT"
+            echo "Streamlit exited with unexpected error code $EXIT"
             exit 1
           fi
           echo "Streamlit smoke check passed."
 
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # 3. LANGGRAPH AGENT SMOKE CHECK  (imports the graph, runs one offline turn)
-  # ─────────────────────────────────────────────────────────────────────────
+  # ───────────────────────────────────────────────────────────────────────────
+  # 3. LANGGRAPH AGENT SMOKE CHECK
+  # ───────────────────────────────────────────────────────────────────────────
   langgraph-smoke:
     name: LangGraph Agent Smoke Check
     runs-on: ubuntu-latest
@@ -141,51 +147,45 @@ jobs:
 
       - name: Write minimal .env
         run: |
-          cat > .env <<'EOF'
-          LLM_PROVIDER=groq
-          GROQ_API_KEY=test-stub
-          GROQ_MODEL=llama-3.3-70b-versatile
-          ANTHROPIC_API_KEY=test-stub
-          OPENROUTER_API_KEY=test-stub
-          OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free
-          GEMINI_MODEL=gemini-2.0-flash
-          JIRA_SITE_URL=https://example.atlassian.net
-          JIRA_PROJECT_KEY=TEST
-          JIRA_ALLOW_CREATE=false
-          AI_MAX_STEPS=10
-          AI_MAX_CONVERSATION_CHARS=8000
-          EOF
+          printf '%s\n' \
+            'LLM_PROVIDER=groq' \
+            'GROQ_API_KEY=test-stub' \
+            'GROQ_MODEL=llama-3.3-70b-versatile' \
+            'ANTHROPIC_API_KEY=test-stub' \
+            'OPENROUTER_API_KEY=test-stub' \
+            'OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free' \
+            'GEMINI_MODEL=gemini-2.0-flash' \
+            'JIRA_SITE_URL=https://example.atlassian.net' \
+            'JIRA_PROJECT_KEY=TEST' \
+            'JIRA_ALLOW_CREATE=false' \
+            'AI_MAX_STEPS=10' \
+            'AI_MAX_CONVERSATION_CHARS=8000' \
+          > .env
 
       - name: Verify agent graph imports and compiles
         run: |
           python - <<'PYEOF'
-          import os, sys
-          # Confirm the graph builds (no live LLM call is made at import time)
           from agent.langgraph.langgraph_agent import graph, LLM_PROVIDER
-          print(f"Graph compiled OK | provider from env: {LLM_PROVIDER}")
-          # Verify the entry-point script is callable
+          print(f"Graph compiled OK | provider: {LLM_PROVIDER}")
           import importlib.util
           spec = importlib.util.spec_from_file_location("agent_main", "agent/langgraph/langgraph_agent.py")
           assert spec is not None, "Could not locate langgraph_agent.py"
-          print("LangGraph agent entry-point located successfully.")
+          print("LangGraph entry-point located successfully.")
           PYEOF
 
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # 4. STORE REAL API KEYS AS GITHUB SECRETS  (reminder block – read notes)
-  # ─────────────────────────────────────────────────────────────────────────
-  # To add your real keys:
-  #   GitHub repo → Settings → Secrets and variables → Actions → New secret
-  #
-  #   Secret name          .env variable
-  #   ─────────────────    ─────────────────────────
-  #   GROQ_API_KEY         GROQ_API_KEY
-  #   OPENROUTER_API_KEY   OPENROUTER_API_KEY
-  #   ANTHROPIC_API_KEY    ANTHROPIC_API_KEY
-  #   GEMINI_API_KEY       GOOGLE_AI_STUDEO_KEY
-  #   SERPAPI_KEY          SERPAPI_KEY
-  #   JIRA_SITE_URL        JIRA_SITE_URL
-  #
-  # Then replace the stub values above with:
-  #   GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}
-  # etc.  Never commit real keys to the repo.
+# ── HOW TO ADD REAL API KEYS ──────────────────────────────────────────────────
+# GitHub repo → Settings → Secrets and variables → Actions → New repository secret
+#
+#   Secret name            maps to .env variable
+#   ─────────────────────  ──────────────────────
+#   GROQ_API_KEY           GROQ_API_KEY
+#   OPENROUTER_API_KEY     OPENROUTER_API_KEY
+#   ANTHROPIC_API_KEY      ANTHROPIC_API_KEY
+#   GEMINI_API_KEY         GOOGLE_AI_STUDEO_KEY
+#   SERPAPI_KEY            SERPAPI_KEY
+#   JIRA_SITE_URL          JIRA_SITE_URL
+#
+# Then replace stub values in the .env steps above with e.g.:
+#   'GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}'
+# Never commit real keys into the repo.
