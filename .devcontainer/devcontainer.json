@@ -1,0 +1,62 @@
+{
+  "name": "JeshlaAutoAI",
+
+  // Python 3.14 on Ubuntu — matches your CI environment exactly
+  "image": "mcr.microsoft.com/devcontainers/python:3.14-bookworm",
+
+  // Forward port 8501 so Streamlit opens as a browser tab automatically
+  "forwardPorts": [8501],
+  "portsAttributes": {
+    "8501": {
+      "label": "Streamlit UI",
+      "onAutoForward": "openBrowser"
+    }
+  },
+
+  // Runs once when the container is first created
+  "postCreateCommand": "pip install -r requirements-rag.txt && echo '✅ Dependencies installed'",
+
+  // VS Code extensions pre-installed inside Codespaces
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.debugpy",
+        "ms-python.vscode-pylance",
+        "redhat.vscode-yaml",
+        "streetsidesoftware.code-spell-checker"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true
+      }
+    }
+  },
+
+  // ── SECRETS ────────────────────────────────────────────────────────────────
+  // Add these in: GitHub repo → Settings → Secrets → Codespaces
+  // They become environment variables automatically inside the container.
+  //
+  //   Secret name            Purpose
+  //   ─────────────────────  ───────────────────────────────
+  //   GROQ_API_KEY           Groq LLM provider
+  //   OPENROUTER_API_KEY     OpenRouter LLM provider
+  //   ANTHROPIC_API_KEY      Anthropic / Claude
+  //   GEMINI_API_KEY         Google Gemini
+  //   SERPAPI_KEY            Web search
+  //   JIRA_SITE_URL          Your Atlassian site URL
+  //   JIRA_PROJECT_KEY       e.g. TEST
+  //   LLM_PROVIDER           groq | openrouter | gemini | ollama
+  // ──────────────────────────────────────────────────────────────────────────
+  "secrets": {
+    "GROQ_API_KEY": {},
+    "OPENROUTER_API_KEY": {},
+    "ANTHROPIC_API_KEY": {},
+    "GEMINI_API_KEY": {},
+    "SERPAPI_KEY": {},
+    "JIRA_SITE_URL": {},
+    "JIRA_PROJECT_KEY": {},
+    "LLM_PROVIDER": {}
+  }
+}
