@@ -1,0 +1,33 @@
+{
+  "provider": "groq",
+  "cases": [
+    {
+      "case": "missing_details",
+      "checks": {
+        "asks_question": true,
+        "no_tools": true,
+        "focused": false
+      },
+      "answer": "Sure! To help you automate the application, could you please answer the following questions?\n\n1. **What is the name or primary function of the application you want to automate?**  \n2. **Which operating system and version is the application running on?**  \n3. **What specific tasks or workflows within the application would you like to automate?**",
+      "task_status": "normal_answer",
+      "calls": []
+    },
+    {
+      "case": "reuse_details",
+      "checks": {
+        "asks_question": true,
+        "no_tools": true,
+        "focused": true
+      },
+      "answer": "Could you let me know:\n\n1. What specific workflow or user flow you\u2019d like to test (e.g., login, checkout, form submission, etc.)?  \n2. What the expected outcome or result of that workflow should be (e.g., successful login, order confirmation, error message, etc.)?",
+      "task_status": "normal_answer",
+      "calls": []
+    },
+    {
+      "case": "plan_read",
+      "error": "GROQ [TOOL_OUTPUT] | HTTP 400 | Provider rejected generated tool/JSON output. Check tool registration/schema or narrow the request. | Attempts: 1. No action was executed from this failed response."
+    }
+  ],
+  "seconds": 6.32,
+  "scope": "Finite synthetic cases with real local temporary files; clarification wording requires manual review, no universal planning or semantic truth guarantee."
+}

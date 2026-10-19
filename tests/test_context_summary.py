@@ -59,6 +59,37 @@ class SummaryTests(unittest.TestCase):
             self.assertGreater(saved["summary_retry_at"],time.time())
             self.assertIn("question two",saved["history"])
 
+    def test_grounding_instructions_and_untrusted_prior_are_supplied(self):
+        raw=json.dumps({"facts":[],"decisions":[],"open_questions":[]})
+        model=Mock(return_value=raw)
+        prior=json.dumps({"facts":[],"decisions":[],"open_questions":["Unsupported browser question?"]})
+        compact_context(prior,self.history(),model)
+        messages=model.call_args.args[0]
+        policy=messages[0]["content"]
+        self.assertIn("assistant-reported",policy)
+        self.assertIn("actual tool evidence",policy)
+        self.assertIn("still unanswered",policy)
+        self.assertIn("omit them when no supporting turn",policy)
+        self.assertEqual(json.loads(json.loads(messages[1]["content"])["prior_summary"])["open_questions"],[])
+
+    def test_unsupported_prior_question_cannot_be_saved_again(self):
+        raw=json.dumps({"facts":[],"decisions":[],"open_questions":["Which browser versions?"]})
+        with self.assertRaisesRegex(ValueError,"Unverified prior-summary"):
+            compact_context(raw,self.history(),Mock(return_value=raw))
+
+    def test_prior_question_with_available_history_support_is_allowed(self):
+        raw=json.dumps({"facts":[],"decisions":[],"open_questions":["Which browser versions?"]})
+        history="\nUser: Which browser versions?\nAssistant: Undecided."+self.history()
+        self.assertTrue(compact_context(raw,history,Mock(return_value=raw))[2])
+
+    def test_archived_question_support_preserves_prior_question(self):
+        raw=json.dumps({"facts":[],"decisions":[],"open_questions":["Where is the report?"]})
+        lookup=Mock(return_value=[{"turn_id":1,"question":"Where is the report?","answer":"Undecided."}])
+        model=Mock(return_value=raw)
+        self.assertTrue(compact_context(raw,self.history(),model,question_lookup=lookup)[2])
+        payload=json.loads(model.call_args.args[0][1]["content"])
+        self.assertEqual(payload["archived_question_evidence"][0]["turn_id"],1)
+
     def test_invalid_thresholds(self):
         with self.assertRaises(ValueError):compact_context("","",Mock(),threshold=3000,keep=4000)
 

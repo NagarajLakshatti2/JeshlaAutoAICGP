@@ -1,0 +1,7 @@
+[
+  {
+    "http": 429,
+    "code": "rate_limit_exceeded",
+    "failed_output_chars": 0
+  }
+]

@@ -1,0 +1,12 @@
+# Optional document/table ingestion and local retrieval.
+-r requirements-core.txt
+openpyxl
+pypdf
+python-docx
+langchain-community
+langchain-huggingface
+langchain-core
+langchain-text-splitters
+sentence-transformers
+faiss-cpu
+rank-bm25

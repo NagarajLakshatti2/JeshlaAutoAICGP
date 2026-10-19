@@ -28,8 +28,8 @@ class CommandTests(unittest.TestCase):
 
     def test_titles(self):
         self.assertEqual(validate_chat_command("new chat Java Learning"),("NEW CHAT Java Learning",None))
-        self.assertIsNone(validate_chat_command("NEW CHAT "+"x"*80)[1])
-        self.assertIsNotNone(validate_chat_command("NEW CHAT "+"x"*81)[1])
+        self.assertIsNone(validate_chat_command("NEW CHAT "+"x"*100)[1])
+        self.assertIsNotNone(validate_chat_command("NEW CHAT "+"x"*101)[1])
 
     def test_ordinary_question_not_intercepted(self):
         text="How do I open a chat in my application?"

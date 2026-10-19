@@ -1,0 +1,63 @@
+test_same_named_folder_documents_keep_distinct_previews (tests.test_use_case_audit.AuditUiTests.test_same_named_folder_documents_keep_distinct_previews) ... 2026-10-19 10:15:14.629 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-19 10:15:15.324 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+────────────────────── Traceback (most recent call last) ───────────────────────
+  D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_  
+  code.py:136 in exec_func_with_error_handling                                  
+                                                                                
+  D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\scrip  
+  t_runner.py:909 in code_to_exec                                               
+                                                                                
+  D:\JeshlaAutoAI\streamlit_app.py:28 in <module>                               
+                                                                                
+    25 session=st.session_state.active_chat                                     
+    26 log_browser_event("page_render",session=session,provider=st.session_sta  
+    27 with st.container(horizontal=True,horizontal_alignment="right",vertical  
+  > 28 │   render_attachment_list(backend,session)                              
+    29 │   render_provider_info(backend)                                        
+    30                                                                          
+    31 with st.container(horizontal=True,horizontal_alignment="center"):        
+                                                                                
+  D:\JeshlaAutoAI\agent\interfaces\attachments.py:177 in                        
+  render_attachment_list                                                        
+                                                                                
+    174 │   │   │   widget_key=session+"_"+identity                             
+    175 │   │   │   with st.expander(item["name"],icon=":material/description:  
+    176 │   │   │   │   if item["truncated"]:st.warning("This is a limited exc  
+  > 177 │   │   │   │   st.text_area("Document preview",item["text"],disabled=  
+    178 │   │   │   │   st.download_button("Download extracted text",item["tex  
+    179 │   │   │   │   if st.button("Remove attachment",key="remove_doc_"+wid  
+    180 │   │   │   │   │   st.session_state.setdefault("attachment_collection  
+                                                                                
+  D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\runtime\metrics_util.py:72  
+  5 in wrapped_func                                                             
+                                                                                
+  D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\elements\widgets\text_widg  
+  ets.py:1154 in text_area                                                      
+                                                                                
+  D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\elements\widgets\text_widg  
+  ets.py:1209 in _text_area                                                     
+                                                                                
+  D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\elements\lib\utils.py:273   
+  in compute_and_register_element_id                                            
+                                                                                
+  D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\elements\lib\utils.py:155   
+  in _register_element_id                                                       
+────────────────────────────────────────────────────────────────────────────────
+StreamlitDuplicateElementKey: There are multiple elements with the same 
+`key='doc_preview_default_ca8b333100a088422435'`. To fix this, please make sure 
+that the `key` argument is unique for each element you create.
+FAIL
+
+======================================================================
+FAIL: test_same_named_folder_documents_keep_distinct_previews (tests.test_use_case_audit.AuditUiTests.test_same_named_folder_documents_keep_distinct_previews)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\JeshlaAutoAI\tests\test_use_case_audit.py", line 138, in test_same_named_folder_documents_keep_distinct_previews
+    self.assertFalse(self.app.exception)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+AssertionError: ElementList(_list=[Exception(message="There are multiple elements with the same `key='doc_preview_default_ca8b333100a088422435'`. To fix this, please make sure that the `key` argument is unique for each element you create.", is_markdown=True, stack_trace=['File "D:\\JeshlaAutoAI\\streamlit_app.py", line 28, in <module>\n    render_attachment_list(backend,session)\n    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^', 'File "D:\\JeshlaAutoAI\\agent\\interfaces\\attachments.py", line 177, in render_attachment_list\n    st.text_area("Document preview",item["text"],disabled=True,height=150,key="doc_preview_"+widget_key)\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'])]) is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.974s
+
+FAILED (failures=1)

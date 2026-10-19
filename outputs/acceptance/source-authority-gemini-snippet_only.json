@@ -1,0 +1,25 @@
+{
+  "provider": "gemini",
+  "status": "Y - selected sampled source behaviors",
+  "cases": [
+    {
+      "id": "snippet_only",
+      "status": "Y - sampled source behavior",
+      "checks": {
+        "searched": true,
+        "returned_source_cited": true,
+        "not_incomplete": true,
+        "page_read_attempted": true,
+        "snippet_scope_disclosed": true,
+        "read_failure_disclosed": true
+      },
+      "answer": "I was unable to read the full page at [https://docs.example.org/guide](https://docs.example.org/guide) because the retrieval failed. Based solely on the search snippet, the available evidence is that ExampleWidget recommends using stable selectors. I cannot verify this information beyond the snippet.",
+      "tool_activity": [
+        "web_search",
+        "fetch_web_page"
+      ]
+    }
+  ],
+  "seconds": 7.68,
+  "scope": "Live model with synthetic public snippets and failed-page fixtures through actual conversation/citation guards. No real search, private data or publisher reputation certification. Checks require manual review for overclaiming."
+}

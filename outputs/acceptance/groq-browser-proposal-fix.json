@@ -1,0 +1,28 @@
+{
+  "provider": "groq",
+  "scope": "Real project-node prompt with synthetic temporary roots, approval callback stops before execution; no private history or actual project writes.",
+  "cases": [
+    {
+      "status": "awaiting_input",
+      "proposal_count": 1,
+      "action": "create_file",
+      "arguments": {
+        "content": "Browser approval test passed.",
+        "relative_path": "outputs/browser-approval-check.txt"
+      },
+      "file_exists": false,
+      "answer": "Waiting for browser approval; no action executed.\n\nTask status: incomplete."
+    },
+    {
+      "status": "awaiting_input",
+      "proposal_count": 1,
+      "action": "create_file",
+      "arguments": {
+        "content": "Browser approval test passed.",
+        "relative_path": "outputs/browser-approval-check.txt"
+      },
+      "file_exists": false,
+      "answer": "Waiting for browser approval; no action executed.\n\nTask status: incomplete."
+    }
+  ]
+}

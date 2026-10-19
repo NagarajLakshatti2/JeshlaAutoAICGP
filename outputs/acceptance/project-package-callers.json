@@ -1,0 +1,161 @@
+{
+  "scope": "absolute static imports and dotted string references; relative/dynamic imports require manual follow-up",
+  "callers": {
+    "agent.llm_client": [
+      "agent/conversation.py",
+      "agent/project_budget.py",
+      "agent/project_decisions.py",
+      "agent/tool_llm.py",
+      "agent/langgraph/jira_workflow_node.py",
+      "agent/langgraph/langgraph_agent.py",
+      "agent/langgraph/langgraph_agent_review_fix.py",
+      "rag/query.py",
+      "integrations/jira/test_case_agent.py",
+      "evaluations/grounding_behavior_live.py",
+      "evaluations/mixed_grounding_live.py",
+      "evaluations/mixed_real_tools_live.py",
+      "evaluations/provider_live_acceptance.py",
+      "evaluations/public_grounding_live.py",
+      "evaluations/source_authority_live.py",
+      "evaluations/workstream5_live.py",
+      "examples/agents/react/react_agent.py"
+    ],
+    "agent.tool_llm": [
+      "agent/project_decisions.py",
+      "agent/summary_model.py",
+      "agent/langgraph/langgraph_agent.py",
+      "evaluations/grounding_behavior_live.py",
+      "evaluations/mixed_grounding_live.py",
+      "evaluations/mixed_real_tools_live.py",
+      "evaluations/provider_live_acceptance.py",
+      "evaluations/public_grounding_live.py",
+      "evaluations/source_authority_live.py",
+      "evaluations/workstream5_live.py"
+    ],
+    "agent.provider_errors": [
+      "agent/browser_activity.py",
+      "agent/context_summary.py",
+      "agent/gemini_config.py",
+      "agent/llm_client.py",
+      "agent/model_budget.py",
+      "agent/project_decisions.py",
+      "agent/summary_model.py",
+      "agent/tool_llm.py",
+      "agent/user_errors.py",
+      "tests/test_browser_activity.py",
+      "tests/test_foundation_errors.py",
+      "tests/test_gemini_provider.py",
+      "tests/test_model_budget.py",
+      "tests/test_project_decisions.py",
+      "tests/test_provider_errors.py",
+      "tests/test_streamlit_ui.py",
+      "tests/test_summary_model.py",
+      "evaluations/grounding_behavior_live.py"
+    ],
+    "agent.model_budget": [
+      "agent/provider_errors.py",
+      "tests/test_model_budget.py"
+    ],
+    "agent.chat_runtime": [
+      "agent/browser_backend.py",
+      "agent/langgraph/langgraph_agent.py",
+      "tests/test_chat_runtime.py",
+      "tests/test_summary_sessions.py"
+    ],
+    "agent.chat_catalog": [
+      "agent/browser_backend.py",
+      "agent/langgraph/langgraph_agent.py",
+      "tests/test_archive_search.py",
+      "tests/test_backup_recovery.py",
+      "tests/test_browser_actions.py",
+      "tests/test_chat_catalog.py",
+      "tests/test_chat_commands.py",
+      "tests/test_chat_runtime.py",
+      "tests/test_streamlit_ui.py",
+      "tests/test_summary_sessions.py",
+      "evaluations/summary_grounding_acceptance.py"
+    ],
+    "agent.context_summary": [
+      "agent/chat_runtime.py",
+      "agent/summary_model.py",
+      "tests/test_context_summary.py",
+      "tests/test_summary_model.py",
+      "evaluations/summary_grounding_acceptance.py",
+      "evaluations/summary_live_acceptance.py"
+    ],
+    "agent.local_action_receipts": [
+      "agent/browser_actions.py",
+      "agent/browser_action_ui.py",
+      "agent/browser_backend.py",
+      "agent/langgraph/langgraph_agent.py",
+      "tests/local_action_process_worker.py",
+      "tests/test_action_policy.py",
+      "tests/test_backup_recovery.py",
+      "tests/test_browser_actions.py",
+      "tests/test_local_action_receipts.py"
+    ],
+    "agent.browser_actions": [
+      "agent/browser_backend.py",
+      "tests/local_action_process_worker.py",
+      "tests/test_action_policy.py",
+      "tests/test_browser_actions.py",
+      "tests/test_browser_action_ui.py"
+    ],
+    "agent.browser_backend": [
+      "tests/test_browser_actions.py",
+      "streamlit_app.py"
+    ],
+    "agent.conversation": [
+      "agent/langgraph/langgraph_agent.py",
+      "tests/test_action_policy.py",
+      "tests/test_archive_search.py",
+      "tests/test_clarification_guard.py",
+      "tests/test_conversation_sources.py",
+      "tests/test_mixed_grounding.py",
+      "tests/test_table_grounding.py",
+      "tests/test_table_memory_tools.py",
+      "tests/test_task_recovery.py",
+      "tests/test_web_pages.py",
+      "evaluations/grounding_behavior_live.py",
+      "evaluations/mixed_grounding_live.py",
+      "evaluations/mixed_real_tools_live.py",
+      "evaluations/public_grounding_live.py",
+      "evaluations/source_authority_live.py",
+      "evaluations/web_page_live.py",
+      "evaluations/workstream5_live.py"
+    ],
+    "agent.langgraph.langgraph_agent": [
+      "agent/browser_backend.py",
+      "rag/entrypoints.py"
+    ]
+  },
+  "string_references": {
+    "agent.llm_client": [
+      "tests/test_gemini_provider.py"
+    ],
+    "agent.tool_llm": [
+      "tests/test_gemini_provider.py"
+    ],
+    "agent.provider_errors": [
+      "tests/test_provider_errors.py"
+    ],
+    "agent.model_budget": [],
+    "agent.chat_runtime": [
+      "tests/test_browser_actions.py"
+    ],
+    "agent.chat_catalog": [],
+    "agent.context_summary": [
+      "tests/test_chat_runtime.py",
+      "tests/test_context_summary.py"
+    ],
+    "agent.local_action_receipts": [],
+    "agent.browser_actions": [],
+    "agent.browser_backend": [
+      "tests/test_browser_actions.py",
+      "tests/test_browser_action_ui.py",
+      "tests/test_streamlit_ui.py"
+    ],
+    "agent.conversation": [],
+    "agent.langgraph.langgraph_agent": []
+  }
+}

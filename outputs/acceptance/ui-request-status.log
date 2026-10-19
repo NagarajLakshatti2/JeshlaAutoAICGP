@@ -1,0 +1,47 @@
+test_only_explicit_completion_is_claimed (tests.test_request_status.RequestStatusTests.test_only_explicit_completion_is_claimed) ... ok
+test_all_provider_failure_categories_allow_next_request (tests.test_streamlit_ui.BrowserTests.test_all_provider_failure_categories_allow_next_request) ... 2026-10-18 23:30:09.389 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_archive_search_opens_old_chat_only_on_selection (tests.test_streamlit_ui.BrowserTests.test_archive_search_opens_old_chat_only_on_selection) ... 2026-10-18 23:30:15.521 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_archive_search_scope_and_no_match_preserve_chat (tests.test_streamlit_ui.BrowserTests.test_archive_search_scope_and_no_match_preserve_chat) ... 2026-10-18 23:30:17.222 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_initial_render_without_model_call (tests.test_streamlit_ui.BrowserTests.test_initial_render_without_model_call) ... 2026-10-18 23:30:18.729 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_memory_editor_requires_confirmation_and_does_not_repeat_on_rerun (tests.test_streamlit_ui.BrowserTests.test_memory_editor_requires_confirmation_and_does_not_repeat_on_rerun) ... 2026-10-18 23:30:20.374 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_memory_view_without_model (tests.test_streamlit_ui.BrowserTests.test_memory_view_without_model) ... 2026-10-18 23:30:22.114 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_model_settings_render_without_request (tests.test_streamlit_ui.BrowserTests.test_model_settings_render_without_request) ... 2026-10-18 23:30:23.334 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_new_chat_and_multiline_message (tests.test_streamlit_ui.BrowserTests.test_new_chat_and_multiline_message) ... 2026-10-18 23:30:24.411 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_provider_configuration_error_is_actionable (tests.test_streamlit_ui.BrowserTests.test_provider_configuration_error_is_actionable) ... 2026-10-18 23:30:25.727 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_recent_chat_button_restores_correct_history_without_model (tests.test_streamlit_ui.BrowserTests.test_recent_chat_button_restores_correct_history_without_model) ... 2026-10-18 23:30:26.828 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_request_status_survives_rerender_and_is_scoped_by_chat (tests.test_streamlit_ui.BrowserTests.test_request_status_survives_rerender_and_is_scoped_by_chat) ... 2026-10-18 23:30:28.655 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_title_filter_does_not_switch_or_call_model (tests.test_streamlit_ui.BrowserTests.test_title_filter_does_not_switch_or_call_model) ... 2026-10-18 23:30:32.422 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_unknown_exception_is_not_exposed (tests.test_streamlit_ui.BrowserTests.test_unknown_exception_is_not_exposed) ... 2026-10-18 23:30:35.389 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_decline_has_no_file_effect (tests.test_browser_action_ui.BrowserActionUITests.test_decline_has_no_file_effect) ... 2026-10-18 23:30:41.051 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_explicit_approval_and_rerender_execute_once (tests.test_browser_action_ui.BrowserActionUITests.test_explicit_approval_and_rerender_execute_once) ... 2026-10-18 23:30:43.136 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_new_message_shows_proposal_without_resubmitting_after_rerun (tests.test_browser_action_ui.BrowserActionUITests.test_new_message_shows_proposal_without_resubmitting_after_rerun) ... 2026-10-18 23:30:46.921 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_render_refresh_and_chat_switch_do_not_approve (tests.test_browser_action_ui.BrowserActionUITests.test_render_refresh_and_chat_switch_do_not_approve) ... 2026-10-18 23:30:54.716 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_legacy_text_keeps_value_and_metadata_separate (tests.test_memory_panel.MemoryPanelTests.test_legacy_text_keeps_value_and_metadata_separate) ... ok
+test_memory_editor_builds_exact_commands_and_rejects_invalid_input (tests.test_memory_panel.MemoryPanelTests.test_memory_editor_builds_exact_commands_and_rejects_invalid_input) ... ok
+test_structured_read_is_scoped_without_seed_or_model (tests.test_memory_panel.MemoryPanelTests.test_structured_read_is_scoped_without_seed_or_model) ... ok
+test_four_providers_return_metadata_only (tests.test_provider_panel.ProviderPanelTests.test_four_providers_return_metadata_only) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 51.854s
+
+OK
+Local action receipt: 937d468875cc49479a78e907e81e809a | C:\Users\nagar\AppData\Local\Temp\tmpci1199g4\actions.sqlite3
+
+CREATED FILE: note.txt

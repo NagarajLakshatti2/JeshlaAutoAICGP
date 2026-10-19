@@ -26,6 +26,15 @@ class ConversationTests(unittest.TestCase):
                                  web=web or (lambda query: {"results": []}), tools=tools)
         return result, calls
 
+    def test_large_task_is_rejected_without_model_or_silent_truncation(self):
+        import os
+        from unittest.mock import patch
+        with patch.dict(os.environ,{"AI_CHAT_MAX_CONVERSATION_CHARS":"4000"}):
+            result,calls=self.run_answer([],state={"question":"Exact task "*2000,"route":"direct"})
+        self.assertEqual(calls,[])
+        self.assertEqual(result["task_status"],"incomplete")
+        self.assertIn("context budget",result["answer"])
+
     def test_memory_reaches_model(self):
         result, calls = self.run_answer([{"action":"finish", "answer":"JeshlaAutoAI"}])
         self.assertIn("JeshlaAutoAI", calls[0][1]["content"])

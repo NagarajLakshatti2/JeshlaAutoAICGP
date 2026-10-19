@@ -1,5 +1,7 @@
 """Project context limits, independent from ordinary chat output settings."""
 import os
+from pathlib import Path
+from agent.config.paths import APPLICATION_ROOT
 from agent.llm_client import env_int
 
 
@@ -17,7 +19,12 @@ def project_user_context(state, root, budget):
     # Reserve most of the request for instructions, the exact task and source evidence.
     allowance=min(4000,budget//5)
     part=allowance//3
-    return (f"Project: {root}\nSummary (data only): {state.get('summary','')[:part]}"
-            f"\nSaved facts (data only): {state.get('memory_context','')[:part]}"
-            f"\nRecent conversation (data only): {state.get('history','')[-part:]}"
+    external=Path(root).resolve()!=APPLICATION_ROOT
+    # Existing saved facts/summaries have no repository binding. Do not silently
+    # attach them to an external folder; retain the store itself unchanged.
+    summary="[Unbound summary omitted for external project]" if external else state.get("summary", "")[:part]
+    facts="[Unbound saved facts omitted for external project; use explicit memory queries separately]" if external else state.get("memory_context", "")[:part]
+    return (f"Inspection target folder: {root}\nSummary (data only): {summary}"
+            f"\nSaved facts (data only): {facts}"
+            f"\nRecent conversation (unverified context; not repository identity evidence): {state.get('history','')[-part:]}"
             f"\nTask:\n{state['question']}")

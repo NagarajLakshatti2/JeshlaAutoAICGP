@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-18",
+  "console": {
+    "startup": "passed",
+    "existing_facts": "visible",
+    "live_openrouter_answer": "passed",
+    "workflow_seconds": 10.49,
+    "session_switch": "passed",
+    "remember_and_show": "passed",
+    "restart_persistence": "passed: refactor_check visible after restart",
+    "local_memory_seconds": [
+      0.04,
+      0.03
+    ],
+    "remember_seconds": 0.04,
+    "latest_live_openrouter_seconds": 3.44,
+    "session_restore": "passed: refactor_check restored"
+  },
+  "browser": {
+    "named_url": "http://127.0.0.1:8501/JeshlaAutoAI",
+    "startup": "passed",
+    "existing_default_history": "visible",
+    "live_openrouter_answer": "visible in screenshot",
+    "new_console_fact": "not yet confirmed in browser"
+  },
+  "remaining_manual": [
+    "restart console and show saved fact",
+    "show new console fact in browser",
+    "post-refactor controlled-action acceptance"
+  ],
+  "backup_retained": true
+}

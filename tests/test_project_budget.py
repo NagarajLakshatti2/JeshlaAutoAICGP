@@ -56,3 +56,21 @@ class BudgetTests(unittest.TestCase):
             self.assertIn("Task status: incomplete",result["answer"])
             self.assertIn("AI_PROJECT_MAX_CONVERSATION_CHARS",result["answer"])
             model.assert_not_called()
+
+    def test_external_project_excludes_unbound_identity_and_summary(self):
+        state={"question":"Review this external repository", "summary":"AgentProjectOldSummary", "memory_context":"project_name: AgentProjectPrivate", "history":"User: read the build"}
+        with tempfile.TemporaryDirectory() as directory:
+            context=project_user_context(state,directory,32000)
+        self.assertNotIn("AgentProjectPrivate",context)
+        self.assertNotIn("AgentProjectOldSummary",context)
+        self.assertIn("User: read the build",context)
+        self.assertIn("Inspection target folder:",context)
+        self.assertEqual(state["memory_context"],"project_name: AgentProjectPrivate")
+
+    def test_agent_repository_keeps_its_context(self):
+        from agent import project_budget
+        root=Path(project_budget.__file__).resolve().parents[1]
+        state={"question":"Review agent", "memory_context":"project_name: LocalAgent", "summary":"AgentSummary"}
+        context=project_user_context(state,root,32000)
+        self.assertIn("LocalAgent",context)
+        self.assertIn("AgentSummary",context)

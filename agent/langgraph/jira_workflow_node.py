@@ -31,7 +31,8 @@ RUN_REQUEST = re.compile(
 
 
 def workflow_intent(question):
-    q = question.strip()
+    from agent.runtime.input_evidence import split_uploaded_input
+    q = split_uploaded_input(question)[0].strip()
     if q.casefold().rstrip(".!?") in {"yes", "yes please", "yes create them", "no", "no thanks", "continue", "next", "okay", "ok"}:
         return True
     if re.search(r"\b(?:read|generate|propose|prepare|revise|draft|create)\b", q, re.I) and re.search(r"\b[A-Z][A-Z0-9_]*-\d+\b", q, re.I) and re.search(r"gherkin|test[ -]?cases?|sub[ -]?tasks?", q, re.I):
@@ -588,8 +589,12 @@ def handle(question):
 
 
 def jira_workflow_node(state):
+    from agent.runtime.input_evidence import split_uploaded_input,explicit_jira_request
+    question,documents,has_upload=split_uploaded_input(state["question"])
+    if has_upload and not explicit_jira_request(question):
+        return {"answer":"Jira was not requested. No Jira authentication or action was started.","task_status":"incomplete"}
     try:
-        return {"answer": handle(state["question"])}
+        return {"answer": handle(question)}
     except Blocked as error:
         return {"answer": "Workflow blocked: " + str(error)}
     except (Exception, SystemExit) as error:

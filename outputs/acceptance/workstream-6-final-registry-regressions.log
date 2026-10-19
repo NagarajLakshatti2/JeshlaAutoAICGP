@@ -1,0 +1,172 @@
+2026-10-18 16:12:34.304 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-18 16:12:47.010 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-18 16:13:14.505 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-18 16:13:21.591 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpho093fi6\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpzc1whhie\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpmq3et4cj\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpga8on_8f\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpa1527wtb\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpa1lrhiem\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmprebgxj39\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpdgkgeiw5\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpbe4idajb\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmp1m0x5d8e\r.sqlite3
+Local action receipt: 552011fb9b24479f9bd5e5c8be4bc1a6 | C:\Users\nagar\AppData\Local\Temp\tmph5kxtub0\r.sqlite3
+Local action receipt: 44207a1c322f49629cb415b2473e80a6 | C:\Users\nagar\AppData\Local\Temp\tmp1p9nlyz0\r.sqlite3
+Local action receipt: bebef357d86a4ef698cd16e403691b8b | C:\Users\nagar\AppData\Local\Temp\tmpcn9ng6qx\r.sqlite3
+Local action receipt: 235fec2a317644eb9ccfce731a160054 | C:\Users\nagar\AppData\Local\Temp\tmp7typexmo\r.sqlite3
+Local action receipt: aa0c873157f94019afab0bf8410ad03c | C:\Users\nagar\AppData\Local\Temp\tmp0zbfq21h\r.sqlite3
+Local action receipt: real-python | C:\Users\nagar\AppData\Local\Temp\tmps0np7i3c\r.sqlite3
+
+RUNNING: ['D:\\JeshlaAutoAI\\.venv\\Scripts\\python.exe', 'C:\\Users\\nagar\\AppData\\Local\\Temp\\tmps0np7i3c\\fixture.py']
+Local action receipt: real-python | C:\Users\nagar\AppData\Local\Temp\tmpjvil_2tl\r.sqlite3
+
+RUNNING: ['D:\\JeshlaAutoAI\\.venv\\Scripts\\python.exe', '-c', 'print("fixture")']
+Local action receipt: saved-running | C:\Users\nagar\AppData\Local\Temp\tmpj62gwj5t\r.sqlite3
+Tool: search_chats
+Local action receipt: 9db0e5a154f24e308dc65eef4ed07e03 | C:\Users\nagar\AppData\Local\Temp\tmpbxxiwcam\actions.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: 15e637ed9bd045a6a0fefb3783b21ceb | C:\Users\nagar\AppData\Local\Temp\tmpijybsfdj\outputs\local_actions.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: 18f8482f40f34de28123d2d8370fb919 | C:\Users\nagar\AppData\Local\Temp\tmpx259xvh7\actions.sqlite3
+Local action receipt: 63244d79be0643d391637fe98592cf6a | C:\Users\nagar\AppData\Local\Temp\tmpuj_sm5th\actions.sqlite3
+Local action receipt: 4fb638a953b3488ca3c20bbed4856f1e | C:\Users\nagar\AppData\Local\Temp\tmp0d_fdrf3\actions.sqlite3
+
+CREATED FILE: note.txt
+Tool: web_search
+Tool: web_search
+Tool: web_search
+Tool: search_documents
+Tool: search_documents
+Tool: web_search
+Tool: search_documents
+Tool: web_search
+Tool: search_documents
+Tool: web_search
+Tool: web_search
+Already applied; returning the saved receipt. No writes.
+Tool: search_documents
+Tool: search_documents
+
+Retrieved 1 unique chunks; selected 1 after reranking.
+
+[TIME START] 2026-10-18T16:14:05+05:30 | LLM tool request
+
+[TIME END] 2026-10-18T16:14:05+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.02 seconds
+
+[TIME START] 2026-10-18T16:14:05+05:30 | LLM tool request
+
+[TIME END] 2026-10-18T16:14:05+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.01 seconds
+
+[TIME START] 2026-10-18T16:14:05+05:30 | LLM request
+
+[TIME END] 2026-10-18T16:14:05+05:30 | LLM request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T16:14:05+05:30 | LLM tool request
+GEMINI BUDGET | input ~96 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-18T16:14:06+05:30 | LLM tool request | SUCCESS | 0.02 seconds
+GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+
+[TIME START] 2026-10-18T16:14:07+05:30 | LLM request
+GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: Gemini | Actual model: gemini-test
+
+[TIME END] 2026-10-18T16:14:07+05:30 | LLM request | SUCCESS | 0.04 seconds
+GEMINI BUDGET | input ~226 tokens (estimate) | output <= 512 tokens | context: unknown; no model-context fit guarantee
+Provider: Gemini | Actual model: gemini-test
+
+[TIME START] 2026-10-18T16:14:08+05:30 | LLM tool request
+GEMINI BUDGET | input ~155 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-18T16:14:08+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T16:14:08+05:30 | LLM tool request
+GEMINI BUDGET | input ~257 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.02s
+
+[TIME END] 2026-10-18T16:14:08+05:30 | LLM tool request | SUCCESS | 0.02 seconds
+Executing <Task finished name='Task-91' coro=<IsolatedAsyncioTestCase.asyncSetUp() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\unittest\async_case.py:44> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.167 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 1.199 seconds
+Executing <Task finished name='Task-92' coro=<T.test_approved_hierarchy() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:39> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 5.824 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.318 seconds
+Executing <Task finished name='Task-93' coro=<IsolatedAsyncioTestCase.asyncTearDown() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\unittest\async_case.py:47> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.237 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.329 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.157 seconds
+Executing <Task finished name='Task-95' coro=<BaseEventLoop.shutdown_default_executor() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py:595> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\tasks.py:732> took 0.219 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.428 seconds
+Executing <Task finished name='Task-96' coro=<IsolatedAsyncioTestCase.asyncSetUp() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\unittest\async_case.py:44> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.233 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.388 seconds
+Executing <Task finished name='Task-97' coro=<T.test_default() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:33> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.389 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.479 seconds
+Executing <Task finished name='Task-98' coro=<IsolatedAsyncioTestCase.asyncTearDown() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\unittest\async_case.py:47> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.600 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.340 seconds
+Executing <Task finished name='Task-99' coro=<BaseEventLoop.shutdown_asyncgens() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py:570> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\tasks.py:732> took 0.104 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.321 seconds
+Executing <Task finished name='Task-100' coro=<BaseEventLoop.shutdown_default_executor() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py:595> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\tasks.py:732> took 0.262 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.426 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.186 seconds
+Executing <Task finished name='Task-102' coro=<T.test_disabled_creation_blocks_fake_gateway() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:26> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.375 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.222 seconds
+Executing <Task finished name='Task-103' coro=<IsolatedAsyncioTestCase.asyncTearDown() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\unittest\async_case.py:47> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.102 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.282 seconds
+Executing <Task finished name='Task-104' coro=<BaseEventLoop.shutdown_asyncgens() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py:570> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\tasks.py:732> took 0.108 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.106 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.127 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.124 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.114 seconds
+Executing <Task finished name='Task-112' coro=<T.test_explicit_duplicate_reuse() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:46> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 1.359 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.398 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.141 seconds
+Executing <Task finished name='Task-115' coro=<BaseEventLoop.shutdown_default_executor() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py:595> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\tasks.py:732> took 0.286 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.451 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.336 seconds
+Executing <Handle _run_until_complete_cb(<Task finishe...unners.py:109>) at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py:181 created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\events.py:94> took 0.178 seconds
+Executing <Task finished name='Task-120' coro=<BaseEventLoop.shutdown_default_executor() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py:595> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\tasks.py:732> took 0.116 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.102 seconds
+Executing <Task finished name='Task-121' coro=<IsolatedAsyncioTestCase.asyncSetUp() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\unittest\async_case.py:44> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.176 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.135 seconds
+Executing <Task finished name='Task-127' coro=<T.test_repeat_success() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:73> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 2.027 seconds
+Executing <Task finished name='Task-130' coro=<BaseEventLoop.shutdown_default_executor() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py:595> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\tasks.py:732> took 0.143 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.491 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.613 seconds
+Executing <Task finished name='Task-137' coro=<T.test_status_change() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:60> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.123 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.143 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.134 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.252 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.173 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.441 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.219 seconds
+Executing <Task finished name='Task-145' coro=<BaseEventLoop.shutdown_default_executor() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py:595> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\tasks.py:732> took 0.174 seconds
+Executing <Task finished name='Task-146' coro=<IsolatedAsyncioTestCase.asyncSetUp() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\unittest\async_case.py:44> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.168 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.161 seconds
+Executing <Task finished name='Task-147' coro=<T.test_tampering() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:55> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.299 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.107 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.123 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.287 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.255 seconds
+Executing <Task finished name='Task-151' coro=<IsolatedAsyncioTestCase.asyncSetUp() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\unittest\async_case.py:44> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.272 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.219 seconds
+Executing <Task finished name='Task-152' coro=<T.test_unknown_no_retry() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:65> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.513 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.101 seconds
+Executing <Task finished name='Task-153' coro=<IsolatedAsyncioTestCase.asyncTearDown() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\unittest\async_case.py:47> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.270 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.298 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.130 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.123 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.166 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.109 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.117 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.234 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.166 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.130 seconds
+2026-10-18 16:16:01.547 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-18 16:16:11.890 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-18 16:16:20.211 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-18 16:16:27.951 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-18 16:16:42.089 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.

@@ -1,0 +1,23 @@
+{
+  "scope": "editable package metadata/path acceptance only; dependencies not installed",
+  "status": "passed",
+  "steps": [
+    {
+      "name": "venv",
+      "returncode": 0
+    },
+    {
+      "name": "build-tools",
+      "returncode": 0
+    },
+    {
+      "name": "editable",
+      "returncode": 0
+    },
+    {
+      "name": "metadata-path",
+      "returncode": 0
+    }
+  ],
+  "elapsed_seconds": 13.32
+}

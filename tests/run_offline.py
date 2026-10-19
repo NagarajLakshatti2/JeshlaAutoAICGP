@@ -53,9 +53,27 @@ def offline_guard():
 
 
 def main():
-    with offline_guard():
-        suite = unittest.defaultTestLoader.discover(str(ROOT / "tests"), pattern="test_*.py")
-        result = unittest.TextTestRunner(verbosity=1).run(suite)
+    import os,io
+    from datetime import datetime,timezone
+    from functools import partial
+    from tests.offline_log import ProgressResult,writer
+    path=ROOT/'outputs/logs'/('offline-tests-'+datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')+'-'+str(os.getpid())+'.jsonl')
+    try:
+        path.parent.mkdir(parents=True,exist_ok=True);handle=path.open('w',encoding='utf-8')
+        print('Offline progress log:',path,flush=True)
+    except OSError:
+        handle=io.StringIO();print('Progress file unavailable; tests will still run.',flush=True)
+    with handle,patch.dict('os.environ',{'JESHLA_EXECUTION_MODE':'offline'}):
+        progress=writer(handle);progress('run_started')
+        try:
+            with offline_guard():
+                progress('discovery_started')
+                suite=unittest.defaultTestLoader.discover(str(ROOT/'tests'),pattern='test_*.py')
+                progress('discovery_finished',test_count=suite.countTestCases())
+                result=unittest.TextTestRunner(verbosity=1,resultclass=partial(ProgressResult,progress=progress)).run(suite)
+            progress('run_finished',tests=result.testsRun,status='passed' if result.wasSuccessful() else 'failed',failures=len(result.failures),errors=len(result.errors))
+        except BaseException:
+            progress('run_interrupted');raise
     return 0 if result.wasSuccessful() else 1
 
 

@@ -1,0 +1,13 @@
+{
+  "page": 2,
+  "checks": {
+    "Aug 2016": true,
+    "Jun 2018": true,
+    "SanDisk": true,
+    "Jan 2015": true,
+    "Jul 2016": true,
+    "iDisha": true
+  },
+  "verified": true,
+  "scope": "Actual local PDF reread verifies the two corrected benchmark locations; no source text exported."
+}

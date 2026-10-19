@@ -29,9 +29,9 @@ class ChatTests(unittest.TestCase):
         self.assertTrue(self.catalog.get(session)["title"].startswith("New chat "))
 
     def test_title_limit(self):
-        self.assertEqual(clean_title("x"*80),"x"*80)
-        with self.assertRaises(ValueError):clean_title("x"*81)
-        session=self.choose(["y","replacement"],title="x"*81)
+        self.assertEqual(clean_title("x"*100),"x"*100)
+        with self.assertRaises(ValueError):clean_title("x"*101)
+        session=self.choose(["y","replacement"],title="x"*101)
         self.assertEqual(self.catalog.get(session)["title"],"replacement")
 
     def test_duplicate_titles_have_unique_ids(self):

@@ -1,0 +1,13 @@
+{
+  "provider": "openrouter",
+  "fixture": "synthetic long chat; no user project content",
+  "checks": {
+    "summary_created": true,
+    "corrected_name_retained": true,
+    "open_question_retained": true,
+    "recent_turn_boundary": true,
+    "summary_within_limit": true
+  },
+  "status": "Y",
+  "seconds": 11.11
+}

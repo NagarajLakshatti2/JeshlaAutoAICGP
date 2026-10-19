@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jeshla-auto-ai"
+version = "0.1.0.dev0"
+description = "Local project assistant with scoped memory and controlled tools"
+readme = "README.md"
+requires-python = ">=3.14"
+dynamic = ["dependencies"]
+
+[project.scripts]
+jeshla-auto-ai = "agent.langgraph.langgraph_agent:main"
+
+[project.optional-dependencies]
+rag = ["openpyxl", "pypdf", "python-docx", "langchain-community", "langchain-huggingface", "langchain-core", "langchain-text-splitters", "sentence-transformers", "faiss-cpu", "rank-bm25"]
+learning = ["langchain", "langchain-ollama", "chromadb"]
+integrations = ["mcp", "httpx2", "pydantic"]
+
+[tool.setuptools]
+include-package-data = false
+py-modules = ["streamlit_app"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["agent", "agent.*", "rag", "rag.*", "integrations", "integrations.*"]
+exclude = ["tests", "tests.*", "examples", "examples.*", "outputs", "outputs.*", "docs", "docs.*"]
+namespaces = true
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements-core.txt"]}

@@ -1,0 +1,63 @@
+{
+  "provider": "gemini",
+  "cases": [
+    {
+      "case": "plan_read",
+      "checks": {
+        "list_then_read": true,
+        "correct_value": true,
+        "cites_file": true,
+        "file_unchanged": true
+      },
+      "answer": "The report format is specified as **Markdown** in the file `settings.txt`.",
+      "task_status": "normal_answer",
+      "calls": [
+        {
+          "name": "list_files",
+          "args": {
+            "limit": 50
+          }
+        },
+        {
+          "name": "read_file",
+          "args": {
+            "relative_path": "settings.txt"
+          }
+        }
+      ]
+    },
+    {
+      "case": "recover_read",
+      "checks": {
+        "list_then_read": true,
+        "correct_value": true,
+        "cites_file": true,
+        "file_unchanged": true,
+        "missing_attempted": true,
+        "conservative_outcome": true
+      },
+      "answer": "The initial attempt to read `missing.txt` failed because the file does not exist in the project root.\n\nAfter listing the available files, I found `settings.txt`. Reading this file reveals the following content:\n\n`report_format=Markdown`\n\nThis indicates that the report format is configured as Markdown.\n\nTask status: incomplete. A tool request failed during this task; later successful results do not independently verify that every requested step was completed.",
+      "task_status": "incomplete",
+      "calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "relative_path": "missing.txt"
+          }
+        },
+        {
+          "name": "list_files",
+          "args": {}
+        },
+        {
+          "name": "read_file",
+          "args": {
+            "relative_path": "settings.txt"
+          }
+        }
+      ]
+    }
+  ],
+  "seconds": 18.51,
+  "scope": "Finite synthetic cases with real local temporary files; clarification wording requires manual review, no universal planning or semantic truth guarantee."
+}

@@ -1,0 +1,173 @@
+Offline progress log: D:\JeshlaAutoAI\outputs\logs\offline-tests-20261019-043234-17340.jsonl
+............................2026-10-19 10:04:14.529 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:04:17.432 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:04:18.682 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:04:19.882 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+...........................................................................................
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+OK
+.......Local action receipt: 15e2c9111ab541348fa923332aaee9f3 | C:\Users\nagar\AppData\Local\Temp\tmpabsawz9r\receipts.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmps9voyoqg\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmp72xi9emx\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpd_d62fzw\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmp5oxypzxq\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpkjtaxjn7\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpq220goti\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpyo9qi7ob\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpbniouncq\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpayzrq8rd\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpeqpxu_6k\r.sqlite3
+Local action receipt: 8fd50f43e8b146a89b45f7d1406cb2e0 | C:\Users\nagar\AppData\Local\Temp\tmpgmb49gln\r.sqlite3
+Local action receipt: b91bfe84654f45d88ffaad3264bfbbd3 | C:\Users\nagar\AppData\Local\Temp\tmposrik2ga\r.sqlite3
+Local action receipt: 63785534baee4b65bd4c3c9a7b0d08ee | C:\Users\nagar\AppData\Local\Temp\tmpj53zntmt\r.sqlite3
+Local action receipt: 70f2945e2b9a4affa11cbbd5e5554069 | C:\Users\nagar\AppData\Local\Temp\tmp59hgvx3n\r.sqlite3
+Local action receipt: 286a262f966a4b48bb0ac390ac56bcea | C:\Users\nagar\AppData\Local\Temp\tmpqlgw44_q\r.sqlite3
+Local action receipt: real-python | C:\Users\nagar\AppData\Local\Temp\tmpzex_lrbl\r.sqlite3
+
+RUNNING: ['D:\\JeshlaAutoAI\\.venv\\Scripts\\python.exe', 'C:\\Users\\nagar\\AppData\\Local\\Temp\\tmpzex_lrbl\\fixture.py']
+Local action receipt: real-python | C:\Users\nagar\AppData\Local\Temp\tmp85_vsjr1\r.sqlite3
+
+RUNNING: ['D:\\JeshlaAutoAI\\.venv\\Scripts\\python.exe', '-c', 'print("fixture")']
+Local action receipt: saved-running | C:\Users\nagar\AppData\Local\Temp\tmpo2f39vxj\r.sqlite3
+Tool: search_chats
+Local action receipt: complete | C:\Users\nagar\AppData\Local\Temp\tmpe0ucpds6\source\outputs\actions.sqlite3
+Local action receipt: uncertain | C:\Users\nagar\AppData\Local\Temp\tmpe0ucpds6\source\outputs\actions.sqlite3
+Local action receipt: 9aab157e88184de3b0db261adfc59d7e | C:\Users\nagar\AppData\Local\Temp\tmps10_anqn\actions.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: 4cbc3dae0ab044f0871b7903ce9b6cbc | C:\Users\nagar\AppData\Local\Temp\tmpjn8cpvnx\outputs\local_actions.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: 54e7f8aa7f244f09adc170d343fc2c45 | C:\Users\nagar\AppData\Local\Temp\tmpogbb94cj\actions.sqlite3
+Local action receipt: 3b6830fd3c0b4b158dabdd48b017edf2 | C:\Users\nagar\AppData\Local\Temp\tmpqr0csnaa\actions.sqlite3
+Local action receipt: 7deafb5f62c946f9a17f0a6808baa4cf | C:\Users\nagar\AppData\Local\Temp\tmpfwyg2hs5\actions.sqlite3
+
+CREATED FILE: note.txt
+Tool: web_search
+Tool: web_search
+Tool: web_search
+Tool: search_documents
+Tool: search_documents
+Tool: web_search
+Tool: search_documents
+Tool: web_search
+Tool: search_documents
+Tool: web_search
+Tool: web_search
+Already applied; returning the saved receipt. No writes.
+Tool: search_documents
+Tool: search_documents
+
+Retrieved 1 unique chunks; selected 1 after reranking.
+
+[TIME START] 2026-10-19T10:05:15+05:30 | LLM tool request
+
+[TIME END] 2026-10-19T10:05:15+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.03 seconds
+
+[TIME START] 2026-10-19T10:05:15+05:30 | LLM tool request
+
+[TIME END] 2026-10-19T10:05:15+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.03 seconds
+..
+[TIME START] 2026-10-19T10:05:16+05:30 | LLM request
+
+[TIME END] 2026-10-19T10:05:16+05:30 | LLM request | FAILED / INTERRUPTED | 0.00 seconds
+.
+[TIME START] 2026-10-19T10:05:16+05:30 | LLM tool request
+GEMINI BUDGET | input ~96 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-19T10:05:16+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+......GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+
+[TIME START] 2026-10-19T10:05:16+05:30 | LLM request
+GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: Gemini | Actual model: gemini-test
+
+[TIME END] 2026-10-19T10:05:16+05:30 | LLM request | SUCCESS | 0.05 seconds
+..GEMINI BUDGET | input ~226 tokens (estimate) | output <= 512 tokens | context: unknown; no model-context fit guarantee
+Provider: Gemini | Actual model: gemini-test
+
+[TIME START] 2026-10-19T10:05:16+05:30 | LLM tool request
+GEMINI BUDGET | input ~155 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-19T10:05:16+05:30 | LLM tool request | SUCCESS | 0.05 seconds
+
+[TIME START] 2026-10-19T10:05:16+05:30 | LLM tool request
+GEMINI BUDGET | input ~257 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-19T10:05:16+05:30 | LLM tool request | SUCCESS | 0.01 seconds
+...E....Executing <Task finished name='Task-92' coro=<T.test_approved_hierarchy() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:39> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.218 seconds
+Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.200 seconds
+..Executing <Task finished name='Task-102' coro=<T.test_disabled_creation_blocks_fake_gateway() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:26> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.147 seconds
+..Executing <Task finished name='Task-112' coro=<T.test_explicit_duplicate_reuse() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:46> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.131 seconds
+..Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.132 seconds
+.Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.118 seconds
+Executing <Task finished name='Task-127' coro=<T.test_repeat_success() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:73> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.726 seconds
+.Executing <Task finished name='Task-133' coro=<IsolatedAsyncioTestCase.asyncTearDown() done, defined at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\unittest\async_case.py:47> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.175 seconds
+..Executing <Handle BaseProactorEventLoop._loop_self_reading() created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\windows_events.py:320> took 0.229 seconds
+..Executing <Task finished name='Task-152' coro=<T.test_unknown_no_retry() done, defined at D:\JeshlaAutoAI\tests\test_jira_creation.py:65> result=None created at C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py:109> took 0.124 seconds
+.......................................................................................................................................Local action receipt: 3cfa794faab341e99532fc5993d4b395 | C:\Users\nagar\AppData\Local\Temp\tmp0_jzry2u\actions.sqlite3
+
+CREATED FILE: export.txt
+Already applied; returning the saved receipt. No writes.
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp6ihyb18l\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmpepc144ej\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp8rs9u4mk\receipts.sqlite3
+Local action receipt: two | C:\Users\nagar\AppData\Local\Temp\tmp8rs9u4mk\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp2hslsjtx\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmpc4mtutd9\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp15eym551\receipts.sqlite3
+Tool: search_memory
+Tool: search_documents
+Tool: web_search
+Tool: fetch_web_page
+GROQ BUDGET | input ~96 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+GROQ BUDGET | input ~96 tokens (estimate) | output <= 1696 tokens | context: 2048 (configured provider context)
+GROQ BUDGET | output reduced from 4096 to 1696 to respect configured limits; input was not silently truncated.
+OLLAMA BUDGET | input ~96 tokens (estimate) | output <= 672 tokens | context: 1024 (configured Ollama num_ctx)
+OLLAMA BUDGET | output reduced from 4096 to 672 to respect configured limits; input was not silently truncated.
+GROQ BUDGET | input ~96 tokens (estimate) | output <= 512 tokens | context: unknown; no model-context fit guarantee
+GROQ BUDGET | output reduced from 4096 to 512 to respect configured limits; input was not silently truncated.
+OPENROUTER BUDGET | input ~95 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+OPENROUTER BUDGET | input ~96 tokens (estimate) | output: provider default | context: unknown; no model-context fit guarantee
+GROQ [RATE_LIMIT] HTTP 429: retrying model request (2/2) in 0s.
+GROQ [PROVIDER_TEMPORARY] HTTP 503: retrying model request (2/2) in 1s.
+GROQ BUDGET | input ~176 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+OPENROUTER BUDGET | input ~176 tokens (estimate) | output <= 235929 tokens | context: 262144 (configured provider context)
+OLLAMA BUDGET | input ~176 tokens (estimate) | output <= 512 tokens | context: 4096 (configured Ollama num_ctx)
+
+[TIME START] 2026-10-19T10:06:15+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-19T10:06:15+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+.
+[TIME START] 2026-10-19T10:06:15+05:30 | LLM request
+
+[TIME END] 2026-10-19T10:06:15+05:30 | LLM request | SUCCESS | 0.00 seconds
+...............2026-10-19 10:06:22.779 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:06:58.655 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:03.224 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:06.444 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-19 10:07:09.274 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:10.407 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:13.737 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:15.263 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:16.989 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:17.931 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:19.287 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:21.024 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:22.362 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:24.332 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:25.790 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:27.402 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:29.940 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:31.629 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 10:07:32.625 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.

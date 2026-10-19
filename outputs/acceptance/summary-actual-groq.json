@@ -1,0 +1,6 @@
+{
+  "status": "P",
+  "provider": "groq",
+  "error": "GROQ [TOOL_OUTPUT] | HTTP 400 | Provider rejected generated tool/JSON output. Check tool registration/schema or narrow the request. | Attempts: 1. No action was executed from this failed response.",
+  "checkpoint_modified": false
+}

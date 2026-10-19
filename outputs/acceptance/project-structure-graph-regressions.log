@@ -1,0 +1,331 @@
+....................2026-10-18 18:09:23.787 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 18:09:24.706 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 18:09:25.190 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 18:09:25.634 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+Local action receipt: 0981889c5cbb4533855b5052a09a1e7b | C:\Users\nagar\AppData\Local\Temp\tmpjs1cak71\receipts.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpew59hh6p\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpmcwzv3wd\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpddoz2d8w\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpclrwae2a\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpulgkggsp\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpoy8tz7u0\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmp7cka09hp\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpzz3zql7p\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpdtb86sqb\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmp1fkfjuf0\r.sqlite3
+Local action receipt: 5677ec027bc747c087aeaab6d2beeea4 | C:\Users\nagar\AppData\Local\Temp\tmpypho7d78\r.sqlite3
+Local action receipt: 6109e48103324124b9ca6ce7533c5a92 | C:\Users\nagar\AppData\Local\Temp\tmpl0t2t0fu\r.sqlite3
+Local action receipt: ff62d922584b453480ae88bad84f667c | C:\Users\nagar\AppData\Local\Temp\tmpx57yxls1\r.sqlite3
+Local action receipt: f4151051aa9b43b7ac7554b23637517d | C:\Users\nagar\AppData\Local\Temp\tmp3ai3r4wr\r.sqlite3
+Local action receipt: 1e812179aa184c8c89677e1245d9b4cc | C:\Users\nagar\AppData\Local\Temp\tmpf5evjq7p\r.sqlite3
+Local action receipt: real-python | C:\Users\nagar\AppData\Local\Temp\tmplgqcep2u\r.sqlite3
+
+RUNNING: ['D:\\JeshlaAutoAI\\.venv\\Scripts\\python.exe', 'C:\\Users\\nagar\\AppData\\Local\\Temp\\tmplgqcep2u\\fixture.py']
+Local action receipt: real-python | C:\Users\nagar\AppData\Local\Temp\tmp_i4nj6dp\r.sqlite3
+
+RUNNING: ['D:\\JeshlaAutoAI\\.venv\\Scripts\\python.exe', '-c', 'print("fixture")']
+Local action receipt: saved-running | C:\Users\nagar\AppData\Local\Temp\tmph3fdar40\r.sqlite3
+Tool: search_chats
+Local action receipt: complete | C:\Users\nagar\AppData\Local\Temp\tmpgd9hd1wf\source\outputs\actions.sqlite3
+Local action receipt: uncertain | C:\Users\nagar\AppData\Local\Temp\tmpgd9hd1wf\source\outputs\actions.sqlite3
+Local action receipt: c1e308477b924e468fe7f9376f2aa560 | C:\Users\nagar\AppData\Local\Temp\tmpzv49djde\actions.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: fc54fb921254472987f6d4978d82b6ba | C:\Users\nagar\AppData\Local\Temp\tmptu47exs5\outputs\local_actions.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: a9cdf991b86d40cfbdbfc6f0fd934f28 | C:\Users\nagar\AppData\Local\Temp\tmp8js4t5t4\actions.sqlite3
+Local action receipt: 1592ae8e3b424e5f950418d388b5dac5 | C:\Users\nagar\AppData\Local\Temp\tmp_wcj3_gr\actions.sqlite3
+Local action receipt: 28dc63ebb7c74a79aa927968fa477190 | C:\Users\nagar\AppData\Local\Temp\tmpjr81391x\actions.sqlite3
+
+CREATED FILE: note.txt
+Tool: web_search
+Tool: web_search
+Tool: web_search
+Tool: search_documents
+Tool: search_documents
+Tool: web_search
+Tool: search_documents
+Tool: web_search
+Tool: search_documents
+Tool: web_search
+Tool: web_search
+Already applied; returning the saved receipt. No writes.
+Tool: search_documents
+Tool: search_documents
+
+Retrieved 1 unique chunks; selected 1 after reranking.
+
+[TIME START] 2026-10-18T18:09:29+05:30 | LLM tool request
+
+[TIME END] 2026-10-18T18:09:29+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:29+05:30 | LLM tool request
+
+[TIME END] 2026-10-18T18:09:29+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:29+05:30 | LLM request
+
+[TIME END] 2026-10-18T18:09:29+05:30 | LLM request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:29+05:30 | LLM tool request
+GEMINI BUDGET | input ~96 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:29+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+
+[TIME START] 2026-10-18T18:09:29+05:30 | LLM request
+GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: Gemini | Actual model: gemini-test
+
+[TIME END] 2026-10-18T18:09:29+05:30 | LLM request | SUCCESS | 0.00 seconds
+GEMINI BUDGET | input ~226 tokens (estimate) | output <= 512 tokens | context: unknown; no model-context fit guarantee
+Provider: Gemini | Actual model: gemini-test
+
+[TIME START] 2026-10-18T18:09:29+05:30 | LLM tool request
+GEMINI BUDGET | input ~155 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:29+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:29+05:30 | LLM tool request
+GEMINI BUDGET | input ~257 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:29+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+.........................................................................................................E..........................................................................................................................................................2026-10-18 18:09:31.523 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 18:09:33.511 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 18:09:33.862 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 18:09:34.230 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 18:09:34.661 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 18:09:35.058 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+Already applied; returning the saved receipt. No writes.
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp3_2rc054\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp58uy49rh\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmpl84xuivc\receipts.sqlite3
+Local action receipt: two | C:\Users\nagar\AppData\Local\Temp\tmpl84xuivc\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp69n_yyse\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmpgehlktbr\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp0dtyqr6w\receipts.sqlite3
+Tool: search_memory
+Tool: search_documents
+Tool: web_search
+Tool: fetch_web_page
+GROQ BUDGET | input ~96 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+GROQ BUDGET | input ~96 tokens (estimate) | output <= 1696 tokens | context: 2048 (configured provider context)
+GROQ BUDGET | output reduced from 4096 to 1696 to respect configured limits; input was not silently truncated.
+OLLAMA BUDGET | input ~96 tokens (estimate) | output <= 672 tokens | context: 1024 (configured Ollama num_ctx)
+OLLAMA BUDGET | output reduced from 4096 to 672 to respect configured limits; input was not silently truncated.
+GROQ BUDGET | input ~96 tokens (estimate) | output <= 512 tokens | context: unknown; no model-context fit guarantee
+GROQ BUDGET | output reduced from 4096 to 512 to respect configured limits; input was not silently truncated.
+OPENROUTER BUDGET | input ~95 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+OPENROUTER BUDGET | input ~96 tokens (estimate) | output: provider default | context: unknown; no model-context fit guarantee
+GROQ [RATE_LIMIT] HTTP 429: retrying model request (2/2) in 0s.
+GROQ [PROVIDER_TEMPORARY] HTTP 503: retrying model request (2/2) in 1s.
+GROQ BUDGET | input ~176 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+OPENROUTER BUDGET | input ~176 tokens (estimate) | output <= 235929 tokens | context: 262144 (configured provider context)
+OLLAMA BUDGET | input ~176 tokens (estimate) | output <= 512 tokens | context: 4096 (configured Ollama num_ctx)
+PDF files found: 0
+TXT files found: 0
+DOCX files found: 0
+CSV files found: 0
+PDF files found: 0
+PDF files found: 0
+TXT files found: 1
+DOCX files found: 0
+CSV files found: 1
+PDF files found: 0
+
+Reading TXT: notes.txt
+
+Reading CSV: rows.csv
+Total documents loaded: 2
+Total chunks: 2
+
+Creating BM25 index...
+BM25 database saved: C:\Users\nagar\AppData\Local\Temp\tmpxjiaavng\indexes\bm25.pkl
+Chunks saved: C:\Users\nagar\AppData\Local\Temp\tmpxjiaavng\indexes\chunks.pkl
+
+Creating FAISS database...
+FAISS database created successfully!
+========================================
+INDEXING COMPLETED
+========================================
+Total documents : 2
+Total chunks    : 2
+FAISS           : faiss_db/
+BM25            : bm25.pkl
+Chunks          : chunks.pkl
+========================================
+Tool: search_documents
+Tool: search_table
+Tool: search_table
+Tool: search_table
+Tool: search_table
+Tool: search_table
+Tool: search_memory
+Tool: search_table
+Tool: read_file
+Tool: read_file
+Tool: list_files
+Tool: read_file
+Tool: list_files
+Tool: read_file
+Tool: read_file
+Tool: list_files
+Tool: read_file
+Tool: list_files
+Tool: read_file
+Tool: read_file
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~100 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+GROQ [CONNECT_TIMEOUT]: retrying model request (2/2); no action executed from this response.
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~100 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+GROQ [CONNECTION]: retrying model request (2/2); no action executed from this response.
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+OPENROUTER BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: 262144 (configured provider context)
+Provider: openrouter | Model: nvidia/nemotron-3-super-120b-a12b:free | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+OLLAMA BUDGET | input ~163 tokens (estimate) | output <= 512 tokens | context: 4096 (configured Ollama num_ctx)
+Provider: ollama | Model: qwen2.5-coder:7b | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+OLLAMA BUDGET | input ~127 tokens (estimate) | output <= 512 tokens | context: 4096 (configured Ollama num_ctx)
+Ollama compatibility: normalized a registered tool proposal from JSON text; execution remains subject to caller validation.
+Provider: ollama | Model: qwen2.5-coder:7b | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~101 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~100 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~100 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~100 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~129 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+GROQ BUDGET | input ~132 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-18T18:09:36+05:30 | LLM tool request
+
+[TIME END] 2026-10-18T18:09:36+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+.....................................................................
+======================================================================
+ERROR: test_lazy_initialization_close_and_reopen_preserve_checkpoint (test_graph_lifecycle.GraphLifecycleTests.test_lazy_initialization_close_and_reopen_preserve_checkpoint)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\shutil.py", line 701, in _rmtree_unsafe
+    os.unlink(fullname)
+    ~~~~~~~~~^^^^^^^^^^
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\nagar\\AppData\\Local\\Temp\\tmprmesf4m5\\state.sqlite3'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\JeshlaAutoAI\tests\test_graph_lifecycle.py", line 18, in test_lazy_initialization_close_and_reopen_preserve_checkpoint
+    with tempfile.TemporaryDirectory() as folder:
+         ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\tempfile.py", line 971, in __exit__
+    self.cleanup()
+    ~~~~~~~~~~~~^^
+  File "C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\tempfile.py", line 975, in cleanup
+    self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\tempfile.py", line 955, in _rmtree
+    _shutil.rmtree(name, onexc=onexc)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\shutil.py", line 852, in rmtree
+    _rmtree_impl(path, dir_fd, onexc)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\shutil.py", line 705, in _rmtree_unsafe
+    onexc(os.unlink, fullname, err)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nagar\AppData\Local\Programs\Python\Python314\Lib\tempfile.py", line 930, in onexc
+    _os.unlink(path)
+    ~~~~~~~~~~^^^^^^
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\nagar\\AppData\\Local\\Temp\\tmprmesf4m5\\state.sqlite3'
+
+----------------------------------------------------------------------
+Ran 357 tests in 22.161s
+
+FAILED (errors=1)
+Tool: fetch_web_page
+Tool: web_search
+Tool: fetch_web_page

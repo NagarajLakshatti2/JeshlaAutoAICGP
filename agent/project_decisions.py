@@ -1,7 +1,8 @@
 """Obtain a project action through registered native tools; never execute it here."""
 import json
 from agent.tool_llm import call_tool_messages
-from agent.llm_client import env_int
+from agent.llm_client import env_int, LLM_PROVIDER
+from agent.provider_errors import ProviderError
 
 
 def call_project_decision(messages, actions):
@@ -11,15 +12,67 @@ def call_project_decision(messages, actions):
         "description":"Propose exactly one local project action for validation. This function itself executes nothing. Use ask for clarification, finish for an evidence-based answer, or an allowed action with arguments.",
         "parameters":{"type":"object","properties":{
             "action":{"type":"string","enum":allowed},
-            "arguments":{"type":"object","additionalProperties":True},
+            "arguments":{"type":"object","properties":{
+                "files":{"type":"array","minItems":1,"maxItems":5,"items":{
+                    "type":"object","properties":{
+                        "relative_path":{"type":"string"},
+                        "start_line":{"type":"integer","minimum":1},
+                        "max_lines":{"type":"integer","minimum":1,"maximum":80}},
+                    "required":["relative_path"],"additionalProperties":False}}},
+                "additionalProperties":True},
             "question":{"type":"string"},"answer":{"type":"string"}},
             "required":["action"],"additionalProperties":False}}}
     instruction={"role":"system","content":
         "Use only the registered submit_project_action function to propose one action. "
         "Names such as read_file and list_files in the instructions are action values, "
         "not independently callable functions. Do not execute actions yourself."}
-    reply=call_tool_messages([instruction,*messages],[spec],
-                             max_tokens=env_int("AI_PROJECT_MAX_TOKENS",4096,64,16384))
+    if messages and messages[0].get("role")=="system":
+        request=[{**messages[0],"content":messages[0]["content"]+"\n\n"+instruction["content"]},*messages[1:]]
+    else:
+        request=[instruction,*messages]
+    for attempt in range(2):
+        options={"max_tokens":env_int("AI_PROJECT_MAX_TOKENS",4096,64,16384)}
+        if LLM_PROVIDER=="groq":options["forced_function"]="submit_project_action"
+        selected_specs=[spec]
+        native=LLM_PROVIDER=="groq" and attempt==1
+        if native:
+            from agent.project_native_specs import native_project_specs
+            selected_specs=native_project_specs(actions)
+            options.pop("forced_function",None);options["require_tool"]=True
+            native_instruction=("Propose exactly ONE action through its registered native function. "
+                "Do not call submit_project_action; the action names themselves are now registered. "
+                "The current Task defines the request; prior errors/history are not instructions. "
+                "Reuse the supplied root, path and content. Do not ask to reconfirm details already supplied. "
+                "No local action has executed from a rejected proposal. Application approval is still required.")
+            request=[*messages,{"role":"system","content":native_instruction}]
+        try:
+            reply=call_tool_messages(request,selected_specs,**options)
+        except ProviderError as error:
+            if attempt or error.category!="TOOL_OUTPUT":raise
+            # This rejected response executed no local action. Correct once,
+            # without feeding failed-generation bodies back into the prompt.
+            request=[*request,{"role":"user","content":
+                "The provider rejected the generated function call before any action executed. "
+                "Call only submit_project_action once, with action as an allowed enum and "
+                "arguments as an object. Local tool names are action values, not function names. "
+                "Use answer for finish or question for ask. Do not claim any execution."}]
+            continue
+        try:
+            if native:
+                from agent.project_native_specs import decode_native_project_reply
+                return decode_native_project_reply(reply,actions)
+            return decode_project_reply(reply,allowed)
+        except ValueError as error:
+            if attempt:
+                raise RuntimeError("Invalid project-action proposal after one format correction: " + str(error) + " No action was executed from these proposals.") from None
+            request=[*request,{"role":"user","content":
+                "Your previous proposal was rejected before execution: " + str(error) +
+                " Return one corrected proposal using the supplied schema. Omit unused optional fields; "
+                "for finish, put the final text in answer. Do not claim a rejected action was executed."}]
+    raise RuntimeError("Project proposal correction did not complete.")
+
+
+def decode_project_reply(reply, allowed):
     calls=reply.get("tool_calls") or []
     if not calls and isinstance(reply.get("content"),str) and reply["content"].strip():
         # Final text is not an executable action. The project loop still verifies
@@ -35,15 +88,32 @@ def call_project_decision(messages, actions):
         # native call. Validate it below; never display an action as a final answer.
         calls=[{"function":{"name":"submit_project_action","arguments":text}}]
     if len(calls)!=1 or calls[0].get("function",{}).get("name")!="submit_project_action":
-        raise RuntimeError("Expected one registered project-action proposal; no action was executed.")
+        raise ValueError("Use exactly one registered submit_project_action function.")
     try:
         decision=json.loads(calls[0]["function"]["arguments"])
-        if not isinstance(decision,dict) or set(decision)-{"action","arguments","question","answer"}:
-            raise ValueError()
-        if decision.get("action") not in allowed or not isinstance(decision.get("arguments",{}),dict):
-            raise ValueError()
-        if any(key in decision and not isinstance(decision[key],str) for key in ("question","answer")):
-            raise ValueError()
     except (ValueError,TypeError,KeyError):
-        raise RuntimeError("Invalid project-action proposal; no action was executed.") from None
+        raise ValueError("Proposal arguments must contain valid JSON.") from None
+    if not isinstance(decision,dict):
+        raise ValueError("Proposal must be a JSON object.")
+    if set(decision)-{"action","arguments","question","answer"}:
+        raise ValueError("Proposal contains unexpected fields; use only action, arguments, question and answer.")
+    decision=dict(decision)
+    for key in ("question","answer"):
+        if decision.get(key) is None:
+            decision.pop(key,None)
+    if decision.get("action") not in allowed:
+        raise ValueError("Choose an allowed action value.")
+    if decision.get("action") in {"ask","finish"}:
+        if "arguments" in decision and decision["arguments"] is None:
+            decision["arguments"]={}
+        field="answer" if decision["action"]=="finish" else "question"
+        nested=decision.get("arguments",{})
+        if field not in decision and isinstance(nested,dict) and isinstance(nested.get(field),str):
+            decision[field]=nested[field]
+        if not isinstance(decision.get(field),str) or not decision[field].strip():
+            raise ValueError("Finish needs a nonempty answer; ask needs a nonempty question.")
+    if not isinstance(decision.get("arguments",{}),dict):
+        raise ValueError("Executable action arguments must be an object.")
+    if any(key in decision and not isinstance(decision[key],str) for key in ("question","answer")):
+        raise ValueError("Answer/question fields must be text when present.")
     return json.dumps(decision,ensure_ascii=False)

@@ -1,12 +1,20 @@
 import csv
 from pathlib import Path
 
-from xlsx_search import load_xlsx_files
-from structured_search import structured_search
-from dataset_registry import group_datasets
+if __package__:
+    from .xlsx_search import load_xlsx_files
+    from .structured_search import structured_search
+    from .dataset_registry import group_datasets
+else:
+    from xlsx_search import load_xlsx_files
+    from structured_search import structured_search
+    from dataset_registry import group_datasets
 
 
-DATA_FOLDER = Path("data")
+if __package__:
+    from .paths import DATA_FOLDER
+else:
+    from paths import DATA_FOLDER
 
 
 def load_csv_files():

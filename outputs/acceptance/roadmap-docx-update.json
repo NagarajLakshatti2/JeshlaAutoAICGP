@@ -1,0 +1,21 @@
+{
+  "artifact": "D:\\JeshlaAutoAI\\docs\\agentic-ai-roadmap.docx",
+  "existing_content_preserved": true,
+  "diagrams": 3,
+  "tables": 21,
+  "layout_verified": false,
+  "reason": "Packaged renderer unavailable: LibreOffice soffice.exe missing. Previous native Word export stalled. Content/status checks passed; visual preview remains pending.",
+  "workstream_4": {
+    "status": "P - parked",
+    "P": 1,
+    "I": 0,
+    "X": 0
+  },
+  "workstream_5": {
+    "status": "Y - scoped core acceptance",
+    "P": 0,
+    "I": 0,
+    "X": 0
+  },
+  "next": "Workstream 6 controlled actions"
+}

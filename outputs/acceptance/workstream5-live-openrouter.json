@@ -1,0 +1,11 @@
+{
+  "provider": "openrouter",
+  "cases": [
+    {
+      "case": "plan_read",
+      "error": "OPENROUTER [QUOTA_EXHAUSTED] | HTTP 429 | Account quota appears exhausted. Check the dashboard/reset time; no automatic retry. | Attempts: 1. No action was executed from this failed response."
+    }
+  ],
+  "seconds": 1.16,
+  "scope": "Finite synthetic cases with real local temporary files; clarification wording requires manual review, no universal planning or semantic truth guarantee."
+}

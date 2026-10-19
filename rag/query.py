@@ -3,6 +3,10 @@ from functools import lru_cache
 from pathlib import Path
 from xml.sax.saxutils import escape
 
+if not __package__:
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from agent.llm_client import LLM_PROVIDER, call_llm
 
 

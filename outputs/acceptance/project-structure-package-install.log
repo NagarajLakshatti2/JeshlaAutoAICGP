@@ -1,0 +1,26 @@
+Collecting setuptools>=77
+  Using cached setuptools-84.0.0-py3-none-any.whl.metadata (6.6 kB)
+Collecting wheel
+  Using cached wheel-0.48.0-py3-none-any.whl.metadata (2.3 kB)
+Collecting packaging>=24.0 (from wheel)
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Using cached setuptools-84.0.0-py3-none-any.whl (818 kB)
+Using cached wheel-0.48.0-py3-none-any.whl (33 kB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Installing collected packages: setuptools, packaging, wheel
+
+Successfully installed packaging-26.3 setuptools-84.0.0 wheel-0.48.0
+Obtaining file:///C:/Users/nagar/AppData/Local/Temp/jeshla-package-c1ttc724/project
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: jeshla-auto-ai
+  Building editable for jeshla-auto-ai (pyproject.toml): started
+  Building editable for jeshla-auto-ai (pyproject.toml): finished with status 'done'
+  Created wheel for jeshla-auto-ai: filename=jeshla_auto_ai-0.1.0.dev0-0.editable-py3-none-any.whl size=5473 sha256=ed306b55abbbc5eb8e0b077b8307adebf798cc13726f01e34e5f5e29ef8ba3e4
+  Stored in directory: C:\Users\nagar\AppData\Local\Temp\pip-ephem-wheel-cache-ih_krw6e\wheels\c9\6c\9a\535fbc24eed9a3e93b908636df477a99f20ed45d2d6cfd985a
+Successfully built jeshla-auto-ai
+Installing collected packages: jeshla-auto-ai
+Successfully installed jeshla-auto-ai-0.1.0.dev0
+Editable metadata, entry point and source anchor verified

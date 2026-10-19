@@ -1,0 +1,29 @@
+{
+  "provider": "gemini",
+  "status": "Y - sampled real-tool mixed acceptance",
+  "checks": {
+    "all_four_tools_used": true,
+    "scoped_name_retained": true,
+    "other_user_excluded": true,
+    "document_format_retained": true,
+    "returned_document_cited": true,
+    "read_page_cited": true,
+    "exact_page_title_retained": true,
+    "not_incomplete": true
+  },
+  "tool_activity": [
+    "search_memory",
+    "search_documents",
+    "web_search",
+    "fetch_web_page"
+  ],
+  "answer": "The saved project name is **SampleProject99c7d6**. According to [DOC-fa14a8902c76c13d], the report format is **Markdown**.\n\nThe official Playwright Java installation page (https://playwright.dev/java/docs/intro) has the title: **Installation | Playwright Java**.",
+  "page_sources": [
+    {
+      "url": "https://playwright.dev/java/docs/intro",
+      "title": "Installation | Playwright Java"
+    }
+  ],
+  "seconds": 19.49,
+  "scope": "Live configured model; real temporary scoped SQLite and BM25 retrieval plus actual public search/page tools. No private project/history export; no embeddings or production index change. Sample facts/title/source checks only."
+}

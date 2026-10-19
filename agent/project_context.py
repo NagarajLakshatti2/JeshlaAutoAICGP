@@ -7,9 +7,11 @@ import re
 def resolve_project_root(state, default_root):
     # Only explicit user declaration lines can change the boundary. Model output,
     # memories, documents and tool results are never consulted.
+    from agent.runtime.input_evidence import split_uploaded_input
+    question=split_uploaded_input(state.get("question",""))[0]
     declarations = re.findall(
         r"^\s*(?:(?:my\s+)?project\s+root\s+is\s+|PROJECT\s+ROOT\s*:\s*)(.+?)\s*$",
-        state.get("question", ""), flags=re.I | re.M)
+        question, flags=re.I | re.M)
     if len(declarations)>1:
         raise ValueError("Provide one project-root declaration per message.")
     if declarations:

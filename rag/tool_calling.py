@@ -1,3 +1,13 @@
+# Command compatibility: use the shared agent's provider, sessions and tools.
+# Historical implementation below is retained for learning/reference only.
+if __name__ == "__main__":
+    if __package__:
+        from .entrypoints import launch_console
+    else:
+        from entrypoints import launch_console
+    launch_console()
+    raise SystemExit(0)
+
 # ==================================================
 # TOOL CALLING — Phase 1 of Agentic AI
 # ==================================================
@@ -27,15 +37,21 @@ from langchain_community.vectorstores import FAISS
 
 from sentence_transformers import CrossEncoder
 
-from chat_memory import load_chat_history, add_chat
-from csv_search import search_csv, format_csv_results
+if __package__:
+    from .chat_memory import load_chat_history, add_chat
+    from .csv_search import search_csv, format_csv_results
+    from .paths import FAISS_DB_FOLDER, BM25_FILE, CHUNKS_FILE, PROJECT_ROOT
+else:
+    from chat_memory import load_chat_history, add_chat
+    from csv_search import search_csv, format_csv_results
+    from paths import FAISS_DB_FOLDER, BM25_FILE, CHUNKS_FILE, PROJECT_ROOT
 
 
 # ==================================================
 # LOAD ENVIRONMENT
 # ==================================================
 
-load_dotenv()
+load_dotenv(PROJECT_ROOT / ".env")
 
 api_key = os.getenv("OPENROUTER_API_KEY")
 
@@ -76,17 +92,17 @@ embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
 
 print("\nLoading FAISS database...")
 vectorstore = FAISS.load_local(
-    "faiss_db",
+    str(FAISS_DB_FOLDER),
     embeddings,
     allow_dangerous_deserialization=True
 )
 print("FAISS loaded!")
 
 print("\nLoading BM25 database...")
-with open("bm25.pkl", "rb") as f:
+with open(BM25_FILE, "rb") as f:
     bm25 = pickle.load(f)
 
-with open("chunks.pkl", "rb") as f:
+with open(CHUNKS_FILE, "rb") as f:
     chunks = pickle.load(f)
 print(f"BM25 loaded! Chunks: {len(chunks)}")
 

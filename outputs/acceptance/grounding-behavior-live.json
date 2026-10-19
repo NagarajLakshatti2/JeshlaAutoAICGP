@@ -1,0 +1,61 @@
+{
+  "provider": "groq",
+  "status": "P",
+  "completed": 3,
+  "total": 4,
+  "cases": [
+    {
+      "id": "supported",
+      "status": "Y - sampled case",
+      "checks": {
+        "document_read": true,
+        "expected_status": true,
+        "supported_terms": true,
+        "real_ref_cited": true,
+        "no_other_tools": true,
+        "not_incomplete": true
+      },
+      "tool_activity": [
+        "search_documents"
+      ],
+      "answer": {
+        "status": "supported",
+        "answer": "PDF",
+        "sources": [
+          "[DOC-9f4c40dc70bf6772]"
+        ]
+      }
+    },
+    {
+      "id": "missing",
+      "status": "Y - sampled case",
+      "checks": {
+        "document_read": true,
+        "expected_status": true,
+        "supported_terms": true,
+        "real_ref_cited": true,
+        "no_other_tools": true,
+        "not_incomplete": true,
+        "no_invented_numeric_date": true
+      },
+      "tool_activity": [
+        "search_documents"
+      ],
+      "answer": {
+        "status": "unknown",
+        "answer": "",
+        "sources": [
+          "[DOC-2504fdeac7078a21]"
+        ]
+      }
+    },
+    {
+      "id": "conflict",
+      "status": "P",
+      "error": "GROQ [QUOTA_EXHAUSTED] | HTTP 429 | Account quota appears exhausted. Check the dashboard/reset time; no automatic retry. | Attempts: 1. No action was executed from this failed response.",
+      "tool_activity": []
+    }
+  ],
+  "seconds": 6.05,
+  "scope": "Live configured model, real temporary text files and structured document fixtures through actual conversation/citation guards. Retrieval fixtures do not evaluate ranking; no private files/history or web search. Finite behavior samples, not universal factual truth."
+}

@@ -1,0 +1,82 @@
+test_complete_graph_reads_upload_without_jira_or_tools (tests.test_uploaded_routing.UploadedRoutingTests.test_complete_graph_reads_upload_without_jira_or_tools) ... ok
+test_damaged_envelope_stays_out_of_router_intent (tests.test_uploaded_routing.UploadedRoutingTests.test_damaged_envelope_stays_out_of_router_intent) ... ok
+test_file_contents_cannot_request_jira (tests.test_uploaded_routing.UploadedRoutingTests.test_file_contents_cannot_request_jira) ... ok
+test_model_gets_question_and_documents_in_separate_fields (tests.test_uploaded_routing.UploadedRoutingTests.test_model_gets_question_and_documents_in_separate_fields) ... ok
+test_real_jira_and_project_requests_remain_routable (tests.test_uploaded_routing.UploadedRoutingTests.test_real_jira_and_project_requests_remain_routable) ... ok
+test_cancel_keeps_receipt (tests.test_prompt_workflow.WorkflowTests.test_cancel_keeps_receipt) ... ok
+test_defaults_deny_parent_creation (tests.test_prompt_workflow.WorkflowTests.test_defaults_deny_parent_creation) ... ok
+test_existing_parent_title_is_authoritative (tests.test_prompt_workflow.WorkflowTests.test_existing_parent_title_is_authoritative) ... ok
+test_import_draft_cannot_enable_creation_permissions (tests.test_prompt_workflow.WorkflowTests.test_import_draft_cannot_enable_creation_permissions) ... ok
+test_import_other_project_is_blocked (tests.test_prompt_workflow.WorkflowTests.test_import_other_project_is_blocked) ... ok
+test_import_path_outside_project_is_blocked (tests.test_prompt_workflow.WorkflowTests.test_import_path_outside_project_is_blocked) ... ok
+test_lock_prevents_concurrent_session (tests.test_prompt_workflow.WorkflowTests.test_lock_prevents_concurrent_session) ... ok
+test_model_cannot_bind_duplicate (tests.test_prompt_workflow.WorkflowTests.test_model_cannot_bind_duplicate) ... ok
+test_model_cannot_grant_permission (tests.test_prompt_workflow.WorkflowTests.test_model_cannot_grant_permission) ... ok
+test_model_cannot_invent_parent_key (tests.test_prompt_workflow.WorkflowTests.test_model_cannot_invent_parent_key) ... ok
+test_model_parent_link_is_rejected (tests.test_prompt_workflow.WorkflowTests.test_model_parent_link_is_rejected) ... ok
+test_natural_creation_routing (tests.test_prompt_workflow.WorkflowTests.test_natural_creation_routing) ... ok
+test_natural_execution_routing (tests.test_prompt_workflow.WorkflowTests.test_natural_execution_routing) ... ok
+test_null_parent_echo_is_ignored (tests.test_prompt_workflow.WorkflowTests.test_null_parent_echo_is_ignored) ... ok
+test_pending_plan_cannot_be_silently_overwritten (tests.test_prompt_workflow.WorkflowTests.test_pending_plan_cannot_be_silently_overwritten) ... ok
+test_permission_command_invalidates_approval (tests.test_prompt_workflow.WorkflowTests.test_permission_command_invalidates_approval) ... ok
+test_project_switch_does_not_reuse_state (tests.test_prompt_workflow.WorkflowTests.test_project_switch_does_not_reuse_state) ... ok
+test_prompt_plan_approve_complete_without_llm_writes (tests.test_prompt_workflow.WorkflowTests.test_prompt_plan_approve_complete_without_llm_writes) ... ok
+test_run_request_cannot_add_shell_flags (tests.test_prompt_workflow.WorkflowTests.test_run_request_cannot_add_shell_flags) ... ok
+test_state_survives_restart (tests.test_prompt_workflow.WorkflowTests.test_state_survives_restart) ... ok
+test_tampered_plan_no_connection (tests.test_prompt_workflow.WorkflowTests.test_tampered_plan_no_connection) ... ok
+test_unknown_exception_text_is_not_exposed (tests.test_prompt_workflow.WorkflowTests.test_unknown_exception_text_is_not_exposed) ... ok
+test_wrapped_validation_message_is_visible (tests.test_prompt_workflow.WorkflowTests.test_wrapped_validation_message_is_visible) ... ok
+test_wrong_approval_no_connection (tests.test_prompt_workflow.WorkflowTests.test_wrong_approval_no_connection) ... ok
+test_apply_checks_flag_at_boundary (tests.test_conversation_workflow.WorkflowTests.test_apply_checks_flag_at_boundary) ... ok
+test_approved_create_and_repeat_are_idempotent (tests.test_conversation_workflow.WorkflowTests.test_approved_create_and_repeat_are_idempotent) ... ok
+test_changed_requirements_invalidates_approval (tests.test_conversation_workflow.WorkflowTests.test_changed_requirements_invalidates_approval) ... ok
+test_continue_never_applies (tests.test_conversation_workflow.WorkflowTests.test_continue_never_applies) ... ok
+test_failed_revision_invalidates_old_approval (tests.test_conversation_workflow.WorkflowTests.test_failed_revision_invalidates_old_approval) ... ok
+test_failed_search_prevents_generation (tests.test_conversation_workflow.WorkflowTests.test_failed_search_prevents_generation) ... ok
+test_false_flag_blocks_apply (tests.test_conversation_workflow.WorkflowTests.test_false_flag_blocks_apply) ... ok
+test_followup_routes (tests.test_conversation_workflow.WorkflowTests.test_followup_routes) ... ok
+test_incomplete_gherkin_rejected (tests.test_conversation_workflow.WorkflowTests.test_incomplete_gherkin_rejected) ... ok
+test_local_action_requires_explicit_yes (tests.test_conversation_workflow.WorkflowTests.test_local_action_requires_explicit_yes) ... ok
+test_multiple_cases_and_scenarios (tests.test_conversation_workflow.WorkflowTests.test_multiple_cases_and_scenarios) ... ok
+test_new_story_draft_receives_requirements (tests.test_conversation_workflow.WorkflowTests.test_new_story_draft_receives_requirements) ... ok
+test_old_block_allows_new_draft (tests.test_conversation_workflow.WorkflowTests.test_old_block_allows_new_draft) ... ok
+test_run_qa_waits_for_approval (tests.test_conversation_workflow.WorkflowTests.test_run_qa_waits_for_approval) ... ok
+test_schema_not_needed_for_draft (tests.test_conversation_workflow.WorkflowTests.test_schema_not_needed_for_draft) ... ok
+test_story_gate_and_epic_status (tests.test_conversation_workflow.WorkflowTests.test_story_gate_and_epic_status) ... ok
+test_uncertain_receipt_survives_cancel (tests.test_conversation_workflow.WorkflowTests.test_uncertain_receipt_survives_cancel) ... ok
+test_unknown_write_is_not_retried (tests.test_conversation_workflow.WorkflowTests.test_unknown_write_is_not_retried) ... ok
+test_yes_binds_exact_saved_proposal (tests.test_conversation_workflow.WorkflowTests.test_yes_binds_exact_saved_proposal) ... ok
+test_yes_without_plan (tests.test_conversation_workflow.WorkflowTests.test_yes_without_plan) ... ok
+test_failure_visible_to_model (tests.test_conversation_sources.ConversationTests.test_failure_visible_to_model) ... ok
+test_invalid_arguments_do_not_execute (tests.test_conversation_sources.ConversationTests.test_invalid_arguments_do_not_execute) ... ok
+test_large_task_is_rejected_without_model_or_silent_truncation (tests.test_conversation_sources.ConversationTests.test_large_task_is_rejected_without_model_or_silent_truncation) ... ok
+test_memory_reaches_model (tests.test_conversation_sources.ConversationTests.test_memory_reaches_model) ... ok
+test_mixed_sources (tests.test_conversation_sources.ConversationTests.test_mixed_sources) ... ok
+test_rag_retrieved_before_answer (tests.test_conversation_sources.ConversationTests.test_rag_retrieved_before_answer) ... ok
+test_repeated_search_not_executed (tests.test_conversation_sources.ConversationTests.test_repeated_search_not_executed) ... ok
+test_web_requires_real_search (tests.test_conversation_sources.ConversationTests.test_web_requires_real_search) ... ok
+test_write_action_rejected (tests.test_conversation_sources.ConversationTests.test_write_action_rejected) ... ok
+test_documents_and_mentions_cannot_change_root (tests.test_project_context.RootTests.test_documents_and_mentions_cannot_change_root) ... ok
+test_explicit_root_overrides_only_this_state (tests.test_project_context.RootTests.test_explicit_root_overrides_only_this_state) ... ok
+test_invalid_or_multiple_declarations_rejected (tests.test_project_context.RootTests.test_invalid_or_multiple_declarations_rejected) ... ok
+test_quoted_path_and_colon_command (tests.test_project_context.RootTests.test_quoted_path_and_colon_command) ... ok
+test_excel_formula_only_requires_cached_values (tests.test_attachments.AttachmentTests.test_excel_formula_only_requires_cached_values) ... ok
+test_excel_values_and_limits (tests.test_attachments.AttachmentTests.test_excel_values_and_limits) ... ok
+test_memory_commands_do_not_absorb_attachment (tests.test_attachments.AttachmentTests.test_memory_commands_do_not_absorb_attachment) ... ok
+test_optional_docx_extracts_paragraphs_and_tables (tests.test_attachments.AttachmentTests.test_optional_docx_extracts_paragraphs_and_tables) ... ok
+test_optional_pdf_blank_has_no_readable_text (tests.test_attachments.AttachmentTests.test_optional_pdf_blank_has_no_readable_text) ... ok
+test_rejected_uploads (tests.test_attachments.AttachmentTests.test_rejected_uploads) ... ok
+test_text_limits_and_name_are_explicit (tests.test_attachments.AttachmentTests.test_text_limits_and_name_are_explicit) ... ok
+test_utf8_bom_is_supported (tests.test_attachments.AttachmentTests.test_utf8_bom_is_supported) ... ok
+
+----------------------------------------------------------------------
+Ran 70 tests in 1.363s
+
+OK
+Already applied; returning the saved receipt. No writes.
+Tool: web_search
+Tool: search_documents
+Tool: web_search
+Tool: search_documents
+Tool: web_search
+Tool: web_search

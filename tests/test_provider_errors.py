@@ -61,7 +61,27 @@ class ProviderErrorTests(unittest.TestCase):
     def test_text_clients_use_shared_diagnostics(self):
         from agent import llm_client as llm
         for client in [llm.call_groq,llm.call_openrouter,llm.call_ollama]:
-            with patch.dict("os.environ",{"GROQ_API_KEY":"offline-fake","GROQ_MODEL":"test-model"}),patch.object(llm,"OPENROUTER_API_KEY","offline-fake"),patch("requests.post",return_value=response(401)) as post:
+            with patch.dict("os.environ",{"GROQ_API_KEY":"offline-fake","GROQ_MODEL":"test-model","OPENROUTER_BUDGET_MODEL":"","GROQ_BUDGET_MODEL":""}),patch.object(llm,"OPENROUTER_API_KEY","offline-fake"),patch("requests.post",return_value=response(401)) as post:
                 with self.assertRaises(ProviderError) as caught:client("offline test")
                 self.assertEqual(caught.exception.category,"AUTHENTICATION")
                 self.assertEqual(post.call_count,1)
+
+
+class RateWindowTests(unittest.TestCase):
+    def test_billing_upgrade_url_does_not_turn_minute_limit_into_quota(self):
+        item=response(429,"rate_limit_exceeded","Tokens per minute (TPM) exceeded. Upgrade at https://console.example/settings/billing?secret=value")
+        error=response_error("groq",item)
+        self.assertEqual(error.category,"RATE_LIMIT")
+        self.assertNotIn("secret",str(error))
+
+    def test_daily_window_remains_quota(self):
+        for message in ["Tokens per day (TPD) exceeded", "Daily limit exceeded"]:
+            self.assertEqual(response_error("groq",response(429,message=message)).category,"QUOTA_EXHAUSTED")
+
+    def test_minute_error_without_explicit_short_delay_is_not_retried(self):
+        item=response(429,"rate_limit_exceeded","Tokens per minute reached. https://console.example/billing")
+        with patch("requests.post",return_value=item) as post:
+            with self.assertRaises(ProviderError) as caught:
+                request_model("groq","https://example.invalid",headers={},json={},timeout=(10,90))
+        self.assertEqual(caught.exception.category,"RATE_LIMIT")
+        self.assertEqual(post.call_count,1)

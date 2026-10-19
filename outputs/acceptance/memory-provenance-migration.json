@@ -1,0 +1,9 @@
+{
+  "status": "Y",
+  "existing_rows_preserved": 5,
+  "values_and_dates_unchanged": true,
+  "source_counts": {
+    "legacy_unknown": 5
+  },
+  "backup": "outputs\\memory\\backups\\before-provenance-20261017T094101Z.sqlite3"
+}

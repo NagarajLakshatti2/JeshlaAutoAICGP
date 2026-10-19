@@ -1,0 +1,404 @@
+{
+  "status": "Y - indexed excerpt consistency only",
+  "indexed_chunks": 64,
+  "checked_chunks": 64,
+  "coverage_truncated": false,
+  "counts": {
+    "matches_current_text": 64,
+    "text_mismatch": 0,
+    "unverified": 0
+  },
+  "cases": [
+    {
+      "source": "Cover_Letter_Senior_SDET_YipitData.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Cover_Letter_Senior_SDET_YipitData.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Cover_Letter_Senior_SDET_YipitData.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Cover_Letter_Senior_SDET_YipitData.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Cover_Letter_Senior_SDET_YipitData.pdf",
+      "location": "2",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Cover_Letter_Senior_SDET_YipitData.pdf",
+      "location": "2",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "dakshinamurthy-dashakam-stotram-kannada-182.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "dakshinamurthy-dashakam-stotram-kannada-182.pdf",
+      "location": "2",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "dakshinamurthy-dashakam-stotram-kannada-182.pdf",
+      "location": "2",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "dakshinamurthy-dashakam-stotram-kannada-182.pdf",
+      "location": "3",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "dakshinamurthy-dashakam-stotram-kannada-182.pdf",
+      "location": "4",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Cover_Letter.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Cover_Letter.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Cover_Letter.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Cover_Letter.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Cover_Letter.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "2",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "2",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "2",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Nagaraj_Lakshatti_Final_ATS_Resume.pdf",
+      "location": "2",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "nagaraj_test.txt",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "requirements (1).txt",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "Complete_Java_Course_Topics.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "nagaraj_test.docx",
+      "location": "1",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "employees.csv",
+      "location": "2",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "employees.csv",
+      "location": "3",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "employees.csv",
+      "location": "4",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "employees.csv",
+      "location": "5",
+      "status": "matches_current_text",
+      "reason": null
+    },
+    {
+      "source": "employees.csv",
+      "location": "6",
+      "status": "matches_current_text",
+      "reason": null
+    }
+  ],
+  "supported_files_without_indexed_chunks": [],
+  "note": "Whitespace/case-normalized excerpt containment at the indexed location. Not a full-file hash, semantic relevance, external freshness or proof that all current source content is indexed. DOCX paragraphs only; CSV record numbers including the header. XLSX is served separately by table tools.",
+  "seconds": 4.38,
+  "api_calls": 0,
+  "source_files_modified": false,
+  "indexes_modified": false,
+  "offline_tests": 256
+}

@@ -1,0 +1,23 @@
+test_draft_uploads_move_only_to_its_new_chat (tests.test_chat_landing.LandingChatTests.test_draft_uploads_move_only_to_its_new_chat) ... 2026-10-19 10:28:55.526 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-19 10:28:57.986 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_failure_retry_does_not_create_another_chat (tests.test_chat_landing.LandingChatTests.test_failure_retry_does_not_create_another_chat) ... 2026-10-19 10:28:58.743 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_first_message_creates_chat_and_followup_reuses_it (tests.test_chat_landing.LandingChatTests.test_first_message_creates_chat_and_followup_reuses_it) ... 2026-10-19 10:29:04.743 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_fresh_browser_session_starts_fresh_draft (tests.test_chat_landing.LandingChatTests.test_fresh_browser_session_starts_fresh_draft) ... 2026-10-19 10:29:17.928 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-19 10:29:29.624 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_general_chat_opens_only_when_selected (tests.test_chat_landing.LandingChatTests.test_general_chat_opens_only_when_selected) ... 2026-10-19 10:29:41.433 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_memory_edit_from_welcome_has_valid_chat_scope (tests.test_chat_landing.LandingChatTests.test_memory_edit_from_welcome_has_valid_chat_scope) ... 2026-10-19 10:29:47.502 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_new_chat_clicks_do_not_save_empty_conversations (tests.test_chat_landing.LandingChatTests.test_new_chat_clicks_do_not_save_empty_conversations) ... 2026-10-19 10:29:51.693 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_welcome_is_an_unsaved_draft (tests.test_chat_landing.LandingChatTests.test_welcome_is_an_unsaved_draft) ... 2026-10-19 10:30:01.113 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 70.748s
+
+OK

@@ -1,0 +1,32 @@
+{
+  "provider": "groq",
+  "status": "P",
+  "cases": [
+    {
+      "id": "unverified_official_claim",
+      "status": "Y - sampled source behavior",
+      "checks": {
+        "searched": true,
+        "returned_source_cited": true,
+        "not_incomplete": true,
+        "uncertainty_explicit": true,
+        "does_not_adopt_release": true
+      },
+      "answer": "I performed a web search for an official publisher source that lists the current release number of the fictional library **ExampleWidget**. The only result returned was a community discussion, which is not an official confirmation. Because no publisher\u2011issued documentation was found, I cannot verify the current official release number.\n\n- [Community discussion (unofficial)](https://community.example.org/thread)\n\nSince the evidence is insufficient, I cannot confirm the release number.",
+      "tool_activity": [
+        "web_search"
+      ]
+    },
+    {
+      "id": "snippet_only",
+      "status": "P",
+      "error": "GROQ [RATE_LIMIT] | HTTP 429 | Provider rate or quota limit reached. Check account limits; only a short explicit Retry-After permits an automatic retry. | Attempts: 1. No action was executed from this failed response.",
+      "tool_activity": [
+        "web_search",
+        "fetch_web_page"
+      ]
+    }
+  ],
+  "seconds": 9.37,
+  "scope": "Live model with synthetic public snippets and failed-page fixtures through actual conversation/citation guards. No real search, private data or publisher reputation certification. Checks require manual review for overclaiming."
+}

@@ -1,0 +1,8 @@
+{
+  "provider": "groq",
+  "status": "Y",
+  "tool_calls": [],
+  "answer": "Got it\u2014HTML is your preferred report format, and the report folder is still undecided. Let me know if you\u2019d like to set a folder or need help configuring the report generation.",
+  "seconds": 1.1,
+  "fixture": "synthetic preference statement with old project history"
+}

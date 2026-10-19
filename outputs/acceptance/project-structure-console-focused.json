@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "tests": 31,
+  "seconds": 7.309,
+  "modules": [
+    "test_chat_commands",
+    "test_context_summary",
+    "test_graph_lifecycle",
+    "test_package_compatibility"
+  ],
+  "full_suite": "interrupted before final result; not counted as passed"
+}

@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-19",
+  "status": "passed_for_tested_scope",
+  "regression_tests": 56,
+  "regression_seconds": 78.718,
+  "new_landing_tests": 10,
+  "browser_cases": [
+    {
+      "engine": "chrome",
+      "width": 360,
+      "status": "passed"
+    },
+    {
+      "engine": "edge",
+      "width": 1440,
+      "status": "passed"
+    }
+  ],
+  "behavior": [
+    "Fresh browser welcome screen is an unsaved draft, separate from General chat.",
+    "First nonblank send creates one chat with a message-based title, up to 100 characters; full question remains saved.",
+    "General chat opens when selected. Repeated New chat clicks do not save empty chats.",
+    "Draft uploads migrate to their saved chat; retry and rerender do not create duplicate chats.",
+    "Native attachment and provider-info popovers sit in the top-right row beside the retained options menu.",
+    "Viewer toolbar mode and disabled source watching remove developer/file-change prompts."
+  ],
+  "implementation_packages": [
+    "agent/interfaces",
+    "agent/storage"
+  ],
+  "restart_required": true,
+  "limits": "Browser acceptance uses synthetic fixtures in desktop Chrome/Edge, including phone viewport emulation. No real provider requests or user-history/settings edits except the requested Streamlit toolbar configuration. The earlier 414-test full suite predates this follow-up; latest verification here is the focused 56-test run."
+}

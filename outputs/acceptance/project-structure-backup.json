@@ -1,0 +1,45 @@
+{
+  "status": "verified",
+  "backup_path": "D:\\JeshlaAutoAI_Backups\\before-structure-20261018-175619",
+  "source": "D:\\JeshlaAutoAI",
+  "files": 928,
+  "bytes": 33163450,
+  "exclusions": [
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "__pycache__"
+  ],
+  "private_acl": true,
+  "database_checks": [
+    {
+      "path": "agent_memory.db",
+      "integrity_ok": true
+    },
+    {
+      "path": "outputs/local_actions.sqlite3",
+      "integrity_ok": true
+    },
+    {
+      "path": "outputs/memory/backups/before-provenance-20261017T094101Z.sqlite3",
+      "integrity_ok": true
+    },
+    {
+      "path": "outputs/memory/chats.sqlite3",
+      "integrity_ok": true
+    },
+    {
+      "path": "outputs/memory/long_term_memory.sqlite3",
+      "integrity_ok": true
+    },
+    {
+      "path": "rag/chroma_db/chroma.sqlite3",
+      "integrity_ok": true
+    }
+  ],
+  "note": "Local private backup, not for GitHub; no user processes stopped. Virtual environment is rebuildable and excluded.",
+  "restore_copy_hash_verified": true,
+  "restored_files": 928,
+  "restore_note": "All restored file hashes matched; no application launched. Integrity inspection touched only backup SHM; original unchanged SHM was recopied and reverified."
+}

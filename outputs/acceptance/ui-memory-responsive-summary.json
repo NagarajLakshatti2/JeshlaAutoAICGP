@@ -1,0 +1,30 @@
+{
+  "functional_tests": 14,
+  "functional_seconds": 52.753,
+  "functional_guard": "outer offline guard",
+  "responsive_cases": 8,
+  "engines": [
+    "installed desktop Chrome",
+    "installed desktop Edge"
+  ],
+  "viewport_widths": [
+    360,
+    390,
+    768,
+    1440
+  ],
+  "verified": [
+    "no page horizontal overflow",
+    "memory control fits viewport",
+    "long memory text wraps",
+    "sidebar-open page fit"
+  ],
+  "not_verified": [
+    "physical phones/tablets",
+    "iOS Safari/WebKit",
+    "Firefox",
+    "every possible screen/browser state"
+  ],
+  "user_state_modified": false,
+  "fixture_server": "stopped after checks"
+}

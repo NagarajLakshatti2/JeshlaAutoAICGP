@@ -1,0 +1,77 @@
+
+================================
+LANGGRAPH AI AGENT
+================================
+Model provider: ollama
+Legacy input: END submits, EXIT quits.
+REMEMBER key = fact saves; FORGET key removes; SHOW MEMORY lists facts. WORKFLOW HELP explains Jira prompts.
+SESSION name switches chat history; SESSION CURRENT shows the active session.
+Saved facts are shared within the selected user/memory space. Jira plans remain scoped to their configured Jira project.
+NEW CHAT [title] / NEW SESSION [title]; LIST CHATS; OPEN CHAT id. Titles: max 80 characters.
+Conversation session: smoke | User: acceptance-user | Shared memory space: acceptance
+New conversation session started.
+Enter your message. END on a separate line submits; EXIT quits.
+
+[TIME START] 2026-10-18T20:48:03+05:30 | Complete agent workflow
+
+[TIME START] 2026-10-18T20:48:04+05:30 | Router node
+
+🧭 ROUTER NODE
+
+[TIME END] 2026-10-18T20:48:04+05:30 | Router node | SUCCESS | 0.00 seconds
+➡️ Routing to: memory_command
+
+[TIME END] 2026-10-18T20:48:05+05:30 | Complete agent workflow | SUCCESS | 1.49 seconds
+
+========== FINAL ANSWER ==========
+
+Route Used: memory_command
+
+AI Response:
+
+Saved memory: console_fact. Use the same key to update it.
+Enter your message. END on a separate line submits; EXIT quits.
+
+[TIME START] 2026-10-18T20:48:05+05:30 | Complete agent workflow
+
+[TIME START] 2026-10-18T20:48:05+05:30 | Router node
+
+🧭 ROUTER NODE
+
+[TIME END] 2026-10-18T20:48:05+05:30 | Router node | SUCCESS | 0.00 seconds
+➡️ Routing to: memory
+
+[TIME END] 2026-10-18T20:48:05+05:30 | Complete agent workflow | SUCCESS | 0.85 seconds
+
+========== FINAL ANSWER ==========
+
+Route Used: memory
+
+AI Response:
+
+- console_fact: "console works" | metadata: {"source_kind": "user_statement", "source_ref": "REMEMBER command", "verification_status": "unverified", "created_at": "2026-10-18T15:18:04+00:00", "updated_at": "2026-10-18T15:18:04+00:00"}
+Enter your message. END on a separate line submits; EXIT quits.
+Session closed. Your saved chats remain available.
+2026-10-18 20:48:37.686 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+    app=AppTest.from_file('streamlit_app.py',default_timeout=20).run()
+  File "D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 568, in run
+    return self._tree.run(timeout=timeout)
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py", line 2693, in run
+    return self._runner._run(widget_states, timeout=timeout)
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\testing\v1\app_test.py", line 501, in _run
+    self._tree = script_runner.run(
+                 ~~~~~~~~~~~~~~~~~^
+        widget_state, self.query_params, timeout, self._page_hash
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 183, in run
+    require_widgets_deltas(self, timeout)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\testing\v1\local_script_runner.py", line 246, in require_widgets_deltas
+    raise RuntimeError(err_string)
+RuntimeError: AppTest script run timed out after 20(s)

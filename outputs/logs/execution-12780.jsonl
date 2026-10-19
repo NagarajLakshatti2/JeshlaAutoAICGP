@@ -1,0 +1,14 @@
+{"time": "2026-10-19T05:24:47.842817+00:00", "event": "stage_started", "pid": 12780, "span": "aeae200cacf2445a9e57de048b644308", "stage": "Router node", "mode": "runtime"}
+{"time": "2026-10-19T05:24:47.860499+00:00", "event": "stage_finished", "pid": 12780, "span": "aeae200cacf2445a9e57de048b644308", "stage": "Router node", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 0.018}
+{"time": "2026-10-19T05:24:47.863577+00:00", "event": "stage_started", "pid": 12780, "span": "dcabaa5acc46484496c47b1e71edbe94", "stage": "Router node", "mode": "runtime"}
+{"time": "2026-10-19T05:24:47.865940+00:00", "event": "stage_finished", "pid": 12780, "span": "dcabaa5acc46484496c47b1e71edbe94", "stage": "Router node", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 0.002}
+{"time": "2026-10-19T05:24:47.871506+00:00", "event": "stage_started", "pid": 12780, "span": "9ba8779b8dd34f11b7690d10cb2f553b", "stage": "Router node", "mode": "runtime"}
+{"time": "2026-10-19T05:24:47.874207+00:00", "event": "stage_finished", "pid": 12780, "span": "9ba8779b8dd34f11b7690d10cb2f553b", "stage": "Router node", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 0.003}
+{"time": "2026-10-19T05:24:47.878790+00:00", "event": "stage_started", "pid": 12780, "span": "70dbe7f95c1245e1b711fe3e1b717002", "stage": "Router node", "mode": "runtime"}
+{"time": "2026-10-19T05:24:47.881729+00:00", "event": "stage_finished", "pid": 12780, "span": "70dbe7f95c1245e1b711fe3e1b717002", "stage": "Router node", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 0.003}
+{"time": "2026-10-19T05:24:47.887631+00:00", "event": "stage_started", "pid": 12780, "span": "c2c7c30f23fe4cf7ac01f77d198d1605", "stage": "Router node", "mode": "runtime"}
+{"time": "2026-10-19T05:24:47.891076+00:00", "event": "stage_finished", "pid": 12780, "span": "c2c7c30f23fe4cf7ac01f77d198d1605", "stage": "Router node", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 0.004}
+{"time": "2026-10-19T05:24:47.899079+00:00", "event": "stage_started", "pid": 12780, "span": "079ca4e8652b4fcaba6aadd1255fed16", "stage": "Router node", "mode": "runtime"}
+{"time": "2026-10-19T05:24:47.903904+00:00", "event": "stage_finished", "pid": 12780, "span": "079ca4e8652b4fcaba6aadd1255fed16", "stage": "Router node", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 0.005}
+{"time": "2026-10-19T05:24:47.908194+00:00", "event": "stage_started", "pid": 12780, "span": "86ea89acd5384b05ad4ea76bd5cf5e2d", "stage": "Router node", "mode": "runtime"}
+{"time": "2026-10-19T05:24:47.911472+00:00", "event": "stage_finished", "pid": 12780, "span": "86ea89acd5384b05ad4ea76bd5cf5e2d", "stage": "Router node", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 0.003}

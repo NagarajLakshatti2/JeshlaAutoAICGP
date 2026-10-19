@@ -1,0 +1,802 @@
+{"time": "2026-10-19T03:45:48.073204+00:00", "event": "run_started"}
+{"time": "2026-10-19T03:45:48.217385+00:00", "event": "discovery_started"}
+{"time": "2026-10-19T03:45:51.711211+00:00", "event": "discovery_finished", "test_count": 399}
+{"time": "2026-10-19T03:45:51.711568+00:00", "event": "test_started", "test": "test_action_policy.BrowserFreshProcessTests.test_browser_hard_exit_after_effect_blocks_restart"}
+{"time": "2026-10-19T03:45:52.680912+00:00", "event": "test_finished", "test": "test_action_policy.BrowserFreshProcessTests.test_browser_hard_exit_after_effect_blocks_restart", "status": "passed", "duration_seconds": 0.969}
+{"time": "2026-10-19T03:45:52.680999+00:00", "event": "test_started", "test": "test_action_policy.BrowserFreshProcessTests.test_completed_and_declined_browser_proposals_survive_new_process"}
+{"time": "2026-10-19T03:45:53.719595+00:00", "event": "test_finished", "test": "test_action_policy.BrowserFreshProcessTests.test_completed_and_declined_browser_proposals_survive_new_process", "status": "passed", "duration_seconds": 1.039}
+{"time": "2026-10-19T03:45:53.719852+00:00", "event": "test_started", "test": "test_action_policy.FreshProcessReceiptTests.test_all_action_kinds_return_completed_receipt_in_new_process"}
+{"time": "2026-10-19T03:45:58.802989+00:00", "event": "test_finished", "test": "test_action_policy.FreshProcessReceiptTests.test_all_action_kinds_return_completed_receipt_in_new_process", "status": "passed", "duration_seconds": 5.083}
+{"time": "2026-10-19T03:45:58.803057+00:00", "event": "test_started", "test": "test_action_policy.FreshProcessReceiptTests.test_hard_process_exit_blocks_all_action_kinds_without_reexecution"}
+{"time": "2026-10-19T03:46:03.809146+00:00", "event": "test_finished", "test": "test_action_policy.FreshProcessReceiptTests.test_hard_process_exit_blocks_all_action_kinds_without_reexecution", "status": "passed", "duration_seconds": 5.006}
+{"time": "2026-10-19T03:46:03.809290+00:00", "event": "test_started", "test": "test_action_policy.PolicyMatrixTests.test_all_controlled_kinds_preserve_uncertain_outcome_after_cancel"}
+{"time": "2026-10-19T03:46:03.917804+00:00", "event": "test_finished", "test": "test_action_policy.PolicyMatrixTests.test_all_controlled_kinds_preserve_uncertain_outcome_after_cancel", "status": "passed", "duration_seconds": 0.109}
+{"time": "2026-10-19T03:46:03.918107+00:00", "event": "test_started", "test": "test_action_policy.PolicyMatrixTests.test_all_controlled_kinds_require_approval_and_return_saved_receipt"}
+{"time": "2026-10-19T03:46:04.001876+00:00", "event": "test_finished", "test": "test_action_policy.PolicyMatrixTests.test_all_controlled_kinds_require_approval_and_return_saved_receipt", "status": "passed", "duration_seconds": 0.084}
+{"time": "2026-10-19T03:46:04.001960+00:00", "event": "test_started", "test": "test_action_policy.PolicyMatrixTests.test_browser_dispatch_requires_decision_for_every_controlled_kind"}
+{"time": "2026-10-19T03:46:04.192098+00:00", "event": "test_finished", "test": "test_action_policy.PolicyMatrixTests.test_browser_dispatch_requires_decision_for_every_controlled_kind", "status": "passed", "duration_seconds": 0.19}
+{"time": "2026-10-19T03:46:04.192184+00:00", "event": "test_started", "test": "test_action_policy.PolicyMatrixTests.test_credentials_and_unregistered_commands_are_rejected"}
+{"time": "2026-10-19T03:46:04.195437+00:00", "event": "test_finished", "test": "test_action_policy.PolicyMatrixTests.test_credentials_and_unregistered_commands_are_rejected", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:04.195496+00:00", "event": "test_started", "test": "test_action_policy.PolicyMatrixTests.test_every_core_project_tool_is_classified_and_implemented"}
+{"time": "2026-10-19T03:46:04.195574+00:00", "event": "test_finished", "test": "test_action_policy.PolicyMatrixTests.test_every_core_project_tool_is_classified_and_implemented", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:04.195598+00:00", "event": "test_started", "test": "test_action_policy.PolicyMatrixTests.test_file_read_write_and_report_paths_cannot_escape_root"}
+{"time": "2026-10-19T03:46:04.198592+00:00", "event": "test_finished", "test": "test_action_policy.PolicyMatrixTests.test_file_read_write_and_report_paths_cannot_escape_root", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:04.198649+00:00", "event": "test_started", "test": "test_action_policy.PolicyMatrixTests.test_real_python_script_and_command_replay_does_not_execute_again"}
+{"time": "2026-10-19T03:46:04.388809+00:00", "event": "test_finished", "test": "test_action_policy.PolicyMatrixTests.test_real_python_script_and_command_replay_does_not_execute_again", "status": "passed", "duration_seconds": 0.19}
+{"time": "2026-10-19T03:46:04.388874+00:00", "event": "test_started", "test": "test_action_policy.PolicyMatrixTests.test_unclassified_or_duplicate_conversation_tool_never_reaches_model"}
+{"time": "2026-10-19T03:46:04.390294+00:00", "event": "test_finished", "test": "test_action_policy.PolicyMatrixTests.test_unclassified_or_duplicate_conversation_tool_never_reaches_model", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:04.390367+00:00", "event": "test_started", "test": "test_action_policy.ReceiptPersistenceFailureTests.test_failed_completion_and_cleanup_writes_leave_running_claim"}
+{"time": "2026-10-19T03:46:04.403002+00:00", "event": "test_finished", "test": "test_action_policy.ReceiptPersistenceFailureTests.test_failed_completion_and_cleanup_writes_leave_running_claim", "status": "passed", "duration_seconds": 0.013}
+{"time": "2026-10-19T03:46:04.403101+00:00", "event": "test_started", "test": "test_application_paths.ApplicationPathTests.test_anchor_import_ignores_cwd_and_has_no_file_side_effects"}
+{"time": "2026-10-19T03:46:04.535416+00:00", "event": "test_finished", "test": "test_application_paths.ApplicationPathTests.test_anchor_import_ignores_cwd_and_has_no_file_side_effects", "status": "passed", "duration_seconds": 0.132}
+{"time": "2026-10-19T03:46:04.535485+00:00", "event": "test_started", "test": "test_application_paths.ApplicationPathTests.test_user_project_boundary_does_not_redirect_application_state"}
+{"time": "2026-10-19T03:46:04.538655+00:00", "event": "test_finished", "test": "test_application_paths.ApplicationPathTests.test_user_project_boundary_does_not_redirect_application_state", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:04.538739+00:00", "event": "test_started", "test": "test_archive_search.ArchiveSearchTests.test_bounds_and_literal_parameters"}
+{"time": "2026-10-19T03:46:04.596829+00:00", "event": "test_finished", "test": "test_archive_search.ArchiveSearchTests.test_bounds_and_literal_parameters", "status": "passed", "duration_seconds": 0.058}
+{"time": "2026-10-19T03:46:04.596887+00:00", "event": "test_started", "test": "test_archive_search.ArchiveSearchTests.test_fake_model_observes_real_archive_evidence"}
+{"time": "2026-10-19T03:46:04.647123+00:00", "event": "test_finished", "test": "test_archive_search.ArchiveSearchTests.test_fake_model_observes_real_archive_evidence", "status": "passed", "duration_seconds": 0.05}
+{"time": "2026-10-19T03:46:04.647197+00:00", "event": "test_started", "test": "test_archive_search.ArchiveSearchTests.test_restart_and_output_bound"}
+{"time": "2026-10-19T03:46:04.738971+00:00", "event": "test_finished", "test": "test_archive_search.ArchiveSearchTests.test_restart_and_output_bound", "status": "passed", "duration_seconds": 0.092}
+{"time": "2026-10-19T03:46:04.739048+00:00", "event": "test_started", "test": "test_archive_search.ArchiveSearchTests.test_scope_citations_and_answer_search"}
+{"time": "2026-10-19T03:46:04.777748+00:00", "event": "test_finished", "test": "test_archive_search.ArchiveSearchTests.test_scope_citations_and_answer_search", "status": "passed", "duration_seconds": 0.039}
+{"time": "2026-10-19T03:46:04.777848+00:00", "event": "test_started", "test": "test_attachments.AttachmentTests.test_excel_formula_only_requires_cached_values"}
+{"time": "2026-10-19T03:46:04.790129+00:00", "event": "test_finished", "test": "test_attachments.AttachmentTests.test_excel_formula_only_requires_cached_values", "status": "passed", "duration_seconds": 0.012}
+{"time": "2026-10-19T03:46:04.790226+00:00", "event": "test_started", "test": "test_attachments.AttachmentTests.test_excel_values_and_limits"}
+{"time": "2026-10-19T03:46:04.798884+00:00", "event": "test_finished", "test": "test_attachments.AttachmentTests.test_excel_values_and_limits", "status": "passed", "duration_seconds": 0.009}
+{"time": "2026-10-19T03:46:04.798933+00:00", "event": "test_started", "test": "test_attachments.AttachmentTests.test_memory_commands_do_not_absorb_attachment"}
+{"time": "2026-10-19T03:46:04.799303+00:00", "event": "test_finished", "test": "test_attachments.AttachmentTests.test_memory_commands_do_not_absorb_attachment", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:04.799334+00:00", "event": "test_started", "test": "test_attachments.AttachmentTests.test_optional_docx_extracts_paragraphs_and_tables"}
+{"time": "2026-10-19T03:46:04.837589+00:00", "event": "test_finished", "test": "test_attachments.AttachmentTests.test_optional_docx_extracts_paragraphs_and_tables", "status": "passed", "duration_seconds": 0.038}
+{"time": "2026-10-19T03:46:04.837653+00:00", "event": "test_started", "test": "test_attachments.AttachmentTests.test_optional_pdf_blank_has_no_readable_text"}
+{"time": "2026-10-19T03:46:04.957552+00:00", "event": "test_finished", "test": "test_attachments.AttachmentTests.test_optional_pdf_blank_has_no_readable_text", "status": "passed", "duration_seconds": 0.12}
+{"time": "2026-10-19T03:46:04.957608+00:00", "event": "test_started", "test": "test_attachments.AttachmentTests.test_rejected_uploads"}
+{"time": "2026-10-19T03:46:04.958952+00:00", "event": "test_finished", "test": "test_attachments.AttachmentTests.test_rejected_uploads", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:04.959019+00:00", "event": "test_started", "test": "test_attachments.AttachmentTests.test_text_limits_and_name_are_explicit"}
+{"time": "2026-10-19T03:46:04.959389+00:00", "event": "test_finished", "test": "test_attachments.AttachmentTests.test_text_limits_and_name_are_explicit", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:04.959445+00:00", "event": "test_started", "test": "test_attachments.AttachmentTests.test_utf8_bom_is_supported"}
+{"time": "2026-10-19T03:46:04.959554+00:00", "event": "test_finished", "test": "test_attachments.AttachmentTests.test_utf8_bom_is_supported", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:04.959621+00:00", "event": "test_started", "test": "test_backup_recovery.BackupRecoveryTests.test_stopped_copy_restores_facts_chats_summaries_and_receipts"}
+{"time": "2026-10-19T03:46:05.086059+00:00", "event": "test_finished", "test": "test_backup_recovery.BackupRecoveryTests.test_stopped_copy_restores_facts_chats_summaries_and_receipts", "status": "passed", "duration_seconds": 0.126}
+{"time": "2026-10-19T03:46:05.086164+00:00", "event": "test_started", "test": "test_browser_action_ui.BrowserActionUITests.test_decline_has_no_file_effect"}
+{"time": "2026-10-19T03:46:05.962625+00:00", "event": "test_finished", "test": "test_browser_action_ui.BrowserActionUITests.test_decline_has_no_file_effect", "status": "passed", "duration_seconds": 0.876}
+{"time": "2026-10-19T03:46:05.962690+00:00", "event": "test_started", "test": "test_browser_action_ui.BrowserActionUITests.test_explicit_approval_and_rerender_execute_once"}
+{"time": "2026-10-19T03:46:06.478055+00:00", "event": "test_finished", "test": "test_browser_action_ui.BrowserActionUITests.test_explicit_approval_and_rerender_execute_once", "status": "passed", "duration_seconds": 0.515}
+{"time": "2026-10-19T03:46:06.478137+00:00", "event": "test_started", "test": "test_browser_action_ui.BrowserActionUITests.test_new_message_shows_proposal_without_resubmitting_after_rerun"}
+{"time": "2026-10-19T03:46:07.068729+00:00", "event": "test_finished", "test": "test_browser_action_ui.BrowserActionUITests.test_new_message_shows_proposal_without_resubmitting_after_rerun", "status": "passed", "duration_seconds": 0.591}
+{"time": "2026-10-19T03:46:07.068817+00:00", "event": "test_started", "test": "test_browser_action_ui.BrowserActionUITests.test_render_refresh_and_chat_switch_do_not_approve"}
+{"time": "2026-10-19T03:46:07.720880+00:00", "event": "test_finished", "test": "test_browser_action_ui.BrowserActionUITests.test_render_refresh_and_chat_switch_do_not_approve", "status": "passed", "duration_seconds": 0.652}
+{"time": "2026-10-19T03:46:07.720992+00:00", "event": "test_started", "test": "test_browser_actions.BackendActionTests.test_queue_and_execute_do_not_rerun_model_or_duplicate_transcript"}
+{"time": "2026-10-19T03:46:07.818903+00:00", "event": "test_finished", "test": "test_browser_actions.BackendActionTests.test_queue_and_execute_do_not_rerun_model_or_duplicate_transcript", "status": "passed", "duration_seconds": 0.098}
+{"time": "2026-10-19T03:46:07.818997+00:00", "event": "test_started", "test": "test_browser_actions.BrowserActionTests.test_cross_user_space_and_chat_are_rejected"}
+{"time": "2026-10-19T03:46:07.840193+00:00", "event": "test_finished", "test": "test_browser_actions.BrowserActionTests.test_cross_user_space_and_chat_are_rejected", "status": "passed", "duration_seconds": 0.021}
+{"time": "2026-10-19T03:46:07.840265+00:00", "event": "test_started", "test": "test_browser_actions.BrowserActionTests.test_execution_failure_keeps_uncertain_and_never_replays"}
+{"time": "2026-10-19T03:46:07.884847+00:00", "event": "test_finished", "test": "test_browser_actions.BrowserActionTests.test_execution_failure_keeps_uncertain_and_never_replays", "status": "passed", "duration_seconds": 0.045}
+{"time": "2026-10-19T03:46:07.884923+00:00", "event": "test_started", "test": "test_browser_actions.BrowserActionTests.test_expiry_and_changed_target_require_new_proposal"}
+{"time": "2026-10-19T03:46:07.920506+00:00", "event": "test_finished", "test": "test_browser_actions.BrowserActionTests.test_expiry_and_changed_target_require_new_proposal", "status": "passed", "duration_seconds": 0.036}
+{"time": "2026-10-19T03:46:07.920579+00:00", "event": "test_started", "test": "test_browser_actions.BrowserActionTests.test_explicit_approval_executes_once_and_replay_returns_receipt"}
+{"time": "2026-10-19T03:46:07.961420+00:00", "event": "test_finished", "test": "test_browser_actions.BrowserActionTests.test_explicit_approval_executes_once_and_replay_returns_receipt", "status": "passed", "duration_seconds": 0.041}
+{"time": "2026-10-19T03:46:07.961495+00:00", "event": "test_started", "test": "test_browser_actions.BrowserActionTests.test_propose_and_reopen_do_not_execute"}
+{"time": "2026-10-19T03:46:07.978449+00:00", "event": "test_finished", "test": "test_browser_actions.BrowserActionTests.test_propose_and_reopen_do_not_execute", "status": "passed", "duration_seconds": 0.017}
+{"time": "2026-10-19T03:46:07.978524+00:00", "event": "test_started", "test": "test_browser_actions.BrowserActionTests.test_real_create_and_decline"}
+{"time": "2026-10-19T03:46:08.029810+00:00", "event": "test_finished", "test": "test_browser_actions.BrowserActionTests.test_real_create_and_decline", "status": "passed", "duration_seconds": 0.051}
+{"time": "2026-10-19T03:46:08.029882+00:00", "event": "test_started", "test": "test_browser_actions.BrowserActionTests.test_stored_arguments_tamper_does_not_execute"}
+{"time": "2026-10-19T03:46:08.051804+00:00", "event": "test_finished", "test": "test_browser_actions.BrowserActionTests.test_stored_arguments_tamper_does_not_execute", "status": "passed", "duration_seconds": 0.022}
+{"time": "2026-10-19T03:46:08.051916+00:00", "event": "test_started", "test": "test_browser_activity.BrowserActivityTests.test_logging_failure_does_not_break_ui"}
+{"time": "2026-10-19T03:46:08.052368+00:00", "event": "test_finished", "test": "test_browser_activity.BrowserActivityTests.test_logging_failure_does_not_break_ui", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:08.052409+00:00", "event": "test_started", "test": "test_browser_activity.BrowserActivityTests.test_metadata_log_excludes_private_session_and_exception"}
+{"time": "2026-10-19T03:46:08.055996+00:00", "event": "test_finished", "test": "test_browser_activity.BrowserActivityTests.test_metadata_log_excludes_private_session_and_exception", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:08.056110+00:00", "event": "test_started", "test": "test_chat_catalog.ChatTests.test_duplicate_titles_have_unique_ids"}
+{"time": "2026-10-19T03:46:08.073971+00:00", "event": "test_finished", "test": "test_chat_catalog.ChatTests.test_duplicate_titles_have_unique_ids", "status": "passed", "duration_seconds": 0.018}
+{"time": "2026-10-19T03:46:08.074103+00:00", "event": "test_started", "test": "test_chat_catalog.ChatTests.test_empty_title_automatic"}
+{"time": "2026-10-19T03:46:08.090032+00:00", "event": "test_finished", "test": "test_chat_catalog.ChatTests.test_empty_title_automatic", "status": "passed", "duration_seconds": 0.016}
+{"time": "2026-10-19T03:46:08.090131+00:00", "event": "test_started", "test": "test_chat_catalog.ChatTests.test_full_transcript_survives_restart"}
+{"time": "2026-10-19T03:46:08.114210+00:00", "event": "test_finished", "test": "test_chat_catalog.ChatTests.test_full_transcript_survives_restart", "status": "passed", "duration_seconds": 0.024}
+{"time": "2026-10-19T03:46:08.114286+00:00", "event": "test_started", "test": "test_chat_catalog.ChatTests.test_invalid_confirmation_retries"}
+{"time": "2026-10-19T03:46:08.132698+00:00", "event": "test_finished", "test": "test_chat_catalog.ChatTests.test_invalid_confirmation_retries", "status": "passed", "duration_seconds": 0.018}
+{"time": "2026-10-19T03:46:08.132829+00:00", "event": "test_started", "test": "test_chat_catalog.ChatTests.test_no_variants_resume_default"}
+{"time": "2026-10-19T03:46:08.152116+00:00", "event": "test_finished", "test": "test_chat_catalog.ChatTests.test_no_variants_resume_default", "status": "passed", "duration_seconds": 0.019}
+{"time": "2026-10-19T03:46:08.152212+00:00", "event": "test_started", "test": "test_chat_catalog.ChatTests.test_title_limit"}
+{"time": "2026-10-19T03:46:08.167665+00:00", "event": "test_finished", "test": "test_chat_catalog.ChatTests.test_title_limit", "status": "passed", "duration_seconds": 0.015}
+{"time": "2026-10-19T03:46:08.167766+00:00", "event": "test_started", "test": "test_chat_catalog.ChatTests.test_user_and_space_isolation"}
+{"time": "2026-10-19T03:46:08.191931+00:00", "event": "test_finished", "test": "test_chat_catalog.ChatTests.test_user_and_space_isolation", "status": "passed", "duration_seconds": 0.024}
+{"time": "2026-10-19T03:46:08.192007+00:00", "event": "test_started", "test": "test_chat_catalog.ChatTests.test_yes_variants_create_new_chat"}
+{"time": "2026-10-19T03:46:08.218312+00:00", "event": "test_finished", "test": "test_chat_catalog.ChatTests.test_yes_variants_create_new_chat", "status": "passed", "duration_seconds": 0.026}
+{"time": "2026-10-19T03:46:08.218423+00:00", "event": "test_started", "test": "test_chat_commands.CommandTests.test_case_and_spacing"}
+{"time": "2026-10-19T03:46:08.219323+00:00", "event": "test_finished", "test": "test_chat_commands.CommandTests.test_case_and_spacing", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:08.219381+00:00", "event": "test_started", "test": "test_chat_commands.CommandTests.test_exact_multiline_placeholder_is_rejected"}
+{"time": "2026-10-19T03:46:08.219438+00:00", "event": "test_finished", "test": "test_chat_commands.CommandTests.test_exact_multiline_placeholder_is_rejected", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:08.219464+00:00", "event": "test_started", "test": "test_chat_commands.CommandTests.test_malformed_command_never_invokes_graph"}
+{"time": "2026-10-19T03:46:08.251037+00:00", "event": "test_finished", "test": "test_chat_commands.CommandTests.test_malformed_command_never_invokes_graph", "status": "passed", "duration_seconds": 0.032}
+{"time": "2026-10-19T03:46:08.251113+00:00", "event": "test_started", "test": "test_chat_commands.CommandTests.test_missing_or_extra_id"}
+{"time": "2026-10-19T03:46:08.251288+00:00", "event": "test_finished", "test": "test_chat_commands.CommandTests.test_missing_or_extra_id", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:08.251325+00:00", "event": "test_started", "test": "test_chat_commands.CommandTests.test_ordinary_question_not_intercepted"}
+{"time": "2026-10-19T03:46:08.251379+00:00", "event": "test_finished", "test": "test_chat_commands.CommandTests.test_ordinary_question_not_intercepted", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:08.251403+00:00", "event": "test_started", "test": "test_chat_commands.CommandTests.test_titles"}
+{"time": "2026-10-19T03:46:08.251484+00:00", "event": "test_finished", "test": "test_chat_commands.CommandTests.test_titles", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:08.251542+00:00", "event": "test_started", "test": "test_chat_runtime.RuntimeTests.test_browser_policy_is_scoped"}
+{"time": "2026-10-19T03:46:08.251598+00:00", "event": "test_finished", "test": "test_chat_runtime.RuntimeTests.test_browser_policy_is_scoped", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:08.251625+00:00", "event": "test_started", "test": "test_chat_runtime.RuntimeTests.test_explicit_memory_controls_never_trigger_summary_model"}
+{"time": "2026-10-19T03:46:08.258308+00:00", "event": "test_finished", "test": "test_chat_runtime.RuntimeTests.test_explicit_memory_controls_never_trigger_summary_model", "status": "passed", "duration_seconds": 0.007}
+{"time": "2026-10-19T03:46:08.258407+00:00", "event": "test_started", "test": "test_chat_runtime.RuntimeTests.test_kernel_lock_releases_after_process_exit"}
+{"time": "2026-10-19T03:46:08.416602+00:00", "event": "test_finished", "test": "test_chat_runtime.RuntimeTests.test_kernel_lock_releases_after_process_exit", "status": "passed", "duration_seconds": 0.158}
+{"time": "2026-10-19T03:46:08.416888+00:00", "event": "test_started", "test": "test_chat_runtime.RuntimeTests.test_legacy_lock_is_never_removed"}
+{"time": "2026-10-19T03:46:08.422117+00:00", "event": "test_finished", "test": "test_chat_runtime.RuntimeTests.test_legacy_lock_is_never_removed", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:08.422189+00:00", "event": "test_started", "test": "test_chat_runtime.RuntimeTests.test_same_chat_lock_blocks_and_releases"}
+{"time": "2026-10-19T03:46:08.427624+00:00", "event": "test_finished", "test": "test_chat_runtime.RuntimeTests.test_same_chat_lock_blocks_and_releases", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:08.427697+00:00", "event": "test_started", "test": "test_chat_runtime.RuntimeTests.test_save_failures_preserve_answer_without_reexecuting"}
+{"time": "2026-10-19T03:46:08.442179+00:00", "event": "test_finished", "test": "test_chat_runtime.RuntimeTests.test_save_failures_preserve_answer_without_reexecuting", "status": "passed", "duration_seconds": 0.014}
+{"time": "2026-10-19T03:46:08.442257+00:00", "event": "test_started", "test": "test_chat_runtime.RuntimeTests.test_turn_uses_latest_checkpoint_and_archives_once"}
+{"time": "2026-10-19T03:46:08.474145+00:00", "event": "test_finished", "test": "test_chat_runtime.RuntimeTests.test_turn_uses_latest_checkpoint_and_archives_once", "status": "passed", "duration_seconds": 0.032}
+{"time": "2026-10-19T03:46:08.474287+00:00", "event": "test_started", "test": "test_checkpoint_crash.CheckpointCrashTests.test_uncommitted_checkpoint_rolls_back_and_archive_survives"}
+{"time": "2026-10-19T03:46:12.273809+00:00", "event": "test_finished", "test": "test_checkpoint_crash.CheckpointCrashTests.test_uncommitted_checkpoint_rolls_back_and_archive_survives", "status": "passed", "duration_seconds": 3.799}
+{"time": "2026-10-19T03:46:12.274058+00:00", "event": "test_started", "test": "test_citation_guard.CitationGuardTests.test_failed_required_search_cannot_claim_current_answer"}
+{"time": "2026-10-19T03:46:12.274822+00:00", "event": "test_finished", "test": "test_citation_guard.CitationGuardTests.test_failed_required_search_cannot_claim_current_answer", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:12.274942+00:00", "event": "test_started", "test": "test_citation_guard.CitationGuardTests.test_loop_corrects_citation_once"}
+{"time": "2026-10-19T03:46:12.275847+00:00", "event": "test_finished", "test": "test_citation_guard.CitationGuardTests.test_loop_corrects_citation_once", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:12.275926+00:00", "event": "test_started", "test": "test_citation_guard.CitationGuardTests.test_only_visible_successful_urls_are_registered"}
+{"time": "2026-10-19T03:46:12.276163+00:00", "event": "test_finished", "test": "test_citation_guard.CitationGuardTests.test_only_visible_successful_urls_are_registered", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.276228+00:00", "event": "test_started", "test": "test_citation_guard.CitationGuardTests.test_repeated_bad_citations_stop_incomplete"}
+{"time": "2026-10-19T03:46:12.276903+00:00", "event": "test_finished", "test": "test_citation_guard.CitationGuardTests.test_repeated_bad_citations_stop_incomplete", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:12.276976+00:00", "event": "test_started", "test": "test_citation_guard.CitationGuardTests.test_unseen_url_and_internal_markers_rejected"}
+{"time": "2026-10-19T03:46:12.280042+00:00", "event": "test_finished", "test": "test_citation_guard.CitationGuardTests.test_unseen_url_and_internal_markers_rejected", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:12.280180+00:00", "event": "test_started", "test": "test_clarification_guard.ClarificationTests.test_explicit_question_with_registered_options_passes"}
+{"time": "2026-10-19T03:46:12.280348+00:00", "event": "test_finished", "test": "test_clarification_guard.ClarificationTests.test_explicit_question_with_registered_options_passes", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.280406+00:00", "event": "test_started", "test": "test_clarification_guard.ClarificationTests.test_generic_conflict_requires_explicit_source_options"}
+{"time": "2026-10-19T03:46:12.280524+00:00", "event": "test_finished", "test": "test_clarification_guard.ClarificationTests.test_generic_conflict_requires_explicit_source_options", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.280573+00:00", "event": "test_started", "test": "test_clarification_guard.ClarificationTests.test_normal_answers_and_web_only_json_are_unchanged"}
+{"time": "2026-10-19T03:46:12.280670+00:00", "event": "test_finished", "test": "test_clarification_guard.ClarificationTests.test_normal_answers_and_web_only_json_are_unchanged", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.280716+00:00", "event": "test_started", "test": "test_clarification_guard.ClarificationTests.test_unknown_refs_cannot_satisfy_conflict_check"}
+{"time": "2026-10-19T03:46:12.280820+00:00", "event": "test_finished", "test": "test_clarification_guard.ClarificationTests.test_unknown_refs_cannot_satisfy_conflict_check", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.280888+00:00", "event": "test_started", "test": "test_clarification_guard.ConflictLoopTests.test_one_correction_preserves_requested_json"}
+{"time": "2026-10-19T03:46:12.281901+00:00", "event": "test_finished", "test": "test_clarification_guard.ConflictLoopTests.test_one_correction_preserves_requested_json", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:12.281988+00:00", "event": "test_started", "test": "test_clarification_guard.ConflictLoopTests.test_repeated_generic_conflict_stops_after_one_correction"}
+{"time": "2026-10-19T03:46:12.282623+00:00", "event": "test_finished", "test": "test_clarification_guard.ConflictLoopTests.test_repeated_generic_conflict_stops_after_one_correction", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:12.282854+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_archived_question_support_preserves_prior_question"}
+{"time": "2026-10-19T03:46:12.283961+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_archived_question_support_preserves_prior_question", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:12.284058+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_cli_summary_failure_pauses_next_turn"}
+{"time": "2026-10-19T03:46:12.361472+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_cli_summary_failure_pauses_next_turn", "status": "passed", "duration_seconds": 0.077}
+{"time": "2026-10-19T03:46:12.361561+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_grounding_instructions_and_untrusted_prior_are_supplied"}
+{"time": "2026-10-19T03:46:12.362147+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_grounding_instructions_and_untrusted_prior_are_supplied", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:12.362200+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_invalid_summaries_rejected"}
+{"time": "2026-10-19T03:46:12.363557+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_invalid_summaries_rejected", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:12.363608+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_invalid_thresholds"}
+{"time": "2026-10-19T03:46:12.363705+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_invalid_thresholds", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.363737+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_long_history_keeps_recent_complete_turns"}
+{"time": "2026-10-19T03:46:12.364135+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_long_history_keeps_recent_complete_turns", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.364179+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_model_failure_propagates_to_preserving_caller"}
+{"time": "2026-10-19T03:46:12.364460+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_model_failure_propagates_to_preserving_caller", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.364493+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_prior_question_with_available_history_support_is_allowed"}
+{"time": "2026-10-19T03:46:12.364767+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_prior_question_with_available_history_support_is_allowed", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.364798+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_short_history_skips_model"}
+{"time": "2026-10-19T03:46:12.364879+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_short_history_skips_model", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.364907+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_single_oversized_turn_not_split"}
+{"time": "2026-10-19T03:46:12.364999+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_single_oversized_turn_not_split", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.365028+00:00", "event": "test_started", "test": "test_context_summary.SummaryTests.test_unsupported_prior_question_cannot_be_saved_again"}
+{"time": "2026-10-19T03:46:12.365439+00:00", "event": "test_finished", "test": "test_context_summary.SummaryTests.test_unsupported_prior_question_cannot_be_saved_again", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.365510+00:00", "event": "test_started", "test": "test_conversation_sources.ConversationTests.test_failure_visible_to_model"}
+{"time": "2026-10-19T03:46:12.365859+00:00", "event": "test_finished", "test": "test_conversation_sources.ConversationTests.test_failure_visible_to_model", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.365895+00:00", "event": "test_started", "test": "test_conversation_sources.ConversationTests.test_invalid_arguments_do_not_execute"}
+{"time": "2026-10-19T03:46:12.366177+00:00", "event": "test_finished", "test": "test_conversation_sources.ConversationTests.test_invalid_arguments_do_not_execute", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.366212+00:00", "event": "test_started", "test": "test_conversation_sources.ConversationTests.test_large_task_is_rejected_without_model_or_silent_truncation"}
+{"time": "2026-10-19T03:46:12.368377+00:00", "event": "test_finished", "test": "test_conversation_sources.ConversationTests.test_large_task_is_rejected_without_model_or_silent_truncation", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:12.368424+00:00", "event": "test_started", "test": "test_conversation_sources.ConversationTests.test_memory_reaches_model"}
+{"time": "2026-10-19T03:46:12.368572+00:00", "event": "test_finished", "test": "test_conversation_sources.ConversationTests.test_memory_reaches_model", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.368601+00:00", "event": "test_started", "test": "test_conversation_sources.ConversationTests.test_mixed_sources"}
+{"time": "2026-10-19T03:46:12.368914+00:00", "event": "test_finished", "test": "test_conversation_sources.ConversationTests.test_mixed_sources", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.368949+00:00", "event": "test_started", "test": "test_conversation_sources.ConversationTests.test_rag_retrieved_before_answer"}
+{"time": "2026-10-19T03:46:12.369184+00:00", "event": "test_finished", "test": "test_conversation_sources.ConversationTests.test_rag_retrieved_before_answer", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.369211+00:00", "event": "test_started", "test": "test_conversation_sources.ConversationTests.test_repeated_search_not_executed"}
+{"time": "2026-10-19T03:46:12.369478+00:00", "event": "test_finished", "test": "test_conversation_sources.ConversationTests.test_repeated_search_not_executed", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.369507+00:00", "event": "test_started", "test": "test_conversation_sources.ConversationTests.test_web_requires_real_search"}
+{"time": "2026-10-19T03:46:12.369777+00:00", "event": "test_finished", "test": "test_conversation_sources.ConversationTests.test_web_requires_real_search", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.369805+00:00", "event": "test_started", "test": "test_conversation_sources.ConversationTests.test_write_action_rejected"}
+{"time": "2026-10-19T03:46:12.370005+00:00", "event": "test_finished", "test": "test_conversation_sources.ConversationTests.test_write_action_rejected", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.370076+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_apply_checks_flag_at_boundary"}
+{"time": "2026-10-19T03:46:12.380042+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_apply_checks_flag_at_boundary", "status": "passed", "duration_seconds": 0.01}
+{"time": "2026-10-19T03:46:12.380176+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_approved_create_and_repeat_are_idempotent"}
+{"time": "2026-10-19T03:46:12.408663+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_approved_create_and_repeat_are_idempotent", "status": "passed", "duration_seconds": 0.028}
+{"time": "2026-10-19T03:46:12.408771+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_changed_requirements_invalidates_approval"}
+{"time": "2026-10-19T03:46:12.432716+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_changed_requirements_invalidates_approval", "status": "passed", "duration_seconds": 0.024}
+{"time": "2026-10-19T03:46:12.432827+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_continue_never_applies"}
+{"time": "2026-10-19T03:46:12.447573+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_continue_never_applies", "status": "passed", "duration_seconds": 0.015}
+{"time": "2026-10-19T03:46:12.447670+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_failed_revision_invalidates_old_approval"}
+{"time": "2026-10-19T03:46:12.475568+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_failed_revision_invalidates_old_approval", "status": "passed", "duration_seconds": 0.028}
+{"time": "2026-10-19T03:46:12.475673+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_failed_search_prevents_generation"}
+{"time": "2026-10-19T03:46:12.483694+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_failed_search_prevents_generation", "status": "passed", "duration_seconds": 0.008}
+{"time": "2026-10-19T03:46:12.483873+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_false_flag_blocks_apply"}
+{"time": "2026-10-19T03:46:12.491390+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_false_flag_blocks_apply", "status": "passed", "duration_seconds": 0.008}
+{"time": "2026-10-19T03:46:12.491453+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_followup_routes"}
+{"time": "2026-10-19T03:46:12.495800+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_followup_routes", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:12.495853+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_incomplete_gherkin_rejected"}
+{"time": "2026-10-19T03:46:12.499929+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_incomplete_gherkin_rejected", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:12.500016+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_local_action_requires_explicit_yes"}
+{"time": "2026-10-19T03:46:12.523851+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_local_action_requires_explicit_yes", "status": "passed", "duration_seconds": 0.024}
+{"time": "2026-10-19T03:46:12.523951+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_multiple_cases_and_scenarios"}
+{"time": "2026-10-19T03:46:12.528857+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_multiple_cases_and_scenarios", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:12.528936+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_new_story_draft_receives_requirements"}
+{"time": "2026-10-19T03:46:12.544943+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_new_story_draft_receives_requirements", "status": "passed", "duration_seconds": 0.016}
+{"time": "2026-10-19T03:46:12.545008+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_old_block_allows_new_draft"}
+{"time": "2026-10-19T03:46:12.554878+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_old_block_allows_new_draft", "status": "passed", "duration_seconds": 0.01}
+{"time": "2026-10-19T03:46:12.554944+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_run_qa_waits_for_approval"}
+{"time": "2026-10-19T03:46:12.567438+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_run_qa_waits_for_approval", "status": "passed", "duration_seconds": 0.012}
+{"time": "2026-10-19T03:46:12.567508+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_schema_not_needed_for_draft"}
+{"time": "2026-10-19T03:46:12.572360+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_schema_not_needed_for_draft", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:12.572424+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_story_gate_and_epic_status"}
+{"time": "2026-10-19T03:46:12.580209+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_story_gate_and_epic_status", "status": "passed", "duration_seconds": 0.008}
+{"time": "2026-10-19T03:46:12.580284+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_uncertain_receipt_survives_cancel"}
+{"time": "2026-10-19T03:46:12.602001+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_uncertain_receipt_survives_cancel", "status": "passed", "duration_seconds": 0.022}
+{"time": "2026-10-19T03:46:12.602068+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_unknown_write_is_not_retried"}
+{"time": "2026-10-19T03:46:12.651416+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_unknown_write_is_not_retried", "status": "passed", "duration_seconds": 0.049}
+{"time": "2026-10-19T03:46:12.651485+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_yes_binds_exact_saved_proposal"}
+{"time": "2026-10-19T03:46:12.678958+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_yes_binds_exact_saved_proposal", "status": "passed", "duration_seconds": 0.027}
+{"time": "2026-10-19T03:46:12.679037+00:00", "event": "test_started", "test": "test_conversation_workflow.WorkflowTests.test_yes_without_plan"}
+{"time": "2026-10-19T03:46:12.686018+00:00", "event": "test_finished", "test": "test_conversation_workflow.WorkflowTests.test_yes_without_plan", "status": "passed", "duration_seconds": 0.007}
+{"time": "2026-10-19T03:46:12.686114+00:00", "event": "test_started", "test": "test_document_sources.DocumentSourceTests.test_document_reference_correction_in_loop"}
+{"time": "2026-10-19T03:46:12.686575+00:00", "event": "test_finished", "test": "test_document_sources.DocumentSourceTests.test_document_reference_correction_in_loop", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.686609+00:00", "event": "test_started", "test": "test_document_sources.DocumentSourceTests.test_empty_structured_search_stops_grounded_claim"}
+{"time": "2026-10-19T03:46:12.686814+00:00", "event": "test_finished", "test": "test_document_sources.DocumentSourceTests.test_empty_structured_search_stops_grounded_claim", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.686841+00:00", "event": "test_started", "test": "test_document_sources.DocumentSourceTests.test_keyword_path_does_not_load_embeddings_and_text_stays_compatible"}
+{"time": "2026-10-19T03:46:12.687492+00:00", "event": "test_finished", "test": "test_document_sources.DocumentSourceTests.test_keyword_path_does_not_load_embeddings_and_text_stays_compatible", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:12.687536+00:00", "event": "test_started", "test": "test_document_sources.DocumentSourceTests.test_only_visible_nonempty_records_validate"}
+{"time": "2026-10-19T03:46:12.687662+00:00", "event": "test_finished", "test": "test_document_sources.DocumentSourceTests.test_only_visible_nonempty_records_validate", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.687689+00:00", "event": "test_started", "test": "test_document_sources.DocumentSourceTests.test_stable_bounded_reference_and_metadata"}
+{"time": "2026-10-19T03:46:12.687759+00:00", "event": "test_finished", "test": "test_document_sources.DocumentSourceTests.test_stable_bounded_reference_and_metadata", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.687812+00:00", "event": "test_started", "test": "test_execution_logging.ExecutionLoggingTests.test_failed_log_write_does_not_break_execution"}
+{"time": "2026-10-19T03:46:12.688146+00:00", "event": "test_finished", "test": "test_execution_logging.ExecutionLoggingTests.test_failed_log_write_does_not_break_execution", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.688178+00:00", "event": "test_started", "test": "test_execution_logging.ExecutionLoggingTests.test_offline_entrypoint_creates_default_progress_log"}
+{"time": "2026-10-19T03:46:12.696791+00:00", "event": "test_finished", "test": "test_execution_logging.ExecutionLoggingTests.test_offline_entrypoint_creates_default_progress_log", "status": "passed", "duration_seconds": 0.009}
+{"time": "2026-10-19T03:46:12.696851+00:00", "event": "test_started", "test": "test_execution_logging.ExecutionLoggingTests.test_progress_records_failure_and_subtest_without_assertion_content"}
+{"time": "2026-10-19T03:46:12.701960+00:00", "event": "test_finished", "test": "test_execution_logging.ExecutionLoggingTests.test_progress_records_failure_and_subtest_without_assertion_content", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:12.702019+00:00", "event": "test_started", "test": "test_execution_logging.ExecutionLoggingTests.test_provider_category_is_saved_without_private_error_body"}
+{"time": "2026-10-19T03:46:12.706389+00:00", "event": "test_finished", "test": "test_execution_logging.ExecutionLoggingTests.test_provider_category_is_saved_without_private_error_body", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:12.706454+00:00", "event": "test_started", "test": "test_execution_logging.ExecutionLoggingTests.test_stage_logs_match_and_hide_arbitrary_labels_and_error_text"}
+{"time": "2026-10-19T03:46:12.710342+00:00", "event": "test_finished", "test": "test_execution_logging.ExecutionLoggingTests.test_stage_logs_match_and_hide_arbitrary_labels_and_error_text", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:12.710421+00:00", "event": "test_started", "test": "test_foundation_errors.FoundationErrorTests.test_bad_numeric_config_does_not_echo_value"}
+{"time": "2026-10-19T03:46:12.712059+00:00", "event": "test_finished", "test": "test_foundation_errors.FoundationErrorTests.test_bad_numeric_config_does_not_echo_value", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:12.712104+00:00", "event": "test_started", "test": "test_foundation_errors.FoundationErrorTests.test_console_provider_failure_matrix"}
+{"time": "2026-10-19T03:46:12.712430+00:00", "event": "test_finished", "test": "test_foundation_errors.FoundationErrorTests.test_console_provider_failure_matrix", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.712462+00:00", "event": "test_started", "test": "test_foundation_errors.FoundationErrorTests.test_console_shows_actionable_safe_provider_error"}
+{"time": "2026-10-19T03:46:12.712513+00:00", "event": "test_finished", "test": "test_foundation_errors.FoundationErrorTests.test_console_shows_actionable_safe_provider_error", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.712536+00:00", "event": "test_started", "test": "test_foundation_errors.FoundationErrorTests.test_missing_hosted_keys_fail_before_network"}
+{"time": "2026-10-19T03:46:12.719398+00:00", "event": "test_finished", "test": "test_foundation_errors.FoundationErrorTests.test_missing_hosted_keys_fail_before_network", "status": "passed", "duration_seconds": 0.007}
+{"time": "2026-10-19T03:46:12.719453+00:00", "event": "test_started", "test": "test_foundation_errors.FoundationErrorTests.test_unknown_exception_text_is_hidden_in_both_presentations"}
+{"time": "2026-10-19T03:46:12.719532+00:00", "event": "test_finished", "test": "test_foundation_errors.FoundationErrorTests.test_unknown_exception_text_is_hidden_in_both_presentations", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.719567+00:00", "event": "test_started", "test": "test_foundation_errors.FoundationErrorTests.test_unknown_provider_does_not_echo_value"}
+{"time": "2026-10-19T03:46:12.720285+00:00", "event": "test_finished", "test": "test_foundation_errors.FoundationErrorTests.test_unknown_provider_does_not_echo_value", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:12.720345+00:00", "event": "test_started", "test": "test_gemini_provider.GeminiTests.test_empty_tools_are_omitted"}
+{"time": "2026-10-19T03:46:12.722866+00:00", "event": "test_finished", "test": "test_gemini_provider.GeminiTests.test_empty_tools_are_omitted", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:12.722925+00:00", "event": "test_started", "test": "test_gemini_provider.GeminiTests.test_existing_key_alias_and_primary_precedence"}
+{"time": "2026-10-19T03:46:12.725638+00:00", "event": "test_finished", "test": "test_gemini_provider.GeminiTests.test_existing_key_alias_and_primary_precedence", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:12.725679+00:00", "event": "test_started", "test": "test_gemini_provider.GeminiTests.test_google_key_error_is_secret_safe"}
+{"time": "2026-10-19T03:46:12.725740+00:00", "event": "test_finished", "test": "test_gemini_provider.GeminiTests.test_google_key_error_is_secret_safe", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:12.725762+00:00", "event": "test_started", "test": "test_gemini_provider.GeminiTests.test_limit_and_invalid_reasoning_stop_without_fallback"}
+{"time": "2026-10-19T03:46:12.728998+00:00", "event": "test_finished", "test": "test_gemini_provider.GeminiTests.test_limit_and_invalid_reasoning_stop_without_fallback", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:12.729035+00:00", "event": "test_started", "test": "test_gemini_provider.GeminiTests.test_missing_key_or_model_fails_before_network"}
+{"time": "2026-10-19T03:46:12.732166+00:00", "event": "test_finished", "test": "test_gemini_provider.GeminiTests.test_missing_key_or_model_fails_before_network", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:12.732207+00:00", "event": "test_started", "test": "test_gemini_provider.GeminiTests.test_quota_error_has_no_automatic_retry"}
+{"time": "2026-10-19T03:46:12.734343+00:00", "event": "test_finished", "test": "test_gemini_provider.GeminiTests.test_quota_error_has_no_automatic_retry", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:12.734387+00:00", "event": "test_started", "test": "test_gemini_provider.GeminiTests.test_shared_provider_dispatch"}
+{"time": "2026-10-19T03:46:12.737884+00:00", "event": "test_finished", "test": "test_gemini_provider.GeminiTests.test_shared_provider_dispatch", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:12.737922+00:00", "event": "test_started", "test": "test_gemini_provider.GeminiTests.test_text_and_json_use_google_endpoint_and_output_budget"}
+{"time": "2026-10-19T03:46:12.739804+00:00", "event": "test_finished", "test": "test_gemini_provider.GeminiTests.test_text_and_json_use_google_endpoint_and_output_budget", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:12.739871+00:00", "event": "test_started", "test": "test_gemini_provider.GeminiTests.test_tools_and_thought_signature_round_trip"}
+{"time": "2026-10-19T03:46:12.744253+00:00", "event": "test_finished", "test": "test_gemini_provider.GeminiTests.test_tools_and_thought_signature_round_trip", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:12.744315+00:00", "event": "test_started", "test": "test_generated_downloads.GeneratedDownloadTests.test_only_scoped_completed_unchanged_creations_download"}
+{"time": "2026-10-19T03:46:12.794568+00:00", "event": "test_finished", "test": "test_generated_downloads.GeneratedDownloadTests.test_only_scoped_completed_unchanged_creations_download", "status": "passed", "duration_seconds": 0.05}
+{"time": "2026-10-19T03:46:12.794704+00:00", "event": "test_started", "test": "test_graph_lifecycle.GraphLifecycleTests.test_concurrent_first_access_initializes_once"}
+{"time": "2026-10-19T03:46:12.797532+00:00", "event": "test_finished", "test": "test_graph_lifecycle.GraphLifecycleTests.test_concurrent_first_access_initializes_once", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:12.797597+00:00", "event": "test_started", "test": "test_graph_lifecycle.GraphLifecycleTests.test_console_import_and_help_do_not_open_database"}
+{"time": "2026-10-19T03:46:14.438185+00:00", "event": "test_finished", "test": "test_graph_lifecycle.GraphLifecycleTests.test_console_import_and_help_do_not_open_database", "status": "passed", "duration_seconds": 1.641}
+{"time": "2026-10-19T03:46:14.438255+00:00", "event": "test_started", "test": "test_graph_lifecycle.GraphLifecycleTests.test_failed_build_closes_connection_without_retaining_graph"}
+{"time": "2026-10-19T03:46:14.439037+00:00", "event": "test_finished", "test": "test_graph_lifecycle.GraphLifecycleTests.test_failed_build_closes_connection_without_retaining_graph", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:14.439103+00:00", "event": "test_started", "test": "test_graph_lifecycle.GraphLifecycleTests.test_lazy_initialization_close_and_reopen_preserve_checkpoint"}
+{"time": "2026-10-19T03:46:14.468586+00:00", "event": "test_finished", "test": "test_graph_lifecycle.GraphLifecycleTests.test_lazy_initialization_close_and_reopen_preserve_checkpoint", "status": "passed", "duration_seconds": 0.029}
+{"time": "2026-10-19T03:46:14.468672+00:00", "event": "test_started", "test": "test_history_intent.HistoryIntentTests.test_external_recency_remains_external"}
+{"time": "2026-10-19T03:46:14.469291+00:00", "event": "test_finished", "test": "test_history_intent.HistoryIntentTests.test_external_recency_remains_external", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:14.469328+00:00", "event": "test_started", "test": "test_history_intent.HistoryIntentTests.test_personal_recency_is_local"}
+{"time": "2026-10-19T03:46:14.469419+00:00", "event": "test_finished", "test": "test_history_intent.HistoryIntentTests.test_personal_recency_is_local", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:14.469470+00:00", "event": "test_started", "test": "test_jira_creation.T.test_approved_hierarchy"}
+{"time": "2026-10-19T03:46:14.565299+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_approved_hierarchy", "status": "passed", "duration_seconds": 0.096}
+{"time": "2026-10-19T03:46:14.579441+00:00", "event": "test_started", "test": "test_jira_creation.T.test_default"}
+{"time": "2026-10-19T03:46:14.597654+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_default", "status": "passed", "duration_seconds": 0.018}
+{"time": "2026-10-19T03:46:14.608018+00:00", "event": "test_started", "test": "test_jira_creation.T.test_disabled_creation_blocks_fake_gateway"}
+{"time": "2026-10-19T03:46:14.629987+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_disabled_creation_blocks_fake_gateway", "status": "passed", "duration_seconds": 0.022}
+{"time": "2026-10-19T03:46:14.640687+00:00", "event": "test_started", "test": "test_jira_creation.T.test_exact_duplicate_review"}
+{"time": "2026-10-19T03:46:14.661898+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_exact_duplicate_review", "status": "passed", "duration_seconds": 0.021}
+{"time": "2026-10-19T03:46:14.672661+00:00", "event": "test_started", "test": "test_jira_creation.T.test_explicit_duplicate_reuse"}
+{"time": "2026-10-19T03:46:14.699154+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_explicit_duplicate_reuse", "status": "passed", "duration_seconds": 0.026}
+{"time": "2026-10-19T03:46:14.709797+00:00", "event": "test_started", "test": "test_jira_creation.T.test_missing_parent_disabled"}
+{"time": "2026-10-19T03:46:14.729119+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_missing_parent_disabled", "status": "passed", "duration_seconds": 0.019}
+{"time": "2026-10-19T03:46:14.739580+00:00", "event": "test_started", "test": "test_jira_creation.T.test_override_parent"}
+{"time": "2026-10-19T03:46:14.758375+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_override_parent", "status": "passed", "duration_seconds": 0.019}
+{"time": "2026-10-19T03:46:14.769836+00:00", "event": "test_started", "test": "test_jira_creation.T.test_repeat_success"}
+{"time": "2026-10-19T03:46:14.801950+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_repeat_success", "status": "passed", "duration_seconds": 0.032}
+{"time": "2026-10-19T03:46:14.814646+00:00", "event": "test_started", "test": "test_jira_creation.T.test_similar_duplicate"}
+{"time": "2026-10-19T03:46:14.834977+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_similar_duplicate", "status": "passed", "duration_seconds": 0.02}
+{"time": "2026-10-19T03:46:14.846864+00:00", "event": "test_started", "test": "test_jira_creation.T.test_status_change"}
+{"time": "2026-10-19T03:46:14.867989+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_status_change", "status": "passed", "duration_seconds": 0.021}
+{"time": "2026-10-19T03:46:14.878753+00:00", "event": "test_started", "test": "test_jira_creation.T.test_string_flag"}
+{"time": "2026-10-19T03:46:14.895698+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_string_flag", "status": "passed", "duration_seconds": 0.017}
+{"time": "2026-10-19T03:46:14.908804+00:00", "event": "test_started", "test": "test_jira_creation.T.test_tampering"}
+{"time": "2026-10-19T03:46:14.928120+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_tampering", "status": "passed", "duration_seconds": 0.019}
+{"time": "2026-10-19T03:46:14.938766+00:00", "event": "test_started", "test": "test_jira_creation.T.test_unknown_no_retry"}
+{"time": "2026-10-19T03:46:14.965539+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_unknown_no_retry", "status": "passed", "duration_seconds": 0.027}
+{"time": "2026-10-19T03:46:14.975427+00:00", "event": "test_started", "test": "test_jira_creation.T.test_wrong_confirmation"}
+{"time": "2026-10-19T03:46:14.996322+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_wrong_confirmation", "status": "passed", "duration_seconds": 0.021}
+{"time": "2026-10-19T03:46:15.008522+00:00", "event": "test_started", "test": "test_jira_creation.T.test_wrong_parent"}
+{"time": "2026-10-19T03:46:15.027294+00:00", "event": "test_finished", "test": "test_jira_creation.T.test_wrong_parent", "status": "passed", "duration_seconds": 0.019}
+{"time": "2026-10-19T03:46:15.040302+00:00", "event": "test_started", "test": "test_keyword_ranking.KeywordRankingTests.test_neighbor_context_never_crosses_source_or_page"}
+{"time": "2026-10-19T03:46:15.040510+00:00", "event": "test_finished", "test": "test_keyword_ranking.KeywordRankingTests.test_neighbor_context_never_crosses_source_or_page", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.040555+00:00", "event": "test_started", "test": "test_keyword_ranking.KeywordRankingTests.test_possessive_punctuation_and_function_words"}
+{"time": "2026-10-19T03:46:15.040719+00:00", "event": "test_finished", "test": "test_keyword_ranking.KeywordRankingTests.test_possessive_punctuation_and_function_words", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.040745+00:00", "event": "test_started", "test": "test_keyword_ranking.KeywordRankingTests.test_source_terms_and_topic_match_without_embeddings"}
+{"time": "2026-10-19T03:46:15.050730+00:00", "event": "test_finished", "test": "test_keyword_ranking.KeywordRankingTests.test_source_terms_and_topic_match_without_embeddings", "status": "passed", "duration_seconds": 0.01}
+{"time": "2026-10-19T03:46:15.050817+00:00", "event": "test_started", "test": "test_legacy_rag_entrypoints.LegacyRagEntryTests.test_package_commands_forward_once_without_loading_legacy_models"}
+{"time": "2026-10-19T03:46:15.065226+00:00", "event": "test_finished", "test": "test_legacy_rag_entrypoints.LegacyRagEntryTests.test_package_commands_forward_once_without_loading_legacy_models", "status": "passed", "duration_seconds": 0.014}
+{"time": "2026-10-19T03:46:15.065349+00:00", "event": "test_started", "test": "test_legacy_rag_entrypoints.LegacyRagEntryTests.test_standalone_commands_forward_from_unrelated_folder"}
+{"time": "2026-10-19T03:46:15.089401+00:00", "event": "test_finished", "test": "test_legacy_rag_entrypoints.LegacyRagEntryTests.test_standalone_commands_forward_from_unrelated_folder", "status": "passed", "duration_seconds": 0.024}
+{"time": "2026-10-19T03:46:15.089496+00:00", "event": "test_started", "test": "test_local_action_receipts.ProjectReceiptIntegrationTests.test_approved_create_records_receipt_and_preserves_readback_flow"}
+{"time": "2026-10-19T03:46:15.133159+00:00", "event": "test_finished", "test": "test_local_action_receipts.ProjectReceiptIntegrationTests.test_approved_create_records_receipt_and_preserves_readback_flow", "status": "passed", "duration_seconds": 0.044}
+{"time": "2026-10-19T03:46:15.133272+00:00", "event": "test_started", "test": "test_local_action_receipts.ProjectReceiptIntegrationTests.test_browser_style_decline_never_creates_file"}
+{"time": "2026-10-19T03:46:15.159791+00:00", "event": "test_finished", "test": "test_local_action_receipts.ProjectReceiptIntegrationTests.test_browser_style_decline_never_creates_file", "status": "passed", "duration_seconds": 0.026}
+{"time": "2026-10-19T03:46:15.159876+00:00", "event": "test_started", "test": "test_local_action_receipts.ProjectReceiptIntegrationTests.test_changed_target_stops_real_project_loop"}
+{"time": "2026-10-19T03:46:15.188081+00:00", "event": "test_finished", "test": "test_local_action_receipts.ProjectReceiptIntegrationTests.test_changed_target_stops_real_project_loop", "status": "passed", "duration_seconds": 0.028}
+{"time": "2026-10-19T03:46:15.188155+00:00", "event": "test_started", "test": "test_local_action_receipts.ReceiptTests.test_approval_mutation_is_rejected"}
+{"time": "2026-10-19T03:46:15.196244+00:00", "event": "test_finished", "test": "test_local_action_receipts.ReceiptTests.test_approval_mutation_is_rejected", "status": "passed", "duration_seconds": 0.008}
+{"time": "2026-10-19T03:46:15.196303+00:00", "event": "test_started", "test": "test_local_action_receipts.ReceiptTests.test_cancel_after_effect_blocks_restart_and_new_token"}
+{"time": "2026-10-19T03:46:15.216950+00:00", "event": "test_finished", "test": "test_local_action_receipts.ReceiptTests.test_cancel_after_effect_blocks_restart_and_new_token", "status": "passed", "duration_seconds": 0.021}
+{"time": "2026-10-19T03:46:15.217090+00:00", "event": "test_started", "test": "test_local_action_receipts.ReceiptTests.test_changed_args_or_root_cannot_reuse_completed_receipt"}
+{"time": "2026-10-19T03:46:15.237268+00:00", "event": "test_finished", "test": "test_local_action_receipts.ReceiptTests.test_changed_args_or_root_cannot_reuse_completed_receipt", "status": "passed", "duration_seconds": 0.02}
+{"time": "2026-10-19T03:46:15.237353+00:00", "event": "test_started", "test": "test_local_action_receipts.ReceiptTests.test_decline_never_writes_or_consumes"}
+{"time": "2026-10-19T03:46:15.246274+00:00", "event": "test_finished", "test": "test_local_action_receipts.ReceiptTests.test_decline_never_writes_or_consumes", "status": "passed", "duration_seconds": 0.009}
+{"time": "2026-10-19T03:46:15.246400+00:00", "event": "test_started", "test": "test_local_action_receipts.ReceiptTests.test_fresh_explicit_approval_allows_intentional_repeat_after_completion"}
+{"time": "2026-10-19T03:46:15.270585+00:00", "event": "test_finished", "test": "test_local_action_receipts.ReceiptTests.test_fresh_explicit_approval_allows_intentional_repeat_after_completion", "status": "passed", "duration_seconds": 0.024}
+{"time": "2026-10-19T03:46:15.270702+00:00", "event": "test_started", "test": "test_local_action_receipts.ReceiptTests.test_outside_and_credentials_are_rejected_before_approval"}
+{"time": "2026-10-19T03:46:15.280346+00:00", "event": "test_finished", "test": "test_local_action_receipts.ReceiptTests.test_outside_and_credentials_are_rejected_before_approval", "status": "passed", "duration_seconds": 0.01}
+{"time": "2026-10-19T03:46:15.280426+00:00", "event": "test_started", "test": "test_local_action_receipts.ReceiptTests.test_reopen_completed_token_returns_receipt_without_write_or_approval"}
+{"time": "2026-10-19T03:46:15.299862+00:00", "event": "test_finished", "test": "test_local_action_receipts.ReceiptTests.test_reopen_completed_token_returns_receipt_without_write_or_approval", "status": "passed", "duration_seconds": 0.019}
+{"time": "2026-10-19T03:46:15.299924+00:00", "event": "test_started", "test": "test_local_action_receipts.ReceiptTests.test_same_token_concurrent_execution_runs_once"}
+{"time": "2026-10-19T03:46:15.318079+00:00", "event": "test_finished", "test": "test_local_action_receipts.ReceiptTests.test_same_token_concurrent_execution_runs_once", "status": "passed", "duration_seconds": 0.018}
+{"time": "2026-10-19T03:46:15.318146+00:00", "event": "test_started", "test": "test_local_action_receipts.ReceiptTests.test_target_changed_during_approval_requires_fresh_review"}
+{"time": "2026-10-19T03:46:15.327009+00:00", "event": "test_finished", "test": "test_local_action_receipts.ReceiptTests.test_target_changed_during_approval_requires_fresh_review", "status": "passed", "duration_seconds": 0.009}
+{"time": "2026-10-19T03:46:15.327068+00:00", "event": "test_started", "test": "test_local_action_receipts.ReceiptTests.test_timeout_blocks_another_execution"}
+{"time": "2026-10-19T03:46:15.342647+00:00", "event": "test_finished", "test": "test_local_action_receipts.ReceiptTests.test_timeout_blocks_another_execution", "status": "passed", "duration_seconds": 0.016}
+{"time": "2026-10-19T03:46:15.342787+00:00", "event": "test_started", "test": "test_memory_panel.MemoryPanelTests.test_legacy_text_keeps_value_and_metadata_separate"}
+{"time": "2026-10-19T03:46:15.342995+00:00", "event": "test_finished", "test": "test_memory_panel.MemoryPanelTests.test_legacy_text_keeps_value_and_metadata_separate", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.343026+00:00", "event": "test_started", "test": "test_memory_panel.MemoryPanelTests.test_memory_editor_builds_exact_commands_and_rejects_invalid_input"}
+{"time": "2026-10-19T03:46:15.343346+00:00", "event": "test_finished", "test": "test_memory_panel.MemoryPanelTests.test_memory_editor_builds_exact_commands_and_rejects_invalid_input", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.343374+00:00", "event": "test_started", "test": "test_memory_panel.MemoryPanelTests.test_structured_read_is_scoped_without_seed_or_model"}
+{"time": "2026-10-19T03:46:15.360536+00:00", "event": "test_finished", "test": "test_memory_panel.MemoryPanelTests.test_structured_read_is_scoped_without_seed_or_model", "status": "passed", "duration_seconds": 0.017}
+{"time": "2026-10-19T03:46:15.360637+00:00", "event": "test_started", "test": "test_memory_provenance.MemoryProvenanceTests.test_invalid_provenance_does_not_replace_fact"}
+{"time": "2026-10-19T03:46:15.361495+00:00", "event": "test_finished", "test": "test_memory_provenance.MemoryProvenanceTests.test_invalid_provenance_does_not_replace_fact", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.361535+00:00", "event": "test_started", "test": "test_memory_provenance.MemoryProvenanceTests.test_legacy_save_signature_remains_supported"}
+{"time": "2026-10-19T03:46:15.362275+00:00", "event": "test_finished", "test": "test_memory_provenance.MemoryProvenanceTests.test_legacy_save_signature_remains_supported", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.362308+00:00", "event": "test_started", "test": "test_memory_provenance.MemoryProvenanceTests.test_old_schema_migration_preserves_value_dates_and_scope"}
+{"time": "2026-10-19T03:46:15.384188+00:00", "event": "test_finished", "test": "test_memory_provenance.MemoryProvenanceTests.test_old_schema_migration_preserves_value_dates_and_scope", "status": "passed", "duration_seconds": 0.022}
+{"time": "2026-10-19T03:46:15.384252+00:00", "event": "test_started", "test": "test_memory_provenance.MemoryProvenanceTests.test_replacement_resets_old_verification_and_preserves_creation"}
+{"time": "2026-10-19T03:46:15.386117+00:00", "event": "test_finished", "test": "test_memory_provenance.MemoryProvenanceTests.test_replacement_resets_old_verification_and_preserves_creation", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.386191+00:00", "event": "test_started", "test": "test_memory_review.MemoryReviewTests.test_candidates_age_scope_and_no_mutation"}
+{"time": "2026-10-19T03:46:15.387191+00:00", "event": "test_finished", "test": "test_memory_review.MemoryReviewTests.test_candidates_age_scope_and_no_mutation", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.387229+00:00", "event": "test_started", "test": "test_memory_review.MemoryReviewTests.test_equal_facts_are_not_conflict_candidates"}
+{"time": "2026-10-19T03:46:15.387947+00:00", "event": "test_finished", "test": "test_memory_review.MemoryReviewTests.test_equal_facts_are_not_conflict_candidates", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.388003+00:00", "event": "test_started", "test": "test_memory_revisions.MemoryRevisionTests.test_failed_update_rolls_back_revision"}
+{"time": "2026-10-19T03:46:15.391193+00:00", "event": "test_finished", "test": "test_memory_revisions.MemoryRevisionTests.test_failed_update_rolls_back_revision", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.391243+00:00", "event": "test_started", "test": "test_memory_revisions.MemoryRevisionTests.test_forget_erases_revisions_and_different_keys_stay_separate"}
+{"time": "2026-10-19T03:46:15.392249+00:00", "event": "test_finished", "test": "test_memory_revisions.MemoryRevisionTests.test_forget_erases_revisions_and_different_keys_stay_separate", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.392285+00:00", "event": "test_started", "test": "test_memory_revisions.MemoryRevisionTests.test_revision_restart_and_current_value_separation"}
+{"time": "2026-10-19T03:46:15.408765+00:00", "event": "test_finished", "test": "test_memory_revisions.MemoryRevisionTests.test_revision_restart_and_current_value_separation", "status": "passed", "duration_seconds": 0.016}
+{"time": "2026-10-19T03:46:15.408855+00:00", "event": "test_started", "test": "test_memory_suggestions.MemorySuggestionTests.test_accept_is_explicit_persistent_and_idempotent"}
+{"time": "2026-10-19T03:46:15.427978+00:00", "event": "test_finished", "test": "test_memory_suggestions.MemorySuggestionTests.test_accept_is_explicit_persistent_and_idempotent", "status": "passed", "duration_seconds": 0.019}
+{"time": "2026-10-19T03:46:15.428039+00:00", "event": "test_started", "test": "test_memory_suggestions.MemorySuggestionTests.test_existing_key_cannot_be_overwritten_and_scope_is_fixed"}
+{"time": "2026-10-19T03:46:15.428947+00:00", "event": "test_finished", "test": "test_memory_suggestions.MemorySuggestionTests.test_existing_key_cannot_be_overwritten_and_scope_is_fixed", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.428987+00:00", "event": "test_started", "test": "test_memory_suggestions.MemorySuggestionTests.test_pending_limit_and_validation"}
+{"time": "2026-10-19T03:46:15.430036+00:00", "event": "test_finished", "test": "test_memory_suggestions.MemorySuggestionTests.test_pending_limit_and_validation", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.430111+00:00", "event": "test_started", "test": "test_memory_suggestions.MemorySuggestionTests.test_reject_and_forget_do_not_resurrect"}
+{"time": "2026-10-19T03:46:15.431190+00:00", "event": "test_finished", "test": "test_memory_suggestions.MemorySuggestionTests.test_reject_and_forget_do_not_resurrect", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.431318+00:00", "event": "test_started", "test": "test_mixed_grounding.MixedGroundingTests.test_scoped_memory_document_and_page_evidence_reach_one_answer"}
+{"time": "2026-10-19T03:46:15.435146+00:00", "event": "test_finished", "test": "test_mixed_grounding.MixedGroundingTests.test_scoped_memory_document_and_page_evidence_reach_one_answer", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:15.435239+00:00", "event": "test_started", "test": "test_model_budget.ModelBudgetTests.test_all_providers_reject_large_unicode_and_schema_before_network"}
+{"time": "2026-10-19T03:46:15.450185+00:00", "event": "test_finished", "test": "test_model_budget.ModelBudgetTests.test_all_providers_reject_large_unicode_and_schema_before_network", "status": "passed", "duration_seconds": 0.015}
+{"time": "2026-10-19T03:46:15.450244+00:00", "event": "test_started", "test": "test_model_budget.ModelBudgetTests.test_bad_ratio_is_configuration_error"}
+{"time": "2026-10-19T03:46:15.451906+00:00", "event": "test_finished", "test": "test_model_budget.ModelBudgetTests.test_bad_ratio_is_configuration_error", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.451950+00:00", "event": "test_started", "test": "test_model_budget.ModelBudgetTests.test_hosted_unknown_context_keeps_requested_output"}
+{"time": "2026-10-19T03:46:15.453367+00:00", "event": "test_finished", "test": "test_model_budget.ModelBudgetTests.test_hosted_unknown_context_keeps_requested_output", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.453400+00:00", "event": "test_started", "test": "test_model_budget.ModelBudgetTests.test_known_hosted_context_reserves_input_and_output"}
+{"time": "2026-10-19T03:46:15.454758+00:00", "event": "test_finished", "test": "test_model_budget.ModelBudgetTests.test_known_hosted_context_reserves_input_and_output", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.454789+00:00", "event": "test_started", "test": "test_model_budget.ModelBudgetTests.test_ollama_uses_actual_request_context"}
+{"time": "2026-10-19T03:46:15.457316+00:00", "event": "test_finished", "test": "test_model_budget.ModelBudgetTests.test_ollama_uses_actual_request_context", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.457364+00:00", "event": "test_started", "test": "test_model_budget.ModelBudgetTests.test_output_cap_is_provider_specific"}
+{"time": "2026-10-19T03:46:15.458833+00:00", "event": "test_finished", "test": "test_model_budget.ModelBudgetTests.test_output_cap_is_provider_specific", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.458867+00:00", "event": "test_started", "test": "test_model_budget.ModelBudgetTests.test_oversized_input_fails_before_network"}
+{"time": "2026-10-19T03:46:15.460471+00:00", "event": "test_finished", "test": "test_model_budget.ModelBudgetTests.test_oversized_input_fails_before_network", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.460505+00:00", "event": "test_started", "test": "test_model_budget.ModelBudgetTests.test_schema_is_part_of_input_estimate"}
+{"time": "2026-10-19T03:46:15.461890+00:00", "event": "test_finished", "test": "test_model_budget.ModelBudgetTests.test_schema_is_part_of_input_estimate", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.461922+00:00", "event": "test_started", "test": "test_model_budget.ModelBudgetTests.test_selected_model_must_match_bound_limits"}
+{"time": "2026-10-19T03:46:15.464177+00:00", "event": "test_finished", "test": "test_model_budget.ModelBudgetTests.test_selected_model_must_match_bound_limits", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.464213+00:00", "event": "test_started", "test": "test_model_budget.ModelBudgetTests.test_unspecified_hosted_output_is_preserved_when_limits_unknown"}
+{"time": "2026-10-19T03:46:15.465794+00:00", "event": "test_finished", "test": "test_model_budget.ModelBudgetTests.test_unspecified_hosted_output_is_preserved_when_limits_unknown", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.465862+00:00", "event": "test_started", "test": "test_named_sessions.SessionTests.test_checkpoint_history_survives_restart_and_isolated"}
+{"time": "2026-10-19T03:46:15.494065+00:00", "event": "test_finished", "test": "test_named_sessions.SessionTests.test_checkpoint_history_survives_restart_and_isolated", "status": "passed", "duration_seconds": 0.028}
+{"time": "2026-10-19T03:46:15.494123+00:00", "event": "test_started", "test": "test_named_sessions.SessionTests.test_existing_default_is_preserved"}
+{"time": "2026-10-19T03:46:15.494177+00:00", "event": "test_finished", "test": "test_named_sessions.SessionTests.test_existing_default_is_preserved", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.494199+00:00", "event": "test_started", "test": "test_named_sessions.SessionTests.test_invalid_names"}
+{"time": "2026-10-19T03:46:15.494255+00:00", "event": "test_finished", "test": "test_named_sessions.SessionTests.test_invalid_names", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.494287+00:00", "event": "test_started", "test": "test_named_sessions.SessionTests.test_memory_shared_by_scope_not_session"}
+{"time": "2026-10-19T03:46:15.494997+00:00", "event": "test_finished", "test": "test_named_sessions.SessionTests.test_memory_shared_by_scope_not_session", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.495036+00:00", "event": "test_started", "test": "test_named_sessions.SessionTests.test_session_user_and_space_are_distinct"}
+{"time": "2026-10-19T03:46:15.495123+00:00", "event": "test_finished", "test": "test_named_sessions.SessionTests.test_session_user_and_space_are_distinct", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.495169+00:00", "event": "test_started", "test": "test_offline_runner.OfflineGuardTests.test_external_socket_is_blocked"}
+{"time": "2026-10-19T03:46:15.495657+00:00", "event": "test_finished", "test": "test_offline_runner.OfflineGuardTests.test_external_socket_is_blocked", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.495693+00:00", "event": "test_started", "test": "test_offline_runner.OfflineGuardTests.test_loopback_classification"}
+{"time": "2026-10-19T03:46:15.495826+00:00", "event": "test_finished", "test": "test_offline_runner.OfflineGuardTests.test_loopback_classification", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.495848+00:00", "event": "test_started", "test": "test_offline_runner.OfflineGuardTests.test_unmocked_http_and_browser_are_blocked"}
+{"time": "2026-10-19T03:46:15.496224+00:00", "event": "test_finished", "test": "test_offline_runner.OfflineGuardTests.test_unmocked_http_and_browser_are_blocked", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.496289+00:00", "event": "test_started", "test": "test_package_compatibility.BrowserInterfaceCompatibilityTests.test_legacy_browser_factory_and_root_share_identity"}
+{"time": "2026-10-19T03:46:15.496601+00:00", "event": "test_finished", "test": "test_package_compatibility.BrowserInterfaceCompatibilityTests.test_legacy_browser_factory_and_root_share_identity", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.496655+00:00", "event": "test_started", "test": "test_package_compatibility.ConsoleInterfaceCompatibilityTests.test_legacy_main_passes_current_dependencies_to_console_adapter"}
+{"time": "2026-10-19T03:46:15.508134+00:00", "event": "test_finished", "test": "test_package_compatibility.ConsoleInterfaceCompatibilityTests.test_legacy_main_passes_current_dependencies_to_console_adapter", "status": "passed", "duration_seconds": 0.011}
+{"time": "2026-10-19T03:46:15.508205+00:00", "event": "test_started", "test": "test_package_compatibility.PolicyCompatibilityTests.test_legacy_module_and_callable_identity"}
+{"time": "2026-10-19T03:46:15.508304+00:00", "event": "test_finished", "test": "test_package_compatibility.PolicyCompatibilityTests.test_legacy_module_and_callable_identity", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.508334+00:00", "event": "test_started", "test": "test_package_compatibility.PolicyCompatibilityTests.test_patch_on_old_path_updates_validator_globals"}
+{"time": "2026-10-19T03:46:15.508464+00:00", "event": "test_finished", "test": "test_package_compatibility.PolicyCompatibilityTests.test_patch_on_old_path_updates_validator_globals", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.508497+00:00", "event": "test_started", "test": "test_package_compatibility.ProviderCompatibilityTests.test_old_budget_patch_is_used_by_canonical_transport"}
+{"time": "2026-10-19T03:46:15.508836+00:00", "event": "test_finished", "test": "test_package_compatibility.ProviderCompatibilityTests.test_old_budget_patch_is_used_by_canonical_transport", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.508869+00:00", "event": "test_started", "test": "test_package_compatibility.ProviderCompatibilityTests.test_provider_module_and_member_identity"}
+{"time": "2026-10-19T03:46:15.508961+00:00", "event": "test_finished", "test": "test_package_compatibility.ProviderCompatibilityTests.test_provider_module_and_member_identity", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.508996+00:00", "event": "test_started", "test": "test_package_compatibility.RuntimeCompatibilityTests.test_legacy_approval_scope_reaches_canonical_context"}
+{"time": "2026-10-19T03:46:15.509041+00:00", "event": "test_finished", "test": "test_package_compatibility.RuntimeCompatibilityTests.test_legacy_approval_scope_reaches_canonical_context", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.509060+00:00", "event": "test_started", "test": "test_package_compatibility.RuntimeCompatibilityTests.test_shared_runtime_objects_keep_identity"}
+{"time": "2026-10-19T03:46:15.509134+00:00", "event": "test_finished", "test": "test_package_compatibility.RuntimeCompatibilityTests.test_shared_runtime_objects_keep_identity", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.509163+00:00", "event": "test_started", "test": "test_package_compatibility.StorageActionCompatibilityTests.test_action_exceptions_and_legacy_patches_stay_shared"}
+{"time": "2026-10-19T03:46:15.509228+00:00", "event": "test_finished", "test": "test_package_compatibility.StorageActionCompatibilityTests.test_action_exceptions_and_legacy_patches_stay_shared", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.509247+00:00", "event": "test_started", "test": "test_package_compatibility.StorageActionCompatibilityTests.test_old_and_new_store_classes_share_identity"}
+{"time": "2026-10-19T03:46:15.509306+00:00", "event": "test_finished", "test": "test_package_compatibility.StorageActionCompatibilityTests.test_old_and_new_store_classes_share_identity", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.509341+00:00", "event": "test_started", "test": "test_page_deadline.PageDeadlineTests.test_cancelled_read_still_cleans_up_worker"}
+{"time": "2026-10-19T03:46:15.510140+00:00", "event": "test_finished", "test": "test_page_deadline.PageDeadlineTests.test_cancelled_read_still_cleans_up_worker", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.510183+00:00", "event": "test_started", "test": "test_page_deadline.PageDeadlineTests.test_credential_url_is_rejected_before_worker_start"}
+{"time": "2026-10-19T03:46:15.510473+00:00", "event": "test_finished", "test": "test_page_deadline.PageDeadlineTests.test_credential_url_is_rejected_before_worker_start", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.510501+00:00", "event": "test_started", "test": "test_page_deadline.PageDeadlineTests.test_stuck_dns_or_headers_terminates_worker"}
+{"time": "2026-10-19T03:46:15.511832+00:00", "event": "test_finished", "test": "test_page_deadline.PageDeadlineTests.test_stuck_dns_or_headers_terminates_worker", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.511868+00:00", "event": "test_started", "test": "test_page_deadline.PageDeadlineTests.test_unicode_excerpt_does_not_exceed_transport_guard"}
+{"time": "2026-10-19T03:46:15.512636+00:00", "event": "test_finished", "test": "test_page_deadline.PageDeadlineTests.test_unicode_excerpt_does_not_exceed_transport_guard", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.512681+00:00", "event": "test_started", "test": "test_page_deadline.PageDeadlineTests.test_worker_crash_or_invalid_json_cannot_become_evidence"}
+{"time": "2026-10-19T03:46:15.515792+00:00", "event": "test_finished", "test": "test_page_deadline.PageDeadlineTests.test_worker_crash_or_invalid_json_cannot_become_evidence", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.515878+00:00", "event": "test_started", "test": "test_page_deadline.PageDeadlineTests.test_worker_returns_evidence_with_bounded_wait"}
+{"time": "2026-10-19T03:46:15.516770+00:00", "event": "test_finished", "test": "test_page_deadline.PageDeadlineTests.test_worker_returns_evidence_with_bounded_wait", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.516839+00:00", "event": "test_started", "test": "test_project_budget.BudgetTests.test_agent_repository_keeps_its_context"}
+{"time": "2026-10-19T03:46:15.517342+00:00", "event": "test_finished", "test": "test_project_budget.BudgetTests.test_agent_repository_keeps_its_context", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.517386+00:00", "event": "test_started", "test": "test_project_budget.BudgetTests.test_defaults_and_legacy_override"}
+{"time": "2026-10-19T03:46:15.522365+00:00", "event": "test_finished", "test": "test_project_budget.BudgetTests.test_defaults_and_legacy_override", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:15.522437+00:00", "event": "test_started", "test": "test_project_budget.BudgetTests.test_explicit_small_budget_still_stops_honestly"}
+{"time": "2026-10-19T03:46:15.541136+00:00", "event": "test_finished", "test": "test_project_budget.BudgetTests.test_explicit_small_budget_still_stops_honestly", "status": "passed", "duration_seconds": 0.019}
+{"time": "2026-10-19T03:46:15.541196+00:00", "event": "test_started", "test": "test_project_budget.BudgetTests.test_external_project_excludes_unbound_identity_and_summary"}
+{"time": "2026-10-19T03:46:15.542074+00:00", "event": "test_finished", "test": "test_project_budget.BudgetTests.test_external_project_excludes_unbound_identity_and_summary", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.542119+00:00", "event": "test_started", "test": "test_project_budget.BudgetTests.test_full_305_line_read_survives_restored_context"}
+{"time": "2026-10-19T03:46:15.563650+00:00", "event": "test_finished", "test": "test_project_budget.BudgetTests.test_full_305_line_read_survives_restored_context", "status": "passed", "duration_seconds": 0.022}
+{"time": "2026-10-19T03:46:15.563709+00:00", "event": "test_started", "test": "test_project_budget.BudgetTests.test_task_is_not_truncated_by_context_selection"}
+{"time": "2026-10-19T03:46:15.564013+00:00", "event": "test_finished", "test": "test_project_budget.BudgetTests.test_task_is_not_truncated_by_context_selection", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.564078+00:00", "event": "test_started", "test": "test_project_context.RootTests.test_documents_and_mentions_cannot_change_root"}
+{"time": "2026-10-19T03:46:15.567578+00:00", "event": "test_finished", "test": "test_project_context.RootTests.test_documents_and_mentions_cannot_change_root", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.567695+00:00", "event": "test_started", "test": "test_project_context.RootTests.test_explicit_root_overrides_only_this_state"}
+{"time": "2026-10-19T03:46:15.571163+00:00", "event": "test_finished", "test": "test_project_context.RootTests.test_explicit_root_overrides_only_this_state", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.571263+00:00", "event": "test_started", "test": "test_project_context.RootTests.test_invalid_or_multiple_declarations_rejected"}
+{"time": "2026-10-19T03:46:15.572601+00:00", "event": "test_finished", "test": "test_project_context.RootTests.test_invalid_or_multiple_declarations_rejected", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.572649+00:00", "event": "test_started", "test": "test_project_context.RootTests.test_quoted_path_and_colon_command"}
+{"time": "2026-10-19T03:46:15.573651+00:00", "event": "test_finished", "test": "test_project_context.RootTests.test_quoted_path_and_colon_command", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.573717+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_executable_null_arguments_still_rejected_and_bounded"}
+{"time": "2026-10-19T03:46:15.574262+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_executable_null_arguments_still_rejected_and_bounded", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.574294+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_finish_and_clarification"}
+{"time": "2026-10-19T03:46:15.574735+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_finish_and_clarification", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.574763+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_groq_tool_output_rejection_gets_one_safe_correction"}
+{"time": "2026-10-19T03:46:15.578526+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_groq_tool_output_rejection_gets_one_safe_correction", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:15.578574+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_groq_unknown_wrapper_call_retries_registered_native_action_only"}
+{"time": "2026-10-19T03:46:15.580069+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_groq_unknown_wrapper_call_retries_registered_native_action_only", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.580113+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_invalid_proposal_gets_one_correction"}
+{"time": "2026-10-19T03:46:15.580490+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_invalid_proposal_gets_one_correction", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.580523+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_native_fallback_rejects_missing_and_extra_arguments"}
+{"time": "2026-10-19T03:46:15.582205+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_native_fallback_rejects_missing_and_extra_arguments", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.582251+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_native_function_is_registered"}
+{"time": "2026-10-19T03:46:15.582607+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_native_function_is_registered", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.582636+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_nested_final_answer_is_normalized"}
+{"time": "2026-10-19T03:46:15.582878+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_nested_final_answer_is_normalized", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.582914+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_nullable_unused_final_fields_are_normalized"}
+{"time": "2026-10-19T03:46:15.583148+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_nullable_unused_final_fields_are_normalized", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.583174+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_other_providers_keep_existing_tool_selection"}
+{"time": "2026-10-19T03:46:15.583673+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_other_providers_keep_existing_tool_selection", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.583699+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_plain_final_text_is_not_executed_as_an_action"}
+{"time": "2026-10-19T03:46:15.583895+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_plain_final_text_is_not_executed_as_an_action", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.583922+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_repeated_tool_rejection_and_quota_do_not_loop"}
+{"time": "2026-10-19T03:46:15.584413+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_repeated_tool_rejection_and_quota_do_not_loop", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.584443+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_text_action_json_remains_an_action"}
+{"time": "2026-10-19T03:46:15.584635+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_text_action_json_remains_an_action", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.584660+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_unknown_and_unavailable_actions_rejected"}
+{"time": "2026-10-19T03:46:15.585920+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_unknown_and_unavailable_actions_rejected", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.585978+00:00", "event": "test_started", "test": "test_project_decisions.ProjectDecisionTests.test_unregistered_function_and_multiple_calls_rejected"}
+{"time": "2026-10-19T03:46:15.586334+00:00", "event": "test_finished", "test": "test_project_decisions.ProjectDecisionTests.test_unregistered_function_and_multiple_calls_rejected", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.586388+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_cancel_keeps_receipt"}
+{"time": "2026-10-19T03:46:15.595259+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_cancel_keeps_receipt", "status": "passed", "duration_seconds": 0.009}
+{"time": "2026-10-19T03:46:15.595320+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_defaults_deny_parent_creation"}
+{"time": "2026-10-19T03:46:15.597896+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_defaults_deny_parent_creation", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.597957+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_existing_parent_title_is_authoritative"}
+{"time": "2026-10-19T03:46:15.601018+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_existing_parent_title_is_authoritative", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.601067+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_import_draft_cannot_enable_creation_permissions"}
+{"time": "2026-10-19T03:46:15.605949+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_import_draft_cannot_enable_creation_permissions", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:15.606059+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_import_other_project_is_blocked"}
+{"time": "2026-10-19T03:46:15.611823+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_import_other_project_is_blocked", "status": "passed", "duration_seconds": 0.006}
+{"time": "2026-10-19T03:46:15.611875+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_import_path_outside_project_is_blocked"}
+{"time": "2026-10-19T03:46:15.614701+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_import_path_outside_project_is_blocked", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.614778+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_lock_prevents_concurrent_session"}
+{"time": "2026-10-19T03:46:15.621591+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_lock_prevents_concurrent_session", "status": "passed", "duration_seconds": 0.007}
+{"time": "2026-10-19T03:46:15.621687+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_model_cannot_bind_duplicate"}
+{"time": "2026-10-19T03:46:15.624629+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_model_cannot_bind_duplicate", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.624750+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_model_cannot_grant_permission"}
+{"time": "2026-10-19T03:46:15.626855+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_model_cannot_grant_permission", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.627000+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_model_cannot_invent_parent_key"}
+{"time": "2026-10-19T03:46:15.629077+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_model_cannot_invent_parent_key", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.629141+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_model_parent_link_is_rejected"}
+{"time": "2026-10-19T03:46:15.631635+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_model_parent_link_is_rejected", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.631796+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_natural_creation_routing"}
+{"time": "2026-10-19T03:46:15.634455+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_natural_creation_routing", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.634523+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_natural_execution_routing"}
+{"time": "2026-10-19T03:46:15.636750+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_natural_execution_routing", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.636800+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_null_parent_echo_is_ignored"}
+{"time": "2026-10-19T03:46:15.639534+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_null_parent_echo_is_ignored", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.639591+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_pending_plan_cannot_be_silently_overwritten"}
+{"time": "2026-10-19T03:46:15.646864+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_pending_plan_cannot_be_silently_overwritten", "status": "passed", "duration_seconds": 0.007}
+{"time": "2026-10-19T03:46:15.646930+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_permission_command_invalidates_approval"}
+{"time": "2026-10-19T03:46:15.658626+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_permission_command_invalidates_approval", "status": "passed", "duration_seconds": 0.012}
+{"time": "2026-10-19T03:46:15.658704+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_project_switch_does_not_reuse_state"}
+{"time": "2026-10-19T03:46:15.665573+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_project_switch_does_not_reuse_state", "status": "passed", "duration_seconds": 0.007}
+{"time": "2026-10-19T03:46:15.665686+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_prompt_plan_approve_complete_without_llm_writes"}
+{"time": "2026-10-19T03:46:15.700757+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_prompt_plan_approve_complete_without_llm_writes", "status": "passed", "duration_seconds": 0.035}
+{"time": "2026-10-19T03:46:15.700825+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_run_request_cannot_add_shell_flags"}
+{"time": "2026-10-19T03:46:15.703709+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_run_request_cannot_add_shell_flags", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.703761+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_state_survives_restart"}
+{"time": "2026-10-19T03:46:15.711587+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_state_survives_restart", "status": "passed", "duration_seconds": 0.008}
+{"time": "2026-10-19T03:46:15.711654+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_tampered_plan_no_connection"}
+{"time": "2026-10-19T03:46:15.715526+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_tampered_plan_no_connection", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:15.715605+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_unknown_exception_text_is_not_exposed"}
+{"time": "2026-10-19T03:46:15.718682+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_unknown_exception_text_is_not_exposed", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.718757+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_wrapped_validation_message_is_visible"}
+{"time": "2026-10-19T03:46:15.720793+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_wrapped_validation_message_is_visible", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.720845+00:00", "event": "test_started", "test": "test_prompt_workflow.WorkflowTests.test_wrong_approval_no_connection"}
+{"time": "2026-10-19T03:46:15.724794+00:00", "event": "test_finished", "test": "test_prompt_workflow.WorkflowTests.test_wrong_approval_no_connection", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:15.724934+00:00", "event": "test_started", "test": "test_provider_errors.ProviderErrorTests.test_http_categories_and_redaction"}
+{"time": "2026-10-19T03:46:15.725091+00:00", "event": "test_finished", "test": "test_provider_errors.ProviderErrorTests.test_http_categories_and_redaction", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.725119+00:00", "event": "test_started", "test": "test_provider_errors.ProviderErrorTests.test_invalid_config_fails_before_network"}
+{"time": "2026-10-19T03:46:15.726886+00:00", "event": "test_finished", "test": "test_provider_errors.ProviderErrorTests.test_invalid_config_fails_before_network", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:15.726925+00:00", "event": "test_started", "test": "test_provider_errors.ProviderErrorTests.test_malformed_response_is_safe"}
+{"time": "2026-10-19T03:46:15.726994+00:00", "event": "test_finished", "test": "test_provider_errors.ProviderErrorTests.test_malformed_response_is_safe", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.727024+00:00", "event": "test_started", "test": "test_provider_errors.ProviderErrorTests.test_proxy_and_timeout_explanations"}
+{"time": "2026-10-19T03:46:15.727580+00:00", "event": "test_finished", "test": "test_provider_errors.ProviderErrorTests.test_proxy_and_timeout_explanations", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.727615+00:00", "event": "test_started", "test": "test_provider_errors.ProviderErrorTests.test_quota_and_long_unknown_delays_do_not_retry"}
+{"time": "2026-10-19T03:46:15.728290+00:00", "event": "test_finished", "test": "test_provider_errors.ProviderErrorTests.test_quota_and_long_unknown_delays_do_not_retry", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.728323+00:00", "event": "test_started", "test": "test_provider_errors.ProviderErrorTests.test_short_rate_limit_recovers"}
+{"time": "2026-10-19T03:46:15.728771+00:00", "event": "test_finished", "test": "test_provider_errors.ProviderErrorTests.test_short_rate_limit_recovers", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.728806+00:00", "event": "test_started", "test": "test_provider_errors.ProviderErrorTests.test_temporary_service_failure_bounded"}
+{"time": "2026-10-19T03:46:15.731366+00:00", "event": "test_finished", "test": "test_provider_errors.ProviderErrorTests.test_temporary_service_failure_bounded", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.731417+00:00", "event": "test_started", "test": "test_provider_errors.ProviderErrorTests.test_text_clients_use_shared_diagnostics"}
+{"time": "2026-10-19T03:46:15.736796+00:00", "event": "test_finished", "test": "test_provider_errors.ProviderErrorTests.test_text_clients_use_shared_diagnostics", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:15.736857+00:00", "event": "test_started", "test": "test_provider_errors.RateWindowTests.test_billing_upgrade_url_does_not_turn_minute_limit_into_quota"}
+{"time": "2026-10-19T03:46:15.736926+00:00", "event": "test_finished", "test": "test_provider_errors.RateWindowTests.test_billing_upgrade_url_does_not_turn_minute_limit_into_quota", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.736948+00:00", "event": "test_started", "test": "test_provider_errors.RateWindowTests.test_daily_window_remains_quota"}
+{"time": "2026-10-19T03:46:15.737001+00:00", "event": "test_finished", "test": "test_provider_errors.RateWindowTests.test_daily_window_remains_quota", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.737021+00:00", "event": "test_started", "test": "test_provider_errors.RateWindowTests.test_minute_error_without_explicit_short_delay_is_not_retried"}
+{"time": "2026-10-19T03:46:15.737255+00:00", "event": "test_finished", "test": "test_provider_errors.RateWindowTests.test_minute_error_without_explicit_short_delay_is_not_retried", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.737304+00:00", "event": "test_started", "test": "test_provider_panel.ProviderPanelTests.test_four_providers_return_metadata_only"}
+{"time": "2026-10-19T03:46:15.739840+00:00", "event": "test_finished", "test": "test_provider_panel.ProviderPanelTests.test_four_providers_return_metadata_only", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:15.739904+00:00", "event": "test_started", "test": "test_provider_selection.ProviderSelectionTests.test_browser_request_selection_is_scoped"}
+{"time": "2026-10-19T03:46:15.740229+00:00", "event": "test_finished", "test": "test_provider_selection.ProviderSelectionTests.test_browser_request_selection_is_scoped", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:15.740260+00:00", "event": "test_started", "test": "test_provider_selection.ProviderSelectionTests.test_context_restores_and_does_not_leak_to_threads"}
+{"time": "2026-10-19T03:46:15.741274+00:00", "event": "test_finished", "test": "test_provider_selection.ProviderSelectionTests.test_context_restores_and_does_not_leak_to_threads", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.741364+00:00", "event": "test_started", "test": "test_provider_selection.ProviderSelectionTests.test_native_tool_dispatch_uses_selected_provider"}
+{"time": "2026-10-19T03:46:15.745541+00:00", "event": "test_finished", "test": "test_provider_selection.ProviderSelectionTests.test_native_tool_dispatch_uses_selected_provider", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:15.745581+00:00", "event": "test_started", "test": "test_provider_selection.ProviderSelectionTests.test_text_dispatch_uses_selected_provider"}
+{"time": "2026-10-19T03:46:15.746376+00:00", "event": "test_finished", "test": "test_provider_selection.ProviderSelectionTests.test_text_dispatch_uses_selected_provider", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.746434+00:00", "event": "test_started", "test": "test_rag_paths.RagPathTests.test_default_paths_agree_with_active_retriever"}
+{"time": "2026-10-19T03:46:15.747460+00:00", "event": "test_finished", "test": "test_rag_paths.RagPathTests.test_default_paths_agree_with_active_retriever", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:15.747501+00:00", "event": "test_started", "test": "test_rag_paths.RagPathTests.test_empty_input_leaves_existing_indexes_unchanged"}
+{"time": "2026-10-19T03:46:15.758530+00:00", "event": "test_finished", "test": "test_rag_paths.RagPathTests.test_empty_input_leaves_existing_indexes_unchanged", "status": "passed", "duration_seconds": 0.011}
+{"time": "2026-10-19T03:46:15.758589+00:00", "event": "test_started", "test": "test_rag_paths.RagPathTests.test_explicit_ingestion_outputs_match_requested_index_folder"}
+{"time": "2026-10-19T03:46:15.765586+00:00", "event": "test_finished", "test": "test_rag_paths.RagPathTests.test_explicit_ingestion_outputs_match_requested_index_folder", "status": "passed", "duration_seconds": 0.007}
+{"time": "2026-10-19T03:46:15.765643+00:00", "event": "test_started", "test": "test_rag_paths.RagPathTests.test_imports_from_unrelated_folder_do_not_load_models_or_write"}
+{"time": "2026-10-19T03:46:16.441897+00:00", "event": "test_finished", "test": "test_rag_paths.RagPathTests.test_imports_from_unrelated_folder_do_not_load_models_or_write", "status": "passed", "duration_seconds": 0.676}
+{"time": "2026-10-19T03:46:16.442038+00:00", "event": "test_started", "test": "test_request_status.RequestStatusTests.test_only_explicit_completion_is_claimed"}
+{"time": "2026-10-19T03:46:16.442150+00:00", "event": "test_finished", "test": "test_request_status.RequestStatusTests.test_only_explicit_completion_is_claimed", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:16.442208+00:00", "event": "test_started", "test": "test_semantic_memory.SemanticMemoryTests.test_empty_scope_does_not_load_model"}
+{"time": "2026-10-19T03:46:16.443428+00:00", "event": "test_finished", "test": "test_semantic_memory.SemanticMemoryTests.test_empty_scope_does_not_load_model", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:16.443539+00:00", "event": "test_started", "test": "test_semantic_memory.SemanticMemoryTests.test_invalid_vectors_rejected"}
+{"time": "2026-10-19T03:46:16.443811+00:00", "event": "test_finished", "test": "test_semantic_memory.SemanticMemoryTests.test_invalid_vectors_rejected", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:16.443867+00:00", "event": "test_started", "test": "test_semantic_memory.SemanticMemoryTests.test_paraphrase_rank_scope_and_current_values"}
+{"time": "2026-10-19T03:46:16.448415+00:00", "event": "test_finished", "test": "test_semantic_memory.SemanticMemoryTests.test_paraphrase_rank_scope_and_current_values", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:16.448599+00:00", "event": "test_started", "test": "test_semantic_memory.SemanticMemoryTests.test_scope_coverage_is_reported"}
+{"time": "2026-10-19T03:46:16.462703+00:00", "event": "test_finished", "test": "test_semantic_memory.SemanticMemoryTests.test_scope_coverage_is_reported", "status": "passed", "duration_seconds": 0.014}
+{"time": "2026-10-19T03:46:16.462951+00:00", "event": "test_started", "test": "test_source_audit.SourceAuditTests.test_changed_source_is_mismatch_not_verified_fresh"}
+{"time": "2026-10-19T03:46:16.472295+00:00", "event": "test_finished", "test": "test_source_audit.SourceAuditTests.test_changed_source_is_mismatch_not_verified_fresh", "status": "passed", "duration_seconds": 0.009}
+{"time": "2026-10-19T03:46:16.472481+00:00", "event": "test_started", "test": "test_source_audit.SourceAuditTests.test_missing_source_and_location_remain_unverified"}
+{"time": "2026-10-19T03:46:16.478728+00:00", "event": "test_finished", "test": "test_source_audit.SourceAuditTests.test_missing_source_and_location_remain_unverified", "status": "passed", "duration_seconds": 0.006}
+{"time": "2026-10-19T03:46:16.478811+00:00", "event": "test_started", "test": "test_source_audit.SourceAuditTests.test_real_docx_and_multiline_csv_record_locations"}
+{"time": "2026-10-19T03:46:16.513649+00:00", "event": "test_finished", "test": "test_source_audit.SourceAuditTests.test_real_docx_and_multiline_csv_record_locations", "status": "passed", "duration_seconds": 0.035}
+{"time": "2026-10-19T03:46:16.513726+00:00", "event": "test_started", "test": "test_source_audit.SourceAuditTests.test_sample_cap_and_new_files_do_not_claim_full_coverage"}
+{"time": "2026-10-19T03:46:16.516978+00:00", "event": "test_finished", "test": "test_source_audit.SourceAuditTests.test_sample_cap_and_new_files_do_not_claim_full_coverage", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:16.517040+00:00", "event": "test_started", "test": "test_source_audit.SourceAuditTests.test_traversal_is_not_read_and_size_bound_is_explicit"}
+{"time": "2026-10-19T03:46:16.519264+00:00", "event": "test_finished", "test": "test_source_audit.SourceAuditTests.test_traversal_is_not_read_and_size_bound_is_explicit", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:16.519349+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_all_provider_failure_categories_allow_next_request"}
+{"time": "2026-10-19T03:46:19.490330+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_all_provider_failure_categories_allow_next_request", "status": "passed", "duration_seconds": 2.971}
+{"time": "2026-10-19T03:46:19.490406+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_archive_search_opens_old_chat_only_on_selection"}
+{"time": "2026-10-19T03:46:20.120787+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_archive_search_opens_old_chat_only_on_selection", "status": "passed", "duration_seconds": 0.63}
+{"time": "2026-10-19T03:46:20.120853+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_archive_search_scope_and_no_match_preserve_chat"}
+{"time": "2026-10-19T03:46:20.600318+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_archive_search_scope_and_no_match_preserve_chat", "status": "passed", "duration_seconds": 0.479}
+{"time": "2026-10-19T03:46:20.600398+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_attachment_is_scoped_and_answer_can_be_downloaded"}
+{"time": "2026-10-19T03:46:21.364972+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_attachment_is_scoped_and_answer_can_be_downloaded", "status": "passed", "duration_seconds": 0.765}
+{"time": "2026-10-19T03:46:21.365047+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_cowork_is_explicit_placeholder_and_provider_has_no_model_label"}
+{"time": "2026-10-19T03:46:22.075370+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_cowork_is_explicit_placeholder_and_provider_has_no_model_label", "status": "passed", "duration_seconds": 0.71}
+{"time": "2026-10-19T03:46:22.075477+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_generated_download_preparation_does_not_submit_or_repeat"}
+{"time": "2026-10-19T03:46:23.494857+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_generated_download_preparation_does_not_submit_or_repeat", "status": "passed", "duration_seconds": 1.419}
+{"time": "2026-10-19T03:46:23.495107+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_initial_render_without_model_call"}
+{"time": "2026-10-19T03:46:25.121381+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_initial_render_without_model_call", "status": "passed", "duration_seconds": 1.626}
+{"time": "2026-10-19T03:46:25.121672+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_landing_hides_old_default_content_until_opened"}
+{"time": "2026-10-19T03:46:26.292655+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_landing_hides_old_default_content_until_opened", "status": "passed", "duration_seconds": 1.171}
+{"time": "2026-10-19T03:46:26.293105+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_memory_editor_requires_confirmation_and_does_not_repeat_on_rerun"}
+{"time": "2026-10-19T03:46:26.880749+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_memory_editor_requires_confirmation_and_does_not_repeat_on_rerun", "status": "passed", "duration_seconds": 0.588}
+{"time": "2026-10-19T03:46:26.880840+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_memory_view_without_model"}
+{"time": "2026-10-19T03:46:27.349198+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_memory_view_without_model", "status": "passed", "duration_seconds": 0.468}
+{"time": "2026-10-19T03:46:27.349317+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_model_settings_render_without_request"}
+{"time": "2026-10-19T03:46:27.747041+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_model_settings_render_without_request", "status": "passed", "duration_seconds": 0.398}
+{"time": "2026-10-19T03:46:27.747107+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_new_chat_and_multiline_message"}
+{"time": "2026-10-19T03:46:28.343102+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_new_chat_and_multiline_message", "status": "passed", "duration_seconds": 0.596}
+{"time": "2026-10-19T03:46:28.343202+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_provider_configuration_error_is_actionable"}
+{"time": "2026-10-19T03:46:28.759924+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_provider_configuration_error_is_actionable", "status": "passed", "duration_seconds": 0.417}
+{"time": "2026-10-19T03:46:28.759994+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_recent_chat_button_restores_correct_history_without_model"}
+{"time": "2026-10-19T03:46:29.196287+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_recent_chat_button_restores_correct_history_without_model", "status": "passed", "duration_seconds": 0.436}
+{"time": "2026-10-19T03:46:29.196405+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_request_status_survives_rerender_and_is_scoped_by_chat"}
+{"time": "2026-10-19T03:46:29.821428+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_request_status_survives_rerender_and_is_scoped_by_chat", "status": "passed", "duration_seconds": 0.625}
+{"time": "2026-10-19T03:46:29.821509+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_settings_require_confirmation_and_keep_running_provider"}
+{"time": "2026-10-19T03:46:30.445963+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_settings_require_confirmation_and_keep_running_provider", "status": "passed", "duration_seconds": 0.624}
+{"time": "2026-10-19T03:46:30.446152+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_title_filter_does_not_switch_or_call_model"}
+{"time": "2026-10-19T03:46:30.943985+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_title_filter_does_not_switch_or_call_model", "status": "passed", "duration_seconds": 0.498}
+{"time": "2026-10-19T03:46:30.944058+00:00", "event": "test_started", "test": "test_streamlit_ui.BrowserTests.test_unknown_exception_is_not_exposed"}
+{"time": "2026-10-19T03:46:31.333503+00:00", "event": "test_finished", "test": "test_streamlit_ui.BrowserTests.test_unknown_exception_is_not_exposed", "status": "passed", "duration_seconds": 0.389}
+{"time": "2026-10-19T03:46:31.333621+00:00", "event": "test_started", "test": "test_summary_model.SummaryModelTests.test_historical_action_is_not_a_summary"}
+{"time": "2026-10-19T03:46:31.334035+00:00", "event": "test_finished", "test": "test_summary_model.SummaryModelTests.test_historical_action_is_not_a_summary", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:31.334080+00:00", "event": "test_started", "test": "test_summary_model.SummaryModelTests.test_invalid_summary_gets_one_correction"}
+{"time": "2026-10-19T03:46:31.334429+00:00", "event": "test_finished", "test": "test_summary_model.SummaryModelTests.test_invalid_summary_gets_one_correction", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:31.334464+00:00", "event": "test_started", "test": "test_summary_model.SummaryModelTests.test_native_summary_returns_validated_data"}
+{"time": "2026-10-19T03:46:31.334681+00:00", "event": "test_finished", "test": "test_summary_model.SummaryModelTests.test_native_summary_returns_validated_data", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:31.334714+00:00", "event": "test_started", "test": "test_summary_model.SummaryModelTests.test_plain_summary_json_remains_compatible"}
+{"time": "2026-10-19T03:46:31.334946+00:00", "event": "test_finished", "test": "test_summary_model.SummaryModelTests.test_plain_summary_json_remains_compatible", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:31.334987+00:00", "event": "test_started", "test": "test_summary_model.SummaryModelTests.test_provider_diagnostic_is_category_based"}
+{"time": "2026-10-19T03:46:31.335055+00:00", "event": "test_finished", "test": "test_summary_model.SummaryModelTests.test_provider_diagnostic_is_category_based", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:31.335082+00:00", "event": "test_started", "test": "test_summary_model.SummaryModelTests.test_provider_format_rejection_gets_one_changed_request"}
+{"time": "2026-10-19T03:46:31.335515+00:00", "event": "test_finished", "test": "test_summary_model.SummaryModelTests.test_provider_format_rejection_gets_one_changed_request", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:31.335542+00:00", "event": "test_started", "test": "test_summary_model.SummaryModelTests.test_quota_error_does_not_get_format_retry"}
+{"time": "2026-10-19T03:46:31.335817+00:00", "event": "test_finished", "test": "test_summary_model.SummaryModelTests.test_quota_error_does_not_get_format_retry", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:31.335842+00:00", "event": "test_started", "test": "test_summary_model.SummaryModelTests.test_repeated_provider_format_rejection_is_bounded"}
+{"time": "2026-10-19T03:46:31.336074+00:00", "event": "test_finished", "test": "test_summary_model.SummaryModelTests.test_repeated_provider_format_rejection_is_bounded", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:31.336172+00:00", "event": "test_started", "test": "test_summary_sessions.SummarySessionTests.test_question_evidence_is_chat_and_user_scoped_and_bounded"}
+{"time": "2026-10-19T03:46:31.393335+00:00", "event": "test_finished", "test": "test_summary_sessions.SummarySessionTests.test_question_evidence_is_chat_and_user_scoped_and_bounded", "status": "passed", "duration_seconds": 0.057}
+{"time": "2026-10-19T03:46:31.393583+00:00", "event": "test_started", "test": "test_summary_sessions.SummarySessionTests.test_summary_restart_switch_and_full_archive"}
+{"time": "2026-10-19T03:46:31.687531+00:00", "event": "test_finished", "test": "test_summary_sessions.SummarySessionTests.test_summary_restart_switch_and_full_archive", "status": "passed", "duration_seconds": 0.294}
+{"time": "2026-10-19T03:46:31.687628+00:00", "event": "test_started", "test": "test_table_grounding.TableGroundingTests.test_empty_table_cannot_bypass_empty_indexed_evidence"}
+{"time": "2026-10-19T03:46:31.690137+00:00", "event": "test_finished", "test": "test_table_grounding.TableGroundingTests.test_empty_table_cannot_bypass_empty_indexed_evidence", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:31.690187+00:00", "event": "test_started", "test": "test_table_grounding.TableGroundingTests.test_failed_read_cannot_license_invented_answer"}
+{"time": "2026-10-19T03:46:31.691626+00:00", "event": "test_finished", "test": "test_table_grounding.TableGroundingTests.test_failed_read_cannot_license_invented_answer", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:31.691674+00:00", "event": "test_started", "test": "test_table_grounding.TableGroundingTests.test_real_csv_result_limit_and_source_row_reach_model"}
+{"time": "2026-10-19T03:46:31.694769+00:00", "event": "test_finished", "test": "test_table_grounding.TableGroundingTests.test_real_csv_result_limit_and_source_row_reach_model", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:31.694828+00:00", "event": "test_started", "test": "test_table_grounding.TableGroundingTests.test_real_xlsx_ambiguity_can_be_resolved_before_answering"}
+{"time": "2026-10-19T03:46:31.713603+00:00", "event": "test_finished", "test": "test_table_grounding.TableGroundingTests.test_real_xlsx_ambiguity_can_be_resolved_before_answering", "status": "passed", "duration_seconds": 0.019}
+{"time": "2026-10-19T03:46:31.713688+00:00", "event": "test_started", "test": "test_table_memory_tools.MemorySearchTests.test_memory_tool_reaches_model"}
+{"time": "2026-10-19T03:46:31.715190+00:00", "event": "test_finished", "test": "test_table_memory_tools.MemorySearchTests.test_memory_tool_reaches_model", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:31.715234+00:00", "event": "test_started", "test": "test_table_memory_tools.MemorySearchTests.test_relevance_and_scope_and_restart"}
+{"time": "2026-10-19T03:46:31.732612+00:00", "event": "test_finished", "test": "test_table_memory_tools.MemorySearchTests.test_relevance_and_scope_and_restart", "status": "passed", "duration_seconds": 0.017}
+{"time": "2026-10-19T03:46:31.732696+00:00", "event": "test_started", "test": "test_table_memory_tools.TableTests.test_discovery"}
+{"time": "2026-10-19T03:46:31.742681+00:00", "event": "test_finished", "test": "test_table_memory_tools.TableTests.test_discovery", "status": "passed", "duration_seconds": 0.01}
+{"time": "2026-10-19T03:46:31.742768+00:00", "event": "test_started", "test": "test_table_memory_tools.TableTests.test_numeric_filter_and_source_row"}
+{"time": "2026-10-19T03:46:31.760001+00:00", "event": "test_finished", "test": "test_table_memory_tools.TableTests.test_numeric_filter_and_source_row", "status": "passed", "duration_seconds": 0.017}
+{"time": "2026-10-19T03:46:31.760072+00:00", "event": "test_started", "test": "test_table_memory_tools.TableTests.test_path_and_filter_rejections"}
+{"time": "2026-10-19T03:46:31.770810+00:00", "event": "test_finished", "test": "test_table_memory_tools.TableTests.test_path_and_filter_rejections", "status": "passed", "duration_seconds": 0.011}
+{"time": "2026-10-19T03:46:31.770876+00:00", "event": "test_started", "test": "test_table_memory_tools.TableTests.test_result_limit_is_explicit"}
+{"time": "2026-10-19T03:46:31.781118+00:00", "event": "test_finished", "test": "test_table_memory_tools.TableTests.test_result_limit_is_explicit", "status": "passed", "duration_seconds": 0.01}
+{"time": "2026-10-19T03:46:31.781212+00:00", "event": "test_started", "test": "test_table_memory_tools.TableTests.test_table_evidence_reaches_model"}
+{"time": "2026-10-19T03:46:31.794901+00:00", "event": "test_finished", "test": "test_table_memory_tools.TableTests.test_table_evidence_reaches_model", "status": "passed", "duration_seconds": 0.014}
+{"time": "2026-10-19T03:46:31.794971+00:00", "event": "test_started", "test": "test_table_memory_tools.TableTests.test_unknown_column_does_not_silently_match"}
+{"time": "2026-10-19T03:46:31.806218+00:00", "event": "test_finished", "test": "test_table_memory_tools.TableTests.test_unknown_column_does_not_silently_match", "status": "passed", "duration_seconds": 0.011}
+{"time": "2026-10-19T03:46:31.806287+00:00", "event": "test_started", "test": "test_table_memory_tools.TableTests.test_xlsx_sheet_choice_and_header"}
+{"time": "2026-10-19T03:46:31.826721+00:00", "event": "test_finished", "test": "test_table_memory_tools.TableTests.test_xlsx_sheet_choice_and_header", "status": "passed", "duration_seconds": 0.02}
+{"time": "2026-10-19T03:46:31.826825+00:00", "event": "test_started", "test": "test_task_recovery.TaskRecoveryTests.test_changed_path_recovers_using_actual_file"}
+{"time": "2026-10-19T03:46:31.830383+00:00", "event": "test_finished", "test": "test_task_recovery.TaskRecoveryTests.test_changed_path_recovers_using_actual_file", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:31.830450+00:00", "event": "test_started", "test": "test_task_recovery.TaskRecoveryTests.test_discover_then_read_is_a_multi_step_success"}
+{"time": "2026-10-19T03:46:31.832986+00:00", "event": "test_finished", "test": "test_task_recovery.TaskRecoveryTests.test_discover_then_read_is_a_multi_step_success", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:31.833040+00:00", "event": "test_started", "test": "test_task_recovery.TaskRecoveryTests.test_handler_exception_is_not_hidden_by_other_success"}
+{"time": "2026-10-19T03:46:31.834759+00:00", "event": "test_finished", "test": "test_task_recovery.TaskRecoveryTests.test_handler_exception_is_not_hidden_by_other_success", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:31.834820+00:00", "event": "test_started", "test": "test_task_recovery.TaskRecoveryTests.test_later_unrelated_success_does_not_clear_failed_read"}
+{"time": "2026-10-19T03:46:31.839249+00:00", "event": "test_finished", "test": "test_task_recovery.TaskRecoveryTests.test_later_unrelated_success_does_not_clear_failed_read", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:31.839532+00:00", "event": "test_started", "test": "test_task_recovery.TaskRecoveryTests.test_only_failed_read_cannot_be_reported_as_completed"}
+{"time": "2026-10-19T03:46:31.842167+00:00", "event": "test_finished", "test": "test_task_recovery.TaskRecoveryTests.test_only_failed_read_cannot_be_reported_as_completed", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:31.842249+00:00", "event": "test_started", "test": "test_task_recovery.TaskRecoveryTests.test_successful_listing_cannot_hide_failed_required_read"}
+{"time": "2026-10-19T03:46:31.847131+00:00", "event": "test_finished", "test": "test_task_recovery.TaskRecoveryTests.test_successful_listing_cannot_hide_failed_required_read", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:31.847192+00:00", "event": "test_started", "test": "test_task_recovery.TaskRecoveryTests.test_unchanged_failed_read_is_not_reexecuted"}
+{"time": "2026-10-19T03:46:31.848961+00:00", "event": "test_finished", "test": "test_task_recovery.TaskRecoveryTests.test_unchanged_failed_read_is_not_reexecuted", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:31.849045+00:00", "event": "test_started", "test": "test_task_timing.TimingTests.test_exception_still_propagates"}
+{"time": "2026-10-19T03:46:31.849923+00:00", "event": "test_finished", "test": "test_task_timing.TimingTests.test_exception_still_propagates", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:31.849991+00:00", "event": "test_started", "test": "test_task_timing.TimingTests.test_existing_success_behavior_preserved"}
+{"time": "2026-10-19T03:46:31.851346+00:00", "event": "test_finished", "test": "test_task_timing.TimingTests.test_existing_success_behavior_preserved", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:31.851448+00:00", "event": "test_started", "test": "test_task_timing.TimingTests.test_incomplete_return_is_not_success"}
+{"time": "2026-10-19T03:46:31.852888+00:00", "event": "test_finished", "test": "test_task_timing.TimingTests.test_incomplete_return_is_not_success", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:31.852937+00:00", "event": "test_started", "test": "test_task_timing.TimingTests.test_outer_workflow_observes_result"}
+{"time": "2026-10-19T03:46:31.853729+00:00", "event": "test_finished", "test": "test_task_timing.TimingTests.test_outer_workflow_observes_result", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:31.853807+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_alt_enter_inserts_newline"}
+{"time": "2026-10-19T03:46:31.891229+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_alt_enter_inserts_newline", "status": "passed", "duration_seconds": 0.037}
+{"time": "2026-10-19T03:46:31.891294+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_bracketed_multiline_paste_is_single_draft"}
+{"time": "2026-10-19T03:46:31.913581+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_bracketed_multiline_paste_is_single_draft", "status": "passed", "duration_seconds": 0.022}
+{"time": "2026-10-19T03:46:31.913640+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_confirmation_requires_no_end"}
+{"time": "2026-10-19T03:46:31.913932+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_confirmation_requires_no_end", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:31.913968+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_ctrl_c_clears_draft"}
+{"time": "2026-10-19T03:46:31.940412+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_ctrl_c_clears_draft", "status": "passed", "duration_seconds": 0.026}
+{"time": "2026-10-19T03:46:31.940471+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_ctrl_d_empty_exits"}
+{"time": "2026-10-19T03:46:31.965442+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_ctrl_d_empty_exits", "status": "passed", "duration_seconds": 0.025}
+{"time": "2026-10-19T03:46:31.965553+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_ctrl_d_nonempty_deletes"}
+{"time": "2026-10-19T03:46:31.988404+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_ctrl_d_nonempty_deletes", "status": "passed", "duration_seconds": 0.023}
+{"time": "2026-10-19T03:46:31.988464+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_ctrl_j_inserts_newline"}
+{"time": "2026-10-19T03:46:32.014710+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_ctrl_j_inserts_newline", "status": "passed", "duration_seconds": 0.026}
+{"time": "2026-10-19T03:46:32.014780+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_edit_previous_line"}
+{"time": "2026-10-19T03:46:32.049777+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_edit_previous_line", "status": "passed", "duration_seconds": 0.035}
+{"time": "2026-10-19T03:46:32.049835+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_enter_sends_without_end"}
+{"time": "2026-10-19T03:46:32.104868+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_enter_sends_without_end", "status": "passed", "duration_seconds": 0.055}
+{"time": "2026-10-19T03:46:32.105105+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_exit_discards_unfinished_legacy_draft"}
+{"time": "2026-10-19T03:46:32.106372+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_exit_discards_unfinished_legacy_draft", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:32.106471+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_legacy_end_mode"}
+{"time": "2026-10-19T03:46:32.107513+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_legacy_end_mode", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:32.107668+00:00", "event": "test_started", "test": "test_terminal_input.InputTests.test_non_terminal_reads_one_line"}
+{"time": "2026-10-19T03:46:32.108663+00:00", "event": "test_finished", "test": "test_terminal_input.InputTests.test_non_terminal_reads_one_line", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:32.108765+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_connect_failure_recovers_without_actions"}
+{"time": "2026-10-19T03:46:32.114428+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_connect_failure_recovers_without_actions", "status": "passed", "duration_seconds": 0.006}
+{"time": "2026-10-19T03:46:32.114483+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_connect_retries_are_bounded"}
+{"time": "2026-10-19T03:46:32.117962+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_connect_retries_are_bounded", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:32.118032+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_duplicate_ids_rejected"}
+{"time": "2026-10-19T03:46:32.123468+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_duplicate_ids_rejected", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:32.123521+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_hosted_tool_calls_preserved"}
+{"time": "2026-10-19T03:46:32.129880+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_hosted_tool_calls_preserved", "status": "passed", "duration_seconds": 0.006}
+{"time": "2026-10-19T03:46:32.129926+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_ollama_argument_and_result_conversion"}
+{"time": "2026-10-19T03:46:32.136186+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_ollama_argument_and_result_conversion", "status": "passed", "duration_seconds": 0.006}
+{"time": "2026-10-19T03:46:32.136236+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_ollama_registered_text_tool_proposal_is_normalized"}
+{"time": "2026-10-19T03:46:32.137942+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_ollama_registered_text_tool_proposal_is_normalized", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:32.138236+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_ollama_text_fallback_does_not_execute_prose_or_results"}
+{"time": "2026-10-19T03:46:32.138344+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_ollama_text_fallback_does_not_execute_prose_or_results", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:32.138369+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_per_request_budget_preserves_default"}
+{"time": "2026-10-19T03:46:32.142693+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_per_request_budget_preserves_default", "status": "passed", "duration_seconds": 0.004}
+{"time": "2026-10-19T03:46:32.142742+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_plain_answer"}
+{"time": "2026-10-19T03:46:32.145974+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_plain_answer", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:32.146133+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_quota_error"}
+{"time": "2026-10-19T03:46:32.148980+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_quota_error", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:32.149034+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_response_timeout_and_tls_failure_do_not_retry"}
+{"time": "2026-10-19T03:46:32.156195+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_response_timeout_and_tls_failure_do_not_retry", "status": "passed", "duration_seconds": 0.007}
+{"time": "2026-10-19T03:46:32.156250+00:00", "event": "test_started", "test": "test_tool_llm.AdapterTests.test_truncation_rejected"}
+{"time": "2026-10-19T03:46:32.158637+00:00", "event": "test_finished", "test": "test_tool_llm.AdapterTests.test_truncation_rejected", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:32.158697+00:00", "event": "test_started", "test": "test_tool_llm.ForcedProposalTests.test_groq_native_fallback_requires_one_tool_without_forcing_wrapper"}
+{"time": "2026-10-19T03:46:32.161974+00:00", "event": "test_finished", "test": "test_tool_llm.ForcedProposalTests.test_groq_native_fallback_requires_one_tool_without_forcing_wrapper", "status": "passed", "duration_seconds": 0.003}
+{"time": "2026-10-19T03:46:32.162017+00:00", "event": "test_started", "test": "test_tool_llm.ForcedProposalTests.test_registered_groq_function_is_selected_and_parallel_disabled"}
+{"time": "2026-10-19T03:46:32.164346+00:00", "event": "test_finished", "test": "test_tool_llm.ForcedProposalTests.test_registered_groq_function_is_selected_and_parallel_disabled", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:32.164388+00:00", "event": "test_started", "test": "test_tool_llm.ForcedProposalTests.test_unregistered_forcing_fails_before_network"}
+{"time": "2026-10-19T03:46:32.165541+00:00", "event": "test_finished", "test": "test_tool_llm.ForcedProposalTests.test_unregistered_forcing_fails_before_network", "status": "passed", "duration_seconds": 0.001}
+{"time": "2026-10-19T03:46:32.165597+00:00", "event": "test_started", "test": "test_ui_settings.SettingsTests.test_invalid_missing_key_and_invalid_file_do_not_write"}
+{"time": "2026-10-19T03:46:32.170555+00:00", "event": "test_finished", "test": "test_ui_settings.SettingsTests.test_invalid_missing_key_and_invalid_file_do_not_write", "status": "passed", "duration_seconds": 0.005}
+{"time": "2026-10-19T03:46:32.170612+00:00", "event": "test_started", "test": "test_ui_settings.SettingsTests.test_ollama_and_gemini_alias_supported"}
+{"time": "2026-10-19T03:46:32.181773+00:00", "event": "test_finished", "test": "test_ui_settings.SettingsTests.test_ollama_and_gemini_alias_supported", "status": "passed", "duration_seconds": 0.011}
+{"time": "2026-10-19T03:46:32.181835+00:00", "event": "test_started", "test": "test_ui_settings.SettingsTests.test_preserves_keys_comments_multiline_and_other_providers"}
+{"time": "2026-10-19T03:46:32.188240+00:00", "event": "test_finished", "test": "test_ui_settings.SettingsTests.test_preserves_keys_comments_multiline_and_other_providers", "status": "passed", "duration_seconds": 0.006}
+{"time": "2026-10-19T03:46:32.188320+00:00", "event": "test_started", "test": "test_web_pages.WebPageTests.test_byte_text_bounds_and_compression"}
+{"time": "2026-10-19T03:46:32.189940+00:00", "event": "test_finished", "test": "test_web_pages.WebPageTests.test_byte_text_bounds_and_compression", "status": "passed", "duration_seconds": 0.002}
+{"time": "2026-10-19T03:46:32.189985+00:00", "event": "test_started", "test": "test_web_pages.WebPageTests.test_connection_failure_does_not_expose_exception"}
+{"time": "2026-10-19T03:46:32.190063+00:00", "event": "test_finished", "test": "test_web_pages.WebPageTests.test_connection_failure_does_not_expose_exception", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:32.190091+00:00", "event": "test_started", "test": "test_web_pages.WebPageTests.test_downgrade_and_nontext_declined"}
+{"time": "2026-10-19T03:46:32.190217+00:00", "event": "test_finished", "test": "test_web_pages.WebPageTests.test_downgrade_and_nontext_declined", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:32.190244+00:00", "event": "test_started", "test": "test_web_pages.WebPageTests.test_page_tool_requires_search_and_registers_final_url"}
+{"time": "2026-10-19T03:46:32.190679+00:00", "event": "test_finished", "test": "test_web_pages.WebPageTests.test_page_tool_requires_search_and_registers_final_url", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:32.190709+00:00", "event": "test_started", "test": "test_web_pages.WebPageTests.test_pinned_public_text_and_script_removal"}
+{"time": "2026-10-19T03:46:32.191075+00:00", "event": "test_finished", "test": "test_web_pages.WebPageTests.test_pinned_public_text_and_script_removal", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:32.191111+00:00", "event": "test_started", "test": "test_web_pages.WebPageTests.test_private_mixed_dns_credentials_and_ports_blocked"}
+{"time": "2026-10-19T03:46:32.191336+00:00", "event": "test_finished", "test": "test_web_pages.WebPageTests.test_private_mixed_dns_credentials_and_ports_blocked", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:32.191362+00:00", "event": "test_started", "test": "test_web_pages.WebPageTests.test_private_redirect_is_blocked_before_second_connection"}
+{"time": "2026-10-19T03:46:32.191493+00:00", "event": "test_finished", "test": "test_web_pages.WebPageTests.test_private_redirect_is_blocked_before_second_connection", "status": "passed", "duration_seconds": 0.0}
+{"time": "2026-10-19T03:46:32.191642+00:00", "event": "run_finished", "tests": 399, "status": "passed", "failures": 0, "errors": 0}

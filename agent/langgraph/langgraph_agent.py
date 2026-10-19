@@ -22,7 +22,7 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 # ENVIRONMENT
 # ============================================================
 
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+from agent.config.paths import APPLICATION_ROOT as PROJECT_ROOT
 
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -44,10 +44,13 @@ class AgentState(TypedDict):
     context: str
     answer: str
     final_answer: str
+    task_status: str
+    execution_outcome: str
     history: str
     previous_route: str
     memory_context: str
     project_root: str
+    conversation_session: str
     summary: str
     summary_retry_at: float
 
@@ -72,16 +75,15 @@ def load_long_term_memory_node(state: AgentState):
             for index, row in enumerate(records, 1):
                 key = f"seed_{index}"
                 if memory.get(user, namespace, key) is None:
-                    memory.save(user, namespace, key, row["text"])
+                    memory.save(user, namespace, key, row["text"], source_kind="seed_import", source_ref="agent/memory/long_term_memory.json")
             if seed.exists():
                 memory.save(user, "__seed_import__", namespace, True)
-        question = state.get("question", "").strip()
+        from agent.runtime.input_evidence import split_uploaded_input
+        question = split_uploaded_input(state.get("question", ""))[0].strip()
         saved = (memory.list(user, namespace) if not question or question.casefold() == "show memory"
                  else memory.search(user, namespace, question[:1500]))
-    context = "\n".join(
-        f"- {row['key']}: {json.dumps(row['value'], ensure_ascii=False)}"
-        for row in saved
-    )[:8000]
+    from agent.memory.long_term_memory import format_memory_record
+    context = "\n".join(format_memory_record(row) for row in saved)[:8000]
     return {"memory_context": context, "project_root": selected_root}
 
 
@@ -91,16 +93,33 @@ def memory_command_node(state: AgentState):
     question = state["question"].strip()
     remember = re.fullmatch(r"REMEMBER\s+([A-Za-z0-9_.-]{1,64})\s*=\s*(.+)", question, re.I | re.S)
     forget = re.fullmatch(r"FORGET\s+([A-Za-z0-9_.-]{1,64})", question, re.I)
-    if not remember and not forget:
-        return {"answer": "Use REMEMBER key = fact, FORGET key, or SHOW MEMORY."}
+    history_request = re.fullmatch(r"MEMORY HISTORY\s+([A-Za-z0-9_.-]{1,64})", question, re.I)
+    suggest = re.fullmatch(r"SUGGEST MEMORY\s+([A-Za-z0-9_.-]{1,64})\s*=\s*(.+)", question, re.I | re.S)
+    decision = re.fullmatch(r"(ACCEPT|REJECT) MEMORY\s+(suggest-[a-f0-9]{32})",question,re.I)
+    show_suggestions = question.upper()=="SHOW SUGGESTIONS"
+    if not any((remember,forget,history_request,suggest,decision,show_suggestions)):
+        return {"answer": "Use REMEMBER key = fact, FORGET key, SHOW MEMORY, or MEMORY HISTORY key. Suggestions: SUGGEST MEMORY key = fact, SHOW SUGGESTIONS, ACCEPT MEMORY id, REJECT MEMORY id."}
     if remember and len(remember.group(2).strip()) > 2000:
         return {"answer": "Please keep each memory fact within 2000 characters."}
     user = os.getenv("AI_MEMORY_USER_ID", "local-user")
     namespace = os.getenv("AI_MEMORY_NAMESPACE", "project")
     with LongTermMemory(PROJECT_ROOT / "outputs" / "memory" / "long_term_memory.sqlite3") as memory:
-        if remember:
+        if suggest or decision or show_suggestions:
+            try:
+                if suggest:result=memory.propose(user,namespace,suggest.group(1),suggest.group(2).strip(),source_kind="user_statement")
+                elif decision:result=memory.decide_suggestion(user,namespace,decision.group(2).lower(),accept=decision.group(1).upper()=="ACCEPT")
+                else:result=memory.suggestions(user,namespace)
+                answer=json.dumps(result,ensure_ascii=False,indent=2)
+            except ValueError as error:
+                answer=str(error)
+        elif history_request:
+            key = history_request.group(1)
+            revisions = memory.history(user,namespace,key)
+            current = memory.get(user,namespace,key)
+            answer = ("Current value: " + json.dumps(current,ensure_ascii=False) + "\nSuperseded versions (newest first, up to 20; historical data, not current facts or permissions):\n" + "\n".join(json.dumps(row,ensure_ascii=False) for row in revisions)) if revisions else "No saved revision history for key: " + key + "."
+        elif remember:
             key, fact = remember.group(1), remember.group(2).strip()
-            memory.save(user, namespace, key, fact)
+            memory.save(user, namespace, key, fact, source_kind="user_statement", source_ref="REMEMBER command")
             answer = f"Saved memory: {key}. Use the same key to update it."
         else:
             key = forget.group(1)
@@ -226,9 +245,13 @@ def router_node(state: AgentState):
         "run_command",
     }
 
-    question = state["question"]
+    from agent.runtime.input_evidence import split_uploaded_input,explicit_jira_request
+    question,documents,has_upload=split_uploaded_input(state["question"])
+    if has_upload and not explicit_jira_request(question):
+        project_write=re.search(r"^\s*(?:please\s+)?(?:create|write|edit|replace|modify|run|execute|debug|fix)\b[^\n]*\b(?:file|script|code|project|command)s?\b",question,re.I|re.M)
+        return {"route":"project" if project_write else "direct"}
 
-    if re.match(r"^(REMEMBER|FORGET)(?:\s|$)", question.strip(), re.I):
+    if re.match(r"^(REMEMBER|FORGET|MEMORY HISTORY|SUGGEST MEMORY|SHOW SUGGESTIONS|ACCEPT MEMORY|REJECT MEMORY)(?:\s|$)", question.strip(), re.I):
         return {"route": "memory_command"}
 
     if question.strip().upper() == "SHOW MEMORY":
@@ -272,6 +295,9 @@ def router_node(state: AgentState):
         r"\b(code|files?|scripts?|python|java|tests?|commands?|gradle|npm|project)\b", question, re.I
     ):
         return {"route": "project"}
+    from agent.history_intent import is_history_request
+    if is_history_request(question):
+        return {"route": "direct"}
     if re.search(r"\b(latest|today|current|live|search the web|search online|internet search)\b", question, re.I):
         return {"route": "web"}
     if re.search(r"\b(indexed documents?|my documents?|my resume|uploaded files?)\b", question, re.I):
@@ -313,13 +339,23 @@ def conversational_answer_node(state: AgentState):
     from agent.memory.long_term_memory import LongTermMemory
     user = os.getenv("AI_MEMORY_USER_ID", "local-user")
     namespace = os.getenv("AI_MEMORY_NAMESPACE", "project")
+    from agent.chat_catalog import ChatCatalog
+    catalog=ChatCatalog(PROJECT_ROOT / "outputs" / "memory" / "chats.sqlite3",user,namespace)
+    def search_archived(query,scope="current",session=None,limit=10):
+        if scope not in {"current","all"} or (scope=="all" and session is not None):
+            raise ValueError("Choose a single session or all-chat scope")
+        selected=None if scope=="all" else (session or state.get("conversation_session") or "default")
+        return catalog.search_turns(query,session=selected,limit=limit)
     with LongTermMemory(PROJECT_ROOT / "outputs" / "memory" / "long_term_memory.sqlite3") as memory:
-        def search_saved(query, limit=20):
+        def search_saved(query, limit=20, mode="lexical"):
+            if mode=="semantic":
+                return memory.semantic_search(user,namespace,query,limit)
+            if mode!="lexical":raise ValueError("Unsupported memory search mode")
             return {"facts": memory.search(user, namespace, query, limit),
                     "note": "Scoped lexical matches; these are saved user assertions, not verified facts."}
         return answer_question(state, model=call_tool_messages,
                                project_root=PROJECT_ROOT, document_search=search_documents,
-                               memory_search=search_saved,
+                               memory_search=search_saved, chat_search=search_archived, memory_propose=lambda key,value: memory.propose(user,namespace,key,value), memory_review=lambda **kwargs: memory.review(user,namespace,**kwargs),
                                tools=ProjectTools(state.get("project_root") or os.getenv("AI_PROJECT_ROOT", str(PROJECT_ROOT))))
 
 
@@ -331,10 +367,10 @@ def llm_node(state: AgentState):
 # DOCUMENT RETRIEVAL
 # ============================================================
 
-def search_documents(query: str) -> str:
+def search_documents(query: str, mode="hybrid"):
     from rag.retrieval import execute_search_documents
 
-    return execute_search_documents(query)
+    return execute_search_documents(query,structured=True,retrieval_mode=mode)
 
 
 def rag_node(state: AgentState):
@@ -396,7 +432,10 @@ def web_node(state: AgentState):
 def jira_node(state: AgentState):
     print("\n🎫 JIRA MCP NODE")
 
-    question = state["question"]
+    from agent.runtime.input_evidence import split_uploaded_input,explicit_jira_request
+    question,documents,has_upload=split_uploaded_input(state["question"])
+    if has_upload and not explicit_jira_request(question):
+        return {"answer":"Jira was not requested. Ask about the attached document in Chat; no Jira connection was started.","task_status":"incomplete"}
 
     issue_keys = list(dict.fromkeys(
         re.findall(
@@ -516,11 +555,15 @@ def project_node(state: AgentState):
 
     tools = ProjectTools(state.get("project_root") or os.getenv("AI_PROJECT_ROOT", str(PROJECT_ROOT)))
     print("\nPROJECT ASSISTANT\nProject:", tools.root)
-    handlers = {name: getattr(tools, name) for name in (
-        "list_files", "read_file", "read_files", "search_text", "replace_text",
-        "create_file", "run_python_file", "run_command", "parse_test_results", "run_tests_and_parse", "discover_feature_mappings",
-    )}
+    from agent.tool_policy import PROJECT_ACTIONS, CONTROLLED_PROJECT_ACTIONS
+    handlers = {name: getattr(tools, name) for name in sorted(PROJECT_ACTIONS)}
     instructions = """You are a local coding assistant. Return exactly ONE JSON object.
+The assistant's own name and shared saved project facts are not the identity of the inspected folder.
+Use the supplied inspection target path to identify the folder. Confirm any formal project name
+from inspected project metadata (for example settings.gradle, pom.xml or package.json).
+Until confirmed, call it the project at that folder; never infer its name from assistant branding,
+old summaries or prior assistant statements. A filename or dependency alone does not establish implementation.
+
 Tools:
 discover_feature_mappings(limit=500) — discover project-wide source features and explicit Jira tags; never updates Jira
 list_files(relative_folder=".", limit=50)
@@ -651,7 +694,7 @@ Finish promptly when the requested work is complete, or explain unresolved block
                          f"timed_out: {result.get('timed_out')}\n"
                          f"output_truncated: {result.get('output_truncated', False)}\n"
                          f"stdout:\n{result.get('stdout', '')}\nstderr:\n{result.get('stderr', '')}")
-        return {"answer": "\n\n".join(parts)}
+        return {"answer": "\n\n".join(parts), "task_status": "incomplete" if incomplete else "completed"}
 
     def review_summary(reason):
         evidence = [item for item in observations if item["action"] in {"read_file", "read_files", "search_text"}]
@@ -782,10 +825,21 @@ Finish promptly when the requested work is complete, or explain unresolved block
             print(f"\nStep {step}: {action} {arguments}")
             with timer(f"Tool step {step}: {action}"):
                 try:
-                    if action in {"create_file", "replace_text", "run_command", "run_python_file", "run_tests_and_parse"}:
-                        if not approve_local_action(action, arguments):
+                    if action in CONTROLLED_PROJECT_ACTIONS:
+                        from agent.local_action_receipts import LocalActionReceipts, ActionDeclined, ActionBlocked, ActionPending
+                        receipts=LocalActionReceipts(PROJECT_ROOT / "outputs" / "local_actions.sqlite3")
+                        try:
+                            result=receipts.run(tools.root,action,dict(bound.arguments),handlers[action],approve_local_action)
+                        except ActionPending as error:
+                            waiting=report(str(error),True)
+                            waiting["task_status"]="awaiting_input"
+                            return waiting
+                        except ActionDeclined:
                             return report("Action declined or approval not received. No further actions taken.", True)
-                    result = handlers[action](**arguments)
+                        except ActionBlocked as error:
+                            return report(str(error), True)
+                    else:
+                        result = handlers[action](**arguments)
                 except FileNotFoundError as error:
                     if action != "read_file":
                         raise
@@ -854,67 +908,65 @@ def format_result_node(state: AgentState):
 # GRAPH
 # ============================================================
 
-builder = StateGraph(AgentState)
+def build_graph(checkpointer):
+    """Assemble the existing workflow using an explicitly supplied checkpointer."""
+    builder = StateGraph(AgentState)
+    
+    builder.add_node("load_memory", load_long_term_memory_node)
+    builder.add_node("memory", show_memory_node)
+    builder.add_node("memory_command", memory_command_node)
+    builder.add_node("clarify", clarify_node)
+    builder.add_node("router_clarification", router_clarification_node)
+    builder.add_node("router", router_node)
+    builder.add_node("prepare_prompt", prepare_prompt_node)
+    builder.add_node("llm", llm_node)
+    builder.add_node("rag", conversational_answer_node)
+    builder.add_node("rag_answer", rag_answer_node)
+    builder.add_node("web", web_node)
+    builder.add_node("jira", jira_node)
+    builder.add_node("jira_workflow", jira_workflow_node)
+    builder.add_node("project", project_node)
+    builder.add_node("format_result", format_result_node)
+    
+    builder.add_edge(START, "load_memory")
+    builder.add_edge("load_memory", "router")
+    builder.add_edge("memory", "format_result")
+    builder.add_edge("memory_command", "format_result")
+    builder.add_edge("clarify", "format_result")
+    builder.add_edge("router_clarification", "format_result")
+    
+    builder.add_conditional_edges(
+        "router",
+        route_question,
+        {
+            "clarify": "clarify",
+            "memory_command": "memory_command",
+            "memory": "memory",
+            "router_clarification": "router_clarification",
+            "direct": "prepare_prompt",
+            "web": "web",
+            "rag": "rag",
+            "jira": "jira",
+            "jira_workflow": "jira_workflow",
+            "project": "project",
+        },
+    )
+    
+    builder.add_edge("prepare_prompt", "llm")
+    builder.add_edge("llm", "format_result")
+    builder.add_edge("rag", "format_result")
+    builder.add_edge("rag_answer", "format_result")
+    builder.add_edge("web", "format_result")
+    builder.add_edge("jira", "format_result")
+    builder.add_edge("jira_workflow", "format_result")
+    builder.add_edge("project", "format_result")
+    builder.add_edge("format_result", END)
+    return builder.compile(checkpointer=checkpointer)
 
-builder.add_node("load_memory", load_long_term_memory_node)
-builder.add_node("memory", show_memory_node)
-builder.add_node("memory_command", memory_command_node)
-builder.add_node("clarify", clarify_node)
-builder.add_node("router_clarification", router_clarification_node)
-builder.add_node("router", router_node)
-builder.add_node("prepare_prompt", prepare_prompt_node)
-builder.add_node("llm", llm_node)
-builder.add_node("rag", conversational_answer_node)
-builder.add_node("rag_answer", rag_answer_node)
-builder.add_node("web", web_node)
-builder.add_node("jira", jira_node)
-builder.add_node("jira_workflow", jira_workflow_node)
-builder.add_node("project", project_node)
-builder.add_node("format_result", format_result_node)
 
-builder.add_edge(START, "load_memory")
-builder.add_edge("load_memory", "router")
-builder.add_edge("memory", "format_result")
-builder.add_edge("memory_command", "format_result")
-builder.add_edge("clarify", "format_result")
-builder.add_edge("router_clarification", "format_result")
-
-builder.add_conditional_edges(
-    "router",
-    route_question,
-    {
-        "clarify": "clarify",
-        "memory_command": "memory_command",
-        "memory": "memory",
-        "router_clarification": "router_clarification",
-        "direct": "prepare_prompt",
-        "web": "web",
-        "rag": "rag",
-        "jira": "jira",
-        "jira_workflow": "jira_workflow",
-        "project": "project",
-    },
-)
-
-builder.add_edge("prepare_prompt", "llm")
-builder.add_edge("llm", "format_result")
-builder.add_edge("rag", "format_result")
-builder.add_edge("rag_answer", "format_result")
-builder.add_edge("web", "format_result")
-builder.add_edge("jira", "format_result")
-builder.add_edge("jira_workflow", "format_result")
-builder.add_edge("project", "format_result")
-builder.add_edge("format_result", END)
-
+from agent.runtime.graph import LazyGraph
 DB_PATH = PROJECT_ROOT / "agent_memory.db"
-
-connection = sqlite3.connect(
-    str(DB_PATH),
-    check_same_thread=False
-)
-
-checkpointer = SqliteSaver(connection)
-graph = builder.compile(checkpointer=checkpointer)
+graph = LazyGraph(DB_PATH, build_graph)
 
 
 # ============================================================
@@ -945,122 +997,11 @@ def restore_session(name, user_id, memory_space):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="JeshlaAutoAI conversational agent")
-    parser.add_argument("--input-mode", choices=["editor", "end"], default="editor", help="Editable Enter-to-send input, or legacy END submission")
-    parser.add_argument("--session", default=None, help="Resume a named conversation without a startup question")
-    parser.add_argument("--user", default=os.getenv("AI_MEMORY_USER_ID", "local-user"))
-    parser.add_argument("--memory-space", default=os.getenv("AI_MEMORY_NAMESPACE", "project"),
-                        help="Shared long-term fact namespace, for example JeshlaAutoAI")
-    args = parser.parse_args()
-    from agent.terminal_input import configure_input, read_message
-    configure_input(args.input_mode)
-    try:
-        session_config(args.session or "default", args.user, args.memory_space)
-    except ValueError as error:
-        parser.error(str(error))
-    os.environ["AI_MEMORY_USER_ID"] = args.user
-    os.environ["AI_MEMORY_NAMESPACE"] = args.memory_space
-    from agent.chat_catalog import ChatCatalog, choose_chat, validate_chat_command
-    catalog = ChatCatalog(PROJECT_ROOT / "outputs" / "memory" / "chats.sqlite3", args.user, args.memory_space)
-    session_name = args.session
-    print("\n================================")
-    print("LANGGRAPH AI AGENT")
-    print("================================")
-    print("Model provider:", LLM_PROVIDER)
-    print("Legacy input: END submits, EXIT quits." if args.input_mode == "end" else "Enter sends; Alt+Enter/Ctrl+J/F2 adds a line. Ctrl+C clears. Ctrl+D exits an empty draft. EXIT quits.")
-    print("REMEMBER key = fact saves; FORGET key removes; SHOW MEMORY lists facts. WORKFLOW HELP explains Jira prompts.")
-
-    print("SESSION name switches chat history; SESSION CURRENT shows the active session.")
-    print("Saved facts are shared within the selected user/memory space. Jira plans remain scoped to their configured Jira project.")
-    print("NEW CHAT [title] / NEW SESSION [title]; LIST CHATS; OPEN CHAT id. Titles: max 80 characters.")
-    try:
-        if session_name is None:
-            session_name = choose_chat(catalog)
-        else:
-            catalog.register(session_name)
-    except (EOFError, KeyboardInterrupt):
-        print("Session closed.")
-        return
-    config, history, previous_route, summary = restore_session(session_name, args.user, args.memory_space)
-
-    while True:
-        try:
-            question = read_message().strip()
-        except EOFError:
-            print("Session closed. Your saved chats remain available.")
-            return
-        except KeyboardInterrupt:
-            print("Draft cancelled.")
-            continue
-        if question.upper() in {"EXIT", "QUIT"}:
-            return
-        if question.upper() == "END":
-            print("END is not needed in editor mode. Press Enter to send your message.")
-            continue
-        if not question:
-            continue
-        question, command_error = validate_chat_command(question)
-        if command_error:
-            print(command_error)
-            continue
-        if question.upper() == "LIST CHATS":
-            for row in catalog.list():
-                print(f"{row['session']} | {row['title']}")
-            continue
-        new_chat = re.fullmatch(r"NEW (?:CHAT|SESSION)(?:\s+(.*))?", question, re.I | re.S)
-        open_chat = re.fullmatch(r"OPEN CHAT\s+(\S+)", question, re.I)
-        if new_chat or open_chat:
-            try:
-                if new_chat:
-                    requested = choose_chat(catalog, (new_chat.group(1) or "").strip())
-                else:
-                    requested = open_chat.group(1)
-                    if not catalog.get(requested):
-                        print("Chat not found in this user/memory space. Use LIST CHATS.")
-                        continue
-                config, history, previous_route, summary = restore_session(requested, args.user, args.memory_space)
-                session_name = requested
-            except (EOFError, KeyboardInterrupt):
-                print("Session closed.")
-                return
-            continue
-        if question.upper() == "SESSION CURRENT":
-            print(f"Conversation session: {session_name} | User: {args.user} | Shared memory space: {args.memory_space}")
-            continue
-        switch = re.fullmatch(r"SESSION(?:\s+(.*))?", question, re.I | re.S)
-        if switch:
-            requested = (switch.group(1) or "").strip()
-            try:
-                new_config, new_history, new_route, new_summary = restore_session(requested, args.user, args.memory_space)
-            except ValueError as error:
-                print(str(error))
-                continue
-            catalog.register(requested)
-            session_name = requested
-            config, history, previous_route, summary = new_config, new_history, new_route, new_summary
-            continue
-        initial_state: AgentState = {
-            "question": question, "route": "", "prompt": "", "context": "",
-            "answer": "", "final_answer": "",
-            "history": history[-16000:],
-            "summary": summary,
-            "previous_route": previous_route,
-        }
-        try:
-            from agent.chat_runtime import run_turn
-            with timer("Complete agent workflow"):
-                result = run_turn(graph, config, catalog, session_name, question, PROJECT_ROOT)
-            print("\n========== FINAL ANSWER ==========\n")
-            print(result["final_answer"])
-            previous_route = result["route"]
-            history, summary = result["history"], result["summary"]
-            for notice in result.get("notices", []):
-                print(notice)
-
-
-        except Exception as error:
-            print("Agent execution failed:", type(error).__name__)
-            print("No success is claimed. For saved Jira work enter STATUS.")
+    """Compatibility console entry point; interface logic lives in its own package."""
+    from agent.interfaces.console import run_console
+    return run_console(graph=graph, project_root=PROJECT_ROOT, provider=LLM_PROVIDER,
+                       session_config=session_config, restore_session=restore_session,
+                       timer_factory=globals().get("timer"))
 
 
 if __name__ == "__main__":

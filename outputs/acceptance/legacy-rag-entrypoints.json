@@ -1,0 +1,18 @@
+{
+  "status": "Y - command/path consolidation",
+  "offline_tests": 251,
+  "seconds": 22.776,
+  "launch_paths_tested": 6,
+  "canonical_console": "agent.langgraph.langgraph_agent.main",
+  "scope": "Mocked console boundary; real script/module dispatch and option forwarding",
+  "limits": [
+    "Historical direct imports remain legacy",
+    "No automatic old JSON transcript migration",
+    "No new live-provider acceptance"
+  ],
+  "remaining_workstream_4": {
+    "P": 3,
+    "I": 1,
+    "X": 0
+  }
+}

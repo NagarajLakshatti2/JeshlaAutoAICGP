@@ -8,9 +8,25 @@ from agent import tool_llm as adapter
 class AdapterTests(unittest.TestCase):
     def run_request(self,provider,data,status=200,messages=None):
         response=SimpleNamespace(status_code=status,json=lambda:data)
-        with patch.object(adapter,"LLM_PROVIDER",provider), patch.dict(adapter.os.environ,{"GROQ_API_KEY":"offline-fake","GROQ_MODEL":"test-model","OPENROUTER_API_KEY":"offline-fake"}), patch.object(adapter.requests,"post",return_value=response) as post:
+        with patch.object(adapter,"LLM_PROVIDER",provider), patch.dict(adapter.os.environ,{"GROQ_API_KEY":"offline-fake","GROQ_MODEL":"test-model","OPENROUTER_API_KEY":"offline-fake","OPENROUTER_BUDGET_MODEL":"","GROQ_BUDGET_MODEL":""}), patch.object(adapter.requests,"post",return_value=response) as post:
             result=adapter.call_tool_messages(messages or [{"role":"user","content":"public test"}],[])
             return result,post.call_args.kwargs
+
+    def test_ollama_registered_text_tool_proposal_is_normalized(self):
+        spec={"type":"function","function":{"name":"read_fact","parameters":{"type":"object"}}}
+        response=SimpleNamespace(status_code=200,json=lambda:{"message":{"content":'{"name":"read_fact","arguments":{}}'}})
+        with patch.object(adapter,"LLM_PROVIDER","ollama"),patch.object(adapter.requests,"post",return_value=response):
+            result=adapter.call_tool_messages([{"role":"user","content":"read"}],[spec])
+        self.assertEqual(result["content"],"")
+        self.assertEqual(result["tool_calls"][0]["function"]["name"],"read_fact")
+        self.assertEqual(json.loads(result["tool_calls"][0]["function"]["arguments"]),{})
+
+    def test_ollama_text_fallback_does_not_execute_prose_or_results(self):
+        spec=[{"function":{"name":"read_fact"}}]
+        for text in ['Call {"name":"read_fact","arguments":{}}', '{"name":"read_fact","arguments":{},"result":"invented"}', 'ordinary answer']:
+            self.assertIsNone(adapter.ollama_text_tool_call(text,spec))
+        for text in ['{"name":"delete_file","arguments":{}}','{"name":"read_fact","arguments":[]}']:
+            with self.assertRaises(adapter.ProviderError):adapter.ollama_text_tool_call(text,spec)
 
     def test_per_request_budget_preserves_default(self):
         response=SimpleNamespace(status_code=200,json=lambda:{"choices":[{"finish_reason":"stop","message":{"content":"done"}}]})
@@ -77,3 +93,26 @@ class AdapterTests(unittest.TestCase):
             self.run_request("groq",{"choices":[{"finish_reason":"tool_calls","message":{"tool_calls":[call,call]}}]})
 
 if __name__=="__main__": unittest.main()
+
+class ForcedProposalTests(unittest.TestCase):
+    def test_registered_groq_function_is_selected_and_parallel_disabled(self):
+        spec={"type":"function","function":{"name":"submit_project_action","parameters":{"type":"object"}}}
+        response=SimpleNamespace(status_code=200,json=lambda:{"choices":[{"finish_reason":"tool_calls","message":{"content":None,"tool_calls":[{"id":"one","function":{"name":"submit_project_action","arguments":"{}"}}]}}]})
+        with patch.object(adapter,"LLM_PROVIDER","groq"),patch.dict(adapter.os.environ,{"GROQ_API_KEY":"offline-fake","GROQ_MODEL":"test-model"}),patch.object(adapter.requests,"post",return_value=response) as post:
+            adapter.call_tool_messages([{"role":"user","content":"Propose"}],[spec],forced_function="submit_project_action")
+        payload=post.call_args.kwargs["json"]
+        self.assertEqual(payload["tool_choice"],{"type":"function","function":{"name":"submit_project_action"}})
+        self.assertFalse(payload["parallel_tool_calls"])
+    def test_unregistered_forcing_fails_before_network(self):
+        with patch.object(adapter.requests,"post") as post:
+            with self.assertRaises(ValueError):adapter.call_tool_messages([],[],forced_function="delete_project")
+        post.assert_not_called()
+
+    def test_groq_native_fallback_requires_one_tool_without_forcing_wrapper(self):
+        spec={"type":"function","function":{"name":"create_file","parameters":{"type":"object"}}}
+        response=SimpleNamespace(status_code=200,json=lambda:{"choices":[{"finish_reason":"tool_calls","message":{"content":None,"tool_calls":[{"id":"one","function":{"name":"create_file","arguments":"{}"}}]}}]})
+        with patch.object(adapter,"LLM_PROVIDER","groq"),patch.dict(adapter.os.environ,{"GROQ_API_KEY":"offline-fake","GROQ_MODEL":"test-model"}),patch.object(adapter.requests,"post",return_value=response) as post:
+            adapter.call_tool_messages([{"role":"user","content":"Propose"}],[spec],require_tool=True)
+        self.assertEqual(post.call_args.kwargs["json"]["tool_choice"],"required")
+        self.assertFalse(post.call_args.kwargs["json"]["parallel_tool_calls"])
+        with self.assertRaises(ValueError):adapter.call_tool_messages([],[],require_tool=True)

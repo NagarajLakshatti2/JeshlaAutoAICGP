@@ -1,97 +1,90 @@
-"""Run: python -m streamlit run streamlit_app.py --server.address 127.0.0.1"""
-import json
-import time
+"""JeshlaAutoAI browser chat; run with python -m streamlit run streamlit_app.py."""
+import json,time
 import streamlit as st
 from agent.browser_backend import make_browser_backend
+from agent.user_errors import user_error_message
+from agent.browser_activity import log_browser_event
+from agent.interfaces.sidebar import initialize_chat,ensure_message_chat,render_sidebar
+from agent.interfaces.attachments import chat_attachments,attachment_question,render_upload_menu
+from agent.interfaces.chat_toolbar import provider_options,render_provider_picker
+from agent.interfaces.header_actions import render_header_actions
+from agent.interfaces.request_status import status_label,remember_status,render_status
 
-st.set_page_config(page_title="JeshlaAutoAI",page_icon=":material/smart_toy:",layout="centered")
-st.title("JeshlaAutoAI")
-st.caption("Your project assistant · Memory, documents, local source and web search")
+st.set_page_config(page_title="JeshlaAutoAI",page_icon=":material/smart_toy:",layout="wide")
 
 @st.cache_resource
-def get_backend():
-    return make_browser_backend()
+def get_backend():return make_browser_backend()
 
-try:
-    backend=get_backend()
-except Exception:
-    st.error("The agent could not start. Check the terminal for startup errors and your local configuration.")
-    st.stop()
+try:backend=get_backend()
+except Exception as error:
+    log_browser_event("error",error=error);st.error(user_error_message(error));st.stop()
 
-st.session_state.setdefault("active_chat","default")
-with st.sidebar:
-    st.header("Conversations")
-    with st.form("new_chat",clear_on_submit=True):
-        title=st.text_input("New chat title",max_chars=80,placeholder="Leave blank for an automatic title")
-        create=st.form_submit_button("New chat",icon=":material/add:",width="stretch")
-    if create:
-        try:
-            chat=backend.create_chat(title)
-            st.session_state.active_chat=chat
-            st.session_state.chat_picker=chat
-            st.session_state.pop("chat_notices",None)
-        except ValueError:
-            st.error("Use a title of at most 80 characters.")
-    rows=backend.list_chats()
-    by_id={row["session"]:row for row in rows}
-    active=st.session_state.active_chat
-    if active not in by_id:
-        row=backend.get_chat(active)
-        if row:by_id[active]=row
-        else:
-            active="default";st.session_state.active_chat=active
-            by_id[active]=backend.get_chat(active)
-    ids=list(by_id)
-    if st.session_state.get("chat_picker") not in ids:
-        st.session_state.chat_picker=active
-    selected=st.selectbox("Saved chats",ids,format_func=lambda key:by_id[key]["title"],key="chat_picker")
-    if selected!=st.session_state.active_chat:
-        st.session_state.active_chat=selected
-        st.session_state.pop("chat_notices",None)
-        st.rerun()
-    if st.button("Refresh chats",icon=":material/refresh:",width="stretch"):
-        st.rerun()
-    with st.expander("Shared project memory"):
-        if st.button("Show saved facts",key="show_facts"):
-            st.session_state.saved_facts=backend.memory()
-        if "saved_facts" in st.session_state:
-            st.text(st.session_state.saved_facts or "No saved facts.")
-        st.caption("REMEMBER key = fact saves; FORGET key removes. These facts are shared across your chats.")
-    st.caption("Provider: "+backend.provider)
-    st.caption("Saved facts and selected evidence are included in hosted-model requests.")
-
+initialize_chat()
+provider_options(backend)
+render_sidebar(backend)
 session=st.session_state.active_chat
-chat=backend.get_chat(session)
-st.subheader(chat["title"] if chat else "Conversation")
-turns=backend.turns(session)
-if turns:
-    st.download_button("Download conversation",json.dumps(turns,ensure_ascii=False,indent=2),file_name="conversation.json",mime="application/json",icon=":material/download:")
-    if len(turns)>100:st.caption("Showing the latest 100 turns. The download includes the full archived conversation.")
-    for turn in turns[-100:]:
-        with st.chat_message("user"):st.markdown(turn["question"])
-        with st.chat_message("assistant"):st.markdown(turn["answer"])
-else:
-    st.info("Ask about your saved project facts, inspect source files, or search the web. Earlier console history may exist in checkpoints even if it predates transcript archiving.")
-for notice in st.session_state.get("chat_notices",[]):st.warning(notice)
-st.caption("Enter to send · Shift+Enter for a new line · Edit or paste multiple lines before sending")
+log_browser_event("page_render",session=session,provider=st.session_state.browser_provider)
+render_header_actions(backend,session)
 
-prompt=st.chat_input("Message JeshlaAutoAI",key="message",height=100,submit_mode="disable")
-if prompt and prompt.strip():
-    with st.chat_message("user"):st.markdown(prompt)
-    with st.chat_message("assistant"):
-        start=time.perf_counter()
-        try:
-            with st.spinner("Working on your request…"):
-                result=backend.submit(session,prompt)
-            st.markdown(result["answer"])
-            st.caption(f"Completed in {time.perf_counter()-start:.1f}s")
-            st.session_state.chat_notices=result.get("notices",[])
-            st.session_state.pop("saved_facts",None)
-        except RuntimeError as error:
-            # Only the local busy error is safe to show verbatim; provider text stays private.
-            if str(error).startswith("This chat is busy"):
-                st.error("This chat is busy in another window. Try again when it finishes.")
-            else:st.error("The request failed. Check provider configuration, quota and connectivity in the terminal.")
-        except Exception:
-            st.error("The request could not complete. Your existing saved chats remain available.")
-    for notice in st.session_state.get("chat_notices",[]):st.warning(notice)
+with st.container(horizontal=True,horizontal_alignment="center"):
+    with st.container(width=960):
+        opened=st.session_state.chat_opened
+        turns=backend.turns(session) if opened else []
+        if not opened:
+            st.space("large");st.space("large")
+            st.title("What would you like to build?",text_alignment="center",anchor=False)
+            st.caption("Ask, explore, and work with your agent.",text_alignment="center")
+            st.space("large")
+        else:
+            if len(turns)>100:st.caption("Showing the latest 100 turns. The conversation download includes the full archive.")
+            for turn in turns[-100:]:
+                with st.chat_message("user"):st.markdown(turn["question"].split("\n\nUploaded document evidence (",1)[0])
+                with st.chat_message("assistant"):st.markdown(turn["answer"])
+            unsaved=st.session_state.get("unsaved_response",{}).get(session)
+            if unsaved:
+                with st.chat_message("user"):st.markdown(unsaved["question"].split("\n\nUploaded document evidence (",1)[0])
+                with st.chat_message("assistant"):st.markdown(unsaved["answer"])
+            with st.popover("Conversation",icon=":material/more_horiz:",type="tertiary"):
+                if turns:
+                    if st.download_button("Download conversation",json.dumps(turns,ensure_ascii=False,indent=2),file_name="conversation.json",mime="application/json"):
+                        log_browser_event("download_clicked",session=session,turns=len(turns))
+                latest=st.session_state.get("answer_downloads",{}).get(session)
+                if latest:st.download_button("Download latest answer",latest,file_name="answer.md",mime="text/markdown",key="download_answer_"+session)
+
+        for notice in st.session_state.get("chat_notices",[]):st.warning(notice)
+        if opened:render_status(st.session_state.get("request_status_by_chat",{}).get(session))
+        from agent.browser_action_ui import render_pending_actions
+        render_pending_actions(backend,session)
+
+        with st.container(border=True,key="message_composer"):
+            prompt=st.chat_input("Message JeshlaAutoAI…",key="message",height=100,submit_mode="disable",disabled=st.session_state.get("work_mode","Chat")=="Cowork")
+            with st.container(horizontal=True,horizontal_alignment="distribute",vertical_alignment="center"):
+                with st.container(horizontal=True,width="content",vertical_alignment="center"):
+                    render_upload_menu(session)
+                    mode=st.segmented_control("Work mode",["Chat","Cowork"],default="Chat",required=True,format_func=lambda value:"Cowork · Soon" if value=="Cowork" else value,key="work_mode",label_visibility="collapsed")
+                render_provider_picker(backend)
+        if mode=="Cowork":st.info("Cowork will be the place to configure a project for your agent. Project connection is planned; use Chat for the current agent. GitHub remains parked.")
+
+        if prompt and prompt.strip():
+            selected=st.session_state.browser_provider
+            start=time.perf_counter()
+            try:
+                session=ensure_message_chat(backend,prompt)
+                log_browser_event("message_started",session=session,provider=selected)
+                with st.spinner("Working on your request…"):
+                    question=attachment_question(prompt,chat_attachments(session))
+                    result=backend.submit_selected(session,question,selected) if hasattr(backend,"submit_selected") else backend.submit(session,question)
+                log_browser_event("message_finished",session=session,provider=selected,duration=time.perf_counter()-start,route=result.get("route"))
+                remember_status(session,status_label(result),time.perf_counter()-start,result.get("persistence_status"))
+                st.session_state.setdefault("answer_downloads",{})[session]=result["answer"]
+                st.session_state.chat_notices=result.get("notices",[])
+                st.session_state.chat_opened=True
+                st.session_state.pop("saved_facts",None)
+                if result.get("persistence_status",{}).get("archive_saved") is False:
+                    st.session_state.setdefault("unsaved_response",{})[session]={"question":question,"answer":result["answer"]}
+                else:st.session_state.setdefault("unsaved_response",{}).pop(session,None)
+                st.rerun()
+            except Exception as error:
+                log_browser_event("error",session=session,provider=selected,duration=time.perf_counter()-start,error=error)
+                remember_status(session,"Failed",time.perf_counter()-start)
+                st.error(user_error_message(error))

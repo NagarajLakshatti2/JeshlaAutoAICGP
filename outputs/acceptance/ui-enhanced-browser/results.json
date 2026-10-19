@@ -1,0 +1,109 @@
+{
+  "scope": "isolated fixtures; installed desktop Chrome/Edge at emulated sizes, not physical devices",
+  "results": [
+    {
+      "engine": "chrome",
+      "width": 360,
+      "upload": true,
+      "answerDownload": true,
+      "settings": true,
+      "memoryFits": true,
+      "memoryWraps": true,
+      "memoryConfirmationReset": true,
+      "search": true,
+      "pageOverflow": false,
+      "status": "passed"
+    },
+    {
+      "engine": "chrome",
+      "width": 390,
+      "upload": true,
+      "answerDownload": true,
+      "settings": true,
+      "memoryFits": true,
+      "memoryWraps": true,
+      "memoryConfirmationReset": true,
+      "search": true,
+      "pageOverflow": false,
+      "status": "passed"
+    },
+    {
+      "engine": "chrome",
+      "width": 768,
+      "upload": true,
+      "answerDownload": true,
+      "settings": true,
+      "memoryFits": true,
+      "memoryWraps": true,
+      "memoryConfirmationReset": true,
+      "search": true,
+      "pageOverflow": false,
+      "status": "passed"
+    },
+    {
+      "engine": "chrome",
+      "width": 1440,
+      "upload": true,
+      "answerDownload": true,
+      "settings": true,
+      "memoryFits": true,
+      "memoryWraps": true,
+      "memoryConfirmationReset": true,
+      "search": true,
+      "pageOverflow": false,
+      "status": "passed"
+    },
+    {
+      "engine": "edge",
+      "width": 360,
+      "upload": true,
+      "answerDownload": true,
+      "settings": true,
+      "memoryFits": true,
+      "memoryWraps": true,
+      "memoryConfirmationReset": true,
+      "search": true,
+      "pageOverflow": false,
+      "status": "passed"
+    },
+    {
+      "engine": "edge",
+      "width": 390,
+      "upload": true,
+      "answerDownload": true,
+      "settings": true,
+      "memoryFits": true,
+      "memoryWraps": true,
+      "memoryConfirmationReset": true,
+      "search": true,
+      "pageOverflow": false,
+      "status": "passed"
+    },
+    {
+      "engine": "edge",
+      "width": 768,
+      "upload": true,
+      "answerDownload": true,
+      "settings": true,
+      "memoryFits": true,
+      "memoryWraps": true,
+      "memoryConfirmationReset": true,
+      "search": true,
+      "pageOverflow": false,
+      "status": "passed"
+    },
+    {
+      "engine": "edge",
+      "width": 1440,
+      "upload": true,
+      "answerDownload": true,
+      "settings": true,
+      "memoryFits": true,
+      "memoryWraps": true,
+      "memoryConfirmationReset": true,
+      "search": true,
+      "pageOverflow": false,
+      "status": "passed"
+    }
+  ]
+}

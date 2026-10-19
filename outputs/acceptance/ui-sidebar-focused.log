@@ -1,0 +1,29 @@
+2026-10-18 23:01:02.034 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 23:01:15.271 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 23:01:16.882 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+F2026-10-18 23:01:18.656 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 23:01:20.381 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 23:01:21.992 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 23:01:23.605 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 23:01:25.545 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 23:01:27.219 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 23:01:29.112 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 23:01:31.037 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-18 23:01:32.877 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.
+======================================================================
+FAIL: test_memory_view_without_model (tests.test_streamlit_ui.BrowserTests.test_memory_view_without_model)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\JeshlaAutoAI\tests\test_streamlit_ui.py", line 60, in test_memory_view_without_model
+    self.assertTrue(any(call.args[0]=="memory_viewed" for call in self.activity.call_args_list))
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 12 tests in 34.161s
+
+FAILED (failures=1)
+Local action receipt: 099f63fb7f9547debd4526b33b55fbbd | C:\Users\nagar\AppData\Local\Temp\tmpu961fnj0\actions.sqlite3
+
+CREATED FILE: note.txt

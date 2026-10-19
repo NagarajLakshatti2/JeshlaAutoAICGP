@@ -1,0 +1,16 @@
+{
+  "simulated_stall": {
+    "deadline_reported": true,
+    "worker_exited": true,
+    "seconds": 0.21
+  },
+  "live_page": {
+    "success": true,
+    "title": "Installation | Playwright Java",
+    "text_chars": 4500,
+    "url": "https://playwright.dev/java/docs/intro",
+    "error": null,
+    "seconds": 0.74
+  },
+  "offline_tests": 262
+}

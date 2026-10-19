@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-18",
+  "scope": "User-operated browser decline scenario",
+  "file": "outputs/browser-decline-check.txt",
+  "file_exists": false,
+  "proposal_id": "03ef48a6ea3e49bcb9a0bfe4ec2525e4",
+  "proposal_status": "declined",
+  "execution_receipt_exists": false,
+  "evidence": "User report plus read-only file/SQLite verification",
+  "remaining_live_check": "Refresh/reopen must not replay approved or declined actions"
+}

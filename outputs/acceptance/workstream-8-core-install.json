@@ -1,0 +1,25 @@
+{
+  "profile": "requirements-core.txt",
+  "working_environment_modified": false,
+  "provider_calls": false,
+  "steps": [
+    {
+      "name": "install",
+      "returncode": 0
+    },
+    {
+      "name": "pip-check",
+      "returncode": 0
+    },
+    {
+      "name": "console-startup",
+      "returncode": 0
+    },
+    {
+      "name": "browser-startup",
+      "returncode": 0
+    }
+  ],
+  "status": "passed",
+  "elapsed_seconds": 80.23
+}

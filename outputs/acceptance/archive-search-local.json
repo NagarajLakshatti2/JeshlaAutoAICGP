@@ -1,0 +1,9 @@
+{
+  "status": "Y",
+  "query": "PDF",
+  "scope": "default chat, local-user/project",
+  "matches": 3,
+  "source_references_present": true,
+  "truncated": true,
+  "api_calls": 0
+}

@@ -1,0 +1,15 @@
+{
+  "status": "Y - observed normal response and sampled native-tool mixed loop",
+  "provider": "gemini",
+  "model": "gemini-3.1-flash-lite",
+  "normal_answer_evidence": "User console execution, 3.09 seconds",
+  "mixed_seconds": 19.49,
+  "mixed_checks_passed": 8,
+  "mixed_evidence": "outputs/acceptance/mixed-real-tools-gemini.json",
+  "account_billing_free_tier": "unverified",
+  "workstream_4_remaining": {
+    "P": 1,
+    "I": 1,
+    "X": 0
+  }
+}

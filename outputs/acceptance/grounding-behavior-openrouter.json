@@ -1,0 +1,16 @@
+{
+  "provider": "openrouter",
+  "status": "P",
+  "completed": 1,
+  "total": 2,
+  "cases": [
+    {
+      "id": "conflict",
+      "status": "P",
+      "error": "OPENROUTER [QUOTA_EXHAUSTED] | HTTP 429 | Account quota appears exhausted. Check the dashboard/reset time; no automatic retry. | Attempts: 1. No action was executed from this failed response.",
+      "tool_activity": []
+    }
+  ],
+  "seconds": 0.91,
+  "scope": "Live configured model, real temporary text files and structured document fixtures through actual conversation/citation guards. Retrieval fixtures do not evaluate ranking; no private files/history or web search. Finite behavior samples, not universal factual truth."
+}

@@ -1,0 +1,16 @@
+{
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b",
+  "scope": "direct answer and real temporary-file native tool/result cycle",
+  "checks": {
+    "direct_answer": {
+      "status": "Y",
+      "seconds": 1.71
+    },
+    "native_tool_result_answer": {
+      "status": "Y",
+      "seconds": 2.87
+    }
+  },
+  "status": "Y"
+}

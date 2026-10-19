@@ -1,0 +1,4 @@
+{"time": "2026-10-19T04:12:58.240099+00:00", "event": "stage_started", "pid": 22428, "span": "ec7f990431684fbdac1fe4f7860513ef", "stage": "Router node", "mode": "runtime"}
+{"time": "2026-10-19T04:12:58.243533+00:00", "event": "stage_finished", "pid": 22428, "span": "ec7f990431684fbdac1fe4f7860513ef", "stage": "Router node", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 0.003}
+{"time": "2026-10-19T04:12:58.287018+00:00", "event": "stage_started", "pid": 22428, "span": "b17374856f5f43b4b9663409fd23e451", "stage": "LLM tool request", "mode": "runtime"}
+{"time": "2026-10-19T04:13:02.027874+00:00", "event": "stage_finished", "pid": 22428, "span": "b17374856f5f43b4b9663409fd23e451", "stage": "LLM tool request", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 3.741}

@@ -1,0 +1,17 @@
+{
+  "provider": "groq",
+  "status": "Y - sampled natural conflict clarification",
+  "checks": {
+    "document_read": true,
+    "both_values_visible": true,
+    "both_sources_cited": true,
+    "clarification_question": true,
+    "not_incomplete": true
+  },
+  "answer": "The two documents you provided give conflicting information about the agreed\u2011upon report format:\n\n| Document | Report format |\n|----------|---------------|\n| first.txt | PDF |\n| second.txt | HTML |\n\nSources: [DOC-3ff3880b58ea11a5] and [DOC-3a94c7444a0331ee].\n\nSince both sources have equal authority and no date or precedence is specified, the conflict remains unresolved. Could you clarify which format should be used?",
+  "tool_activity": [
+    "search_documents"
+  ],
+  "seconds": 4.86,
+  "scope": "Normal chat question; temporary equal-authority conflicting document fixtures, actual conversation/citation loop, live model. No private data. Finite sample only."
+}

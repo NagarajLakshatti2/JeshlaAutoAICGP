@@ -1,0 +1,40 @@
+test_failed_download_revalidation_clears_previous_snapshot (tests.test_use_case_audit.AuditUiTests.test_failed_download_revalidation_clears_previous_snapshot) ... 2026-10-19 09:55:52.619 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_memory_preview_refreshes_when_existing_fact_changes (tests.test_use_case_audit.AuditUiTests.test_memory_preview_refreshes_when_existing_fact_changes) ... 2026-10-19 09:55:53.159 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+FAIL
+test_removing_first_attachment_updates_preview_and_download (tests.test_use_case_audit.AuditUiTests.test_removing_first_attachment_updates_preview_and_download) ... 2026-10-19 09:55:53.460 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-19 09:55:53.684 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ok
+test_view_all_can_open_chat_older_than_recent_thirty (tests.test_use_case_audit.AuditUiTests.test_view_all_can_open_chat_older_than_recent_thirty) ... 2026-10-19 09:55:53.825 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+ERROR
+test_document_jira_reference_and_explicit_no_connection_stay_local (tests.test_use_case_audit.UseCaseAuditTests.test_document_jira_reference_and_explicit_no_connection_stay_local) ... ok
+test_model_change_cannot_leave_an_incompatible_budget_binding (tests.test_use_case_audit.UseCaseAuditTests.test_model_change_cannot_leave_an_incompatible_budget_binding) ... ok
+test_runtime_budget_override_is_checked_before_saving (tests.test_use_case_audit.UseCaseAuditTests.test_runtime_budget_override_is_checked_before_saving) ... ok
+
+======================================================================
+ERROR: test_view_all_can_open_chat_older_than_recent_thirty (tests.test_use_case_audit.AuditUiTests.test_view_all_can_open_chat_older_than_recent_thirty)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\JeshlaAutoAI\tests\test_use_case_audit.py", line 102, in test_view_all_can_open_chat_older_than_recent_thirty
+    self.app.button(key="older_chat_page").click().run()
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\JeshlaAutoAI\.venv\Lib\site-packages\streamlit\testing\v1\element_tree.py", line 339, in __call__
+    raise KeyError(key)
+KeyError: 'older_chat_page'
+
+======================================================================
+FAIL: test_memory_preview_refreshes_when_existing_fact_changes (tests.test_use_case_audit.AuditUiTests.test_memory_preview_refreshes_when_existing_fact_changes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\JeshlaAutoAI\tests\test_use_case_audit.py", line 94, in test_memory_preview_refreshes_when_existing_fact_changes
+    self.assertEqual(next(row.value for row in self.app.text_area if row.label=="format"),"DOCX")
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'PDF' != 'DOCX'
+- PDF
++ DOCX
+
+
+----------------------------------------------------------------------
+Ran 7 tests in 1.615s
+
+FAILED (failures=1, errors=1)

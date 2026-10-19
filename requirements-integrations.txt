@@ -1,0 +1,5 @@
+# Optional existing Jira/MCP integrations; not needed for core chat startup.
+# Install only when exercising these integrations.
+mcp
+httpx2
+pydantic

@@ -1,0 +1,24 @@
+{
+  "provider": "groq",
+  "status": "Y - sampled public tool/answer acceptance",
+  "checks": {
+    "searched_and_read": true,
+    "java_page_read": true,
+    "page_title_retained": true,
+    "returned_page_cited": true,
+    "not_incomplete": true
+  },
+  "tool_activity": [
+    "web_search",
+    "fetch_web_page"
+  ],
+  "answer": "**Page title:** Installation | Playwright Java  \n**Java documentation:** Yes  \n**URL:** [https://playwright.dev/java/docs/intro](https://playwright.dev/java/docs/intro)",
+  "page_sources": [
+    {
+      "url": "https://playwright.dev/java/docs/intro",
+      "title": "Installation | Playwright Java"
+    }
+  ],
+  "seconds": 12.01,
+  "scope": "Configured hosted/local model selects actual public search/page tools. Temporary empty source root; no private facts/history/documents. Title/source checks only, not general factual entailment."
+}

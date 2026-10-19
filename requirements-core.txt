@@ -1,0 +1,9 @@
+# Console/browser, state, provider HTTP, search and editable input.
+# No local embedding models or vector engines.
+requests>=2.31,<3
+python-dotenv>=1,<2
+langgraph
+langgraph-checkpoint-sqlite
+ddgs
+prompt_toolkit>=3.0,<4
+streamlit>=1.64,<2

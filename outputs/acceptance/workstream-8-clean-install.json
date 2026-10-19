@@ -1,0 +1,9 @@
+{
+  "scope": "fresh isolated venv; no system site packages; current requirements; bounded connected install",
+  "python": "3.14.0",
+  "working_environment_modified": false,
+  "timeout_seconds": 180,
+  "status": "timeout",
+  "stage": "bounded-install-or-smoke",
+  "elapsed_seconds": 187.88
+}

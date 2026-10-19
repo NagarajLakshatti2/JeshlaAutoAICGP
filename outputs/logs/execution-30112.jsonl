@@ -1,0 +1,2 @@
+{"time": "2026-10-19T03:33:33.433361+00:00", "event": "stage_started", "pid": 30112, "span": "8ffe5b3bd9514e829b37f76de4c0f8f2", "stage": "LLM request", "mode": "runtime"}
+{"time": "2026-10-19T03:33:33.435800+00:00", "event": "stage_finished", "pid": 30112, "span": "8ffe5b3bd9514e829b37f76de4c0f8f2", "stage": "LLM request", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 0.002}

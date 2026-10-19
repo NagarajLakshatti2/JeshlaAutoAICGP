@@ -189,3 +189,52 @@ The verified run used the project's virtual environment and required Windows fil
 ## Shared table and memory tool integration - 17 October 2026
 
 **Y - implementation and offline integration:** CSV/XLSX discovery/filtering with source rows and scoped lexical saved-memory search are connected to the shared conversation. 129 guarded offline tests pass. See [table-memory-tools.md](table-memory-tools.md) for files, limits and trial prompts. **P - broader acceptance:** live model behavior, semantic-memory retrieval, complex-table queries and grounding remain pending.
+
+
+## Project identity separation - 17 October 2026
+
+Y - scoped implementation: external project reviews omit shared saved facts and unbound summaries from their initial project prompt. The saved SQLite data is unchanged, and reviewing the agent's own repository still includes its memory context. Recent chat remains available for follow-ups, explicitly labeled unverified context rather than repository identity evidence. Instructions require inspecting the target's own metadata before asserting a formal project name; until then, use the folder path. General conversation also distinguishes assistant branding/shared memory from external repository identity.
+
+Files: agent/project_budget.py, agent/langgraph/langgraph_agent.py, agent/conversation.py, tests/test_project_budget.py. 157 guarded offline tests passed in 4.790 seconds. No live API call was made for this change. Prompt instructions cannot guarantee every model's final wording; live validation and repository-bound persistent memory remain pending. Existing file tools, project selection and approval handlers are unchanged.
+
+Trial after restarting: select the external root, ask to read settings.gradle and build.gradle, and ask which project name is confirmed by settings.gradle. Shared SHOW MEMORY still works separately.
+
+
+## Final-proposal compatibility - 17 October 2026
+
+The user's live output confirmed settings.gradle declares PayWrightWorkSpaceGradle and showed all 305 build.gradle lines inspected. The final project-action proposal was rejected; its raw payload was not available, so the exact invalid field is not established.
+
+Implemented safe normalization for unused null question/answer fields, explicit null arguments on non-executable ask/finish, and answer/question text nested in arguments. Executable argument objects remain strict; unknown actions/fields remain rejected. One bounded format-correction request is allowed only before any proposal execution, with static validation diagnostics rather than leaked payloads. The native tool schema now exposes the existing batch-read limits: five files and 80 lines per file. No stored project name or target source was renamed.
+
+161 offline tests passed in 22.901 seconds, including new normalization/correction tests and existing source/memory/UI checks. An earlier run had a final-answer-shape regression (fixed) and a headless UI startup timeout (passed on rerun without changing UI code). Live provider validation remains pending; no additional API quota was used for these tests.
+
+Changed files: agent/project_decisions.py, tests/test_project_decisions.py. Restart the agent and repeat the settings.gradle/build.gradle request. If malformed output recurs, the new error identifies the failed validation after one correction rather than a generic failure.
+
+
+## Task outcome logging - 17 October 2026
+
+Y - scoped completion: project reports include task_status (completed/incomplete); timer decorators and the console's outer workflow observe that explicit status. Returned incomplete results log INCOMPLETE instead of SUCCESS. Exceptions still propagate and log FAILED / INTERRUPTED. New turns reset task_status so an earlier incomplete checkpoint does not contaminate the next result. Shared conversation budget/invalid-ID/step-limit exits also mark incomplete.
+
+165 guarded offline tests passed in 28.822 seconds. Added tests/test_task_timing.py and updated runtime reset coverage. Files: agent/timing.py, agent/chat_runtime.py, agent/conversation.py, agent/langgraph/langgraph_agent.py. Runtime tools, approvals, provider selection and saved facts were not changed. This covers explicit task outcomes; route-specific blocked/waiting states without task_status still need separate acceptance coverage. No live API call was required.
+
+The user's previous successful settings.gradle/build.gradle run confirmed PayWrightWorkSpaceGradle correctly and inspected all requested lines. Next priority remains provider/model-aware token budgeting, followed by grounded document workflows and overall core-agent acceptance.
+
+
+## Provider-budget preflight - 17 October 2026
+
+Y - configured/estimated preflight: Ollama request context, configurable hosted context/output caps, model binding and explicit unknown-limit diagnostics are implemented. Public OpenRouter model metadata was verified and stored for the selected model. 174 offline tests pass. See [model-budgeting.md](model-budgeting.md). P - exact tokenizer/model discovery, quota scheduling, metadata refresh and adaptive compaction remain. This supersedes the earlier entirely-pending provider-budget item without claiming full token accuracy.
+
+
+## Workstream 1 focused acceptance - 17 October 2026
+
+Y: secret-safe actionable configuration errors now reach console/browser; 181 offline tests pass. Live OpenRouter/Groq direct and native tool/result checks pass. P: the selected Ollama qwen2.5-coder:7b passes direct answers but not native-tool acceptance, including one focused retry. The user selected all three for release, so Workstream 1 remains P. Active provider remains OpenRouter; no model downloads or silent provider fallback. See [foundation-acceptance.md](foundation-acceptance.md).
+
+
+## Workstream 1 completed - 17 October 2026
+
+Y for the agreed foundation scope. Diagnosed Ollama qwen2.5-coder:7b returning registered tool proposals as JSON text. A narrow Ollama-only normalization fixed the real tool/result cycle; no approval/path/schema checks were bypassed. All three selected provider/model combinations now pass live direct/tool/result acceptance. 183 offline tests pass. Current roadmap/diagram updated; see foundation-acceptance.md. OpenRouter remains selected; no model download or provider substitution. The former Ollama P finding is superseded for this acceptance scope. Continue Workstream 2 next; do not mark the overall AI agent/release complete.
+
+
+## Workstream 2 summary reliability started - 17 October 2026
+
+I overall. Registered, data-only summary generation replaces the old JSON-only client path. Validation, one bounded format correction and category-safe failures preserve context/archives. 189 offline tests pass, including real SQLite summary restart/session isolation with model mocks. Live synthetic long-chat summaries pass on Groq (2.11s) and OpenRouter (11.11s), retaining a correction and unanswered question. Full user-chat/live-browser acceptance remains pending; Ollama summary generation was not live-tested. See [workstream-2-summaries.md](workstream-2-summaries.md). The Word workstream snapshot is docs/agentic-ai-roadmap.docx.

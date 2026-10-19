@@ -1,0 +1,24 @@
+{
+  "workstream": 5,
+  "status": "Y - scoped core acceptance",
+  "offline_tests": 287,
+  "browser_tests_included": true,
+  "remaining": {
+    "P": 0,
+    "I": 0,
+    "X": 0
+  },
+  "live_provider_scope": {
+    "groq": "clarification and structured conflict only; planning rejected generated tool output",
+    "openrouter": "quota exhausted; not counted as acceptance",
+    "gemini": "real temporary-file planning and failure/recovery passed"
+  },
+  "clarification_manual_review": "Three substantive questions in missing-details answer; introduction is not a fourth requested detail. Reuse-details asks only workflow and expected outcome. JSON conflict names PDF/HTML with real DOC refs and a question.",
+  "limits": [
+    "Execution outcomes do not prove semantic truth.",
+    "Changed-path recovery remains conservatively partial.",
+    "Structural conflict guard checks references/question, not option entailment.",
+    "No long-horizon or exhaustive task guarantee."
+  ],
+  "next": "Workstream 6 controlled actions"
+}

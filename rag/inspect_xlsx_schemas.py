@@ -2,7 +2,10 @@ from pathlib import Path
 from openpyxl import load_workbook
 
 
-DATA_FOLDER = Path("data")
+if __package__:
+    from .paths import DATA_FOLDER
+else:
+    from paths import DATA_FOLDER
 
 
 xlsx_files = list(DATA_FOLDER.glob("*.xlsx"))

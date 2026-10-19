@@ -1,0 +1,329 @@
+Offline progress log: D:\JeshlaAutoAI\outputs\logs\offline-tests-20261019-034548-30900.jsonl
+............................2026-10-19 09:16:05.109 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:06.000 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:06.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:07.103 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+...........................................................................................
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+OK
+.......Local action receipt: cb4ea16ef84845edb84513ae03c82303 | C:\Users\nagar\AppData\Local\Temp\tmp4oqw2i1d\receipts.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmplaysqtsr\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmppz396iuc\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmp8ib1hcda\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmp4ag4lkcu\r.sqlite3
+Local action receipt: cancelled | C:\Users\nagar\AppData\Local\Temp\tmpgq728yfw\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpijo66nf8\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpf8c8z5ni\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmp144b00s6\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmpxqp9u3e8\r.sqlite3
+Local action receipt: approved | C:\Users\nagar\AppData\Local\Temp\tmphmr3qzyz\r.sqlite3
+Local action receipt: aeab940c66214509b40e2d15f0878525 | C:\Users\nagar\AppData\Local\Temp\tmpzy38au23\r.sqlite3
+Local action receipt: 1b0a238f935b460982821e11b4f82910 | C:\Users\nagar\AppData\Local\Temp\tmplue1i1vf\r.sqlite3
+Local action receipt: 1076f697dc2c464488a6ebc8f4482628 | C:\Users\nagar\AppData\Local\Temp\tmpzbv7627s\r.sqlite3
+Local action receipt: 699a3bd58a1a4834be647d9205a812a0 | C:\Users\nagar\AppData\Local\Temp\tmpzh0ocvf5\r.sqlite3
+Local action receipt: e5a4a3188b1e4cada4cb6ad3c1b0c512 | C:\Users\nagar\AppData\Local\Temp\tmp9177jgjs\r.sqlite3
+Local action receipt: real-python | C:\Users\nagar\AppData\Local\Temp\tmp0w5p2ns1\r.sqlite3
+
+RUNNING: ['D:\\JeshlaAutoAI\\.venv\\Scripts\\python.exe', 'C:\\Users\\nagar\\AppData\\Local\\Temp\\tmp0w5p2ns1\\fixture.py']
+Local action receipt: real-python | C:\Users\nagar\AppData\Local\Temp\tmpk8y22ciy\r.sqlite3
+
+RUNNING: ['D:\\JeshlaAutoAI\\.venv\\Scripts\\python.exe', '-c', 'print("fixture")']
+Local action receipt: saved-running | C:\Users\nagar\AppData\Local\Temp\tmpljhd9yqr\r.sqlite3
+Tool: search_chats
+Local action receipt: complete | C:\Users\nagar\AppData\Local\Temp\tmp9yxb44u3\source\outputs\actions.sqlite3
+Local action receipt: uncertain | C:\Users\nagar\AppData\Local\Temp\tmp9yxb44u3\source\outputs\actions.sqlite3
+Local action receipt: d3d921042e7147539b4c3bd0d647dafc | C:\Users\nagar\AppData\Local\Temp\tmpktuitfan\actions.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: 18cdd80d23934c6a83bb52f1abdb2a2a | C:\Users\nagar\AppData\Local\Temp\tmpatr0k8ns\outputs\local_actions.sqlite3
+
+CREATED FILE: note.txt
+Local action receipt: 4f8308abadc849efa2444ef2e9a06116 | C:\Users\nagar\AppData\Local\Temp\tmprj1dyh6a\actions.sqlite3
+Local action receipt: 50160a2685574c10906b30389cd9d238 | C:\Users\nagar\AppData\Local\Temp\tmp7da3h1a_\actions.sqlite3
+Local action receipt: 6369dfca12b24d5699cc01a9dd2d894b | C:\Users\nagar\AppData\Local\Temp\tmpg106ny2h\actions.sqlite3
+
+CREATED FILE: note.txt
+Tool: web_search
+Tool: web_search
+Tool: web_search
+Tool: search_documents
+Tool: search_documents
+Tool: web_search
+Tool: search_documents
+Tool: web_search
+Tool: search_documents
+Tool: web_search
+Tool: web_search
+Already applied; returning the saved receipt. No writes.
+Tool: search_documents
+Tool: search_documents
+
+Retrieved 1 unique chunks; selected 1 after reranking.
+
+[TIME START] 2026-10-19T09:16:12+05:30 | LLM tool request
+
+[TIME END] 2026-10-19T09:16:12+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-19T09:16:12+05:30 | LLM tool request
+
+[TIME END] 2026-10-19T09:16:12+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+..
+[TIME START] 2026-10-19T09:16:12+05:30 | LLM request
+
+[TIME END] 2026-10-19T09:16:12+05:30 | LLM request | FAILED / INTERRUPTED | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:12+05:30 | LLM tool request
+GEMINI BUDGET | input ~96 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:12+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+......GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+
+[TIME START] 2026-10-19T09:16:12+05:30 | LLM request
+GEMINI BUDGET | input ~174 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: Gemini | Actual model: gemini-test
+
+[TIME END] 2026-10-19T09:16:12+05:30 | LLM request | SUCCESS | 0.00 seconds
+..GEMINI BUDGET | input ~226 tokens (estimate) | output <= 512 tokens | context: unknown; no model-context fit guarantee
+Provider: Gemini | Actual model: gemini-test
+
+[TIME START] 2026-10-19T09:16:12+05:30 | LLM tool request
+GEMINI BUDGET | input ~155 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:12+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-19T09:16:12+05:30 | LLM tool request
+GEMINI BUDGET | input ~257 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: gemini | Model: gemini-test | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:12+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+...........................................................................................................................................................Local action receipt: 3d309b51e46444b0858f51e0358a3938 | C:\Users\nagar\AppData\Local\Temp\tmpmy2pdqvb\actions.sqlite3
+
+CREATED FILE: export.txt
+Already applied; returning the saved receipt. No writes.
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp5enbc_gx\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp10nnbu_9\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmpdp9axglt\receipts.sqlite3
+Local action receipt: two | C:\Users\nagar\AppData\Local\Temp\tmpdp9axglt\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp4kp89luj\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmp4_6mv8ox\receipts.sqlite3
+Local action receipt: one | C:\Users\nagar\AppData\Local\Temp\tmptq6j82y9\receipts.sqlite3
+Tool: search_memory
+Tool: search_documents
+Tool: web_search
+Tool: fetch_web_page
+GROQ BUDGET | input ~96 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+GROQ BUDGET | input ~96 tokens (estimate) | output <= 1696 tokens | context: 2048 (configured provider context)
+GROQ BUDGET | output reduced from 4096 to 1696 to respect configured limits; input was not silently truncated.
+OLLAMA BUDGET | input ~96 tokens (estimate) | output <= 672 tokens | context: 1024 (configured Ollama num_ctx)
+OLLAMA BUDGET | output reduced from 4096 to 672 to respect configured limits; input was not silently truncated.
+GROQ BUDGET | input ~96 tokens (estimate) | output <= 512 tokens | context: unknown; no model-context fit guarantee
+GROQ BUDGET | output reduced from 4096 to 512 to respect configured limits; input was not silently truncated.
+OPENROUTER BUDGET | input ~95 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+OPENROUTER BUDGET | input ~96 tokens (estimate) | output: provider default | context: unknown; no model-context fit guarantee
+GROQ [RATE_LIMIT] HTTP 429: retrying model request (2/2) in 0s.
+GROQ [PROVIDER_TEMPORARY] HTTP 503: retrying model request (2/2) in 1s.
+GROQ BUDGET | input ~176 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+OPENROUTER BUDGET | input ~176 tokens (estimate) | output <= 235929 tokens | context: 262144 (configured provider context)
+OLLAMA BUDGET | input ~176 tokens (estimate) | output <= 512 tokens | context: 4096 (configured Ollama num_ctx)
+
+[TIME START] 2026-10-19T09:16:15+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:15+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:15+05:30 | LLM request
+
+[TIME END] 2026-10-19T09:16:15+05:30 | LLM request | SUCCESS | 0.00 seconds
+...............2026-10-19 09:16:16.532 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:19.513 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:20.141 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:20.619 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-19 09:16:21.113 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:21.381 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:22.107 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:23.554 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:25.173 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:26.319 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:26.901 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:27.366 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:27.771 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:28.356 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:28.774 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:29.219 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:29.843 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:30.473 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+.2026-10-19 09:16:30.964 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+...............................................PDF files found: 0
+TXT files found: 0
+DOCX files found: 0
+CSV files found: 0
+PDF files found: 0
+PDF files found: 0
+TXT files found: 1
+DOCX files found: 0
+CSV files found: 1
+PDF files found: 0
+
+Reading TXT: notes.txt
+
+Reading CSV: rows.csv
+Total documents loaded: 2
+Total chunks: 2
+
+Creating BM25 index...
+BM25 database saved: C:\Users\nagar\AppData\Local\Temp\tmp5dn98_2a\indexes\bm25.pkl
+Chunks saved: C:\Users\nagar\AppData\Local\Temp\tmp5dn98_2a\indexes\chunks.pkl
+
+Creating FAISS database...
+FAISS database created successfully!
+========================================
+INDEXING COMPLETED
+========================================
+Total documents : 2
+Total chunks    : 2
+FAISS           : faiss_db/
+BM25            : bm25.pkl
+Chunks          : chunks.pkl
+========================================
+Tool: search_documents
+Tool: search_table
+Tool: search_table
+Tool: search_table
+Tool: search_table
+Tool: search_table
+Tool: search_memory
+Tool: search_table
+Tool: read_file
+Tool: read_file
+Tool: list_files
+Tool: read_file
+Tool: list_files
+Tool: read_file
+Tool: read_file
+Tool: list_files
+Tool: read_file
+Tool: list_files
+Tool: read_file
+Tool: read_file
+
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~100 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+GROQ [CONNECT_TIMEOUT]: retrying model request (2/2); no action executed from this response.
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~100 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+GROQ [CONNECTION]: retrying model request (2/2); no action executed from this response.
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+OPENROUTER BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: 262144 (configured provider context)
+Provider: openrouter | Model: 00077 | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+OLLAMA BUDGET | input ~163 tokens (estimate) | output <= 512 tokens | context: 4096 (configured Ollama num_ctx)
+Provider: ollama | Model: qwen2.5-coder:7b | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+OLLAMA BUDGET | input ~127 tokens (estimate) | output <= 512 tokens | context: 4096 (configured Ollama num_ctx)
+Ollama compatibility: normalized a registered tool proposal from JSON text; execution remains subject to caller validation.
+Provider: ollama | Model: qwen2.5-coder:7b | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+..
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~101 tokens (estimate) | output <= 4096 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~100 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~100 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~100 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~102 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~129 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+GROQ BUDGET | input ~132 tokens (estimate) | output <= 1024 tokens | context: unknown; no model-context fit guarantee
+Provider: groq | Model: test-model | Request: 0.00s
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | SUCCESS | 0.00 seconds
+.
+[TIME START] 2026-10-19T09:16:32+05:30 | LLM tool request
+
+[TIME END] 2026-10-19T09:16:32+05:30 | LLM tool request | FAILED / INTERRUPTED | 0.00 seconds
+.python-dotenv could not parse statement starting at line 1
+..........
+----------------------------------------------------------------------
+Ran 399 tests in 40.480s
+
+OK
+Tool: fetch_web_page
+Tool: web_search
+Tool: fetch_web_page

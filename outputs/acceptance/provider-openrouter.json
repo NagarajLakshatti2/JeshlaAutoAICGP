@@ -1,0 +1,17 @@
+{
+  "provider": "openrouter",
+  "model": "nvidia/nemotron-3-super-120b-a12b:free",
+  "verified_date": "2026-10-17",
+  "source": "Observed manual acceptance execution in this chat, using the same direct/native-tool/temporary-file checks",
+  "checks": {
+    "direct_answer": {
+      "status": "Y",
+      "seconds": 2.15
+    },
+    "native_tool_result_answer": {
+      "status": "Y",
+      "seconds": 4.46
+    }
+  },
+  "status": "Y"
+}
