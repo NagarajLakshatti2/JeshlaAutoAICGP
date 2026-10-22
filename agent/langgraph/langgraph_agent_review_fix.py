@@ -9,7 +9,7 @@ from typing import TypedDict
 from dotenv import load_dotenv
 from langgraph.graph import END, START, StateGraph
 
-from agent.timing import timer, timed
+from agent.runtime.timing import timer, timed
 
 
 # ============================================================

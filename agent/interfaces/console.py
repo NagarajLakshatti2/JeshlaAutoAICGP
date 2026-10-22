@@ -2,7 +2,7 @@
 import argparse
 import os
 import re
-from agent.timing import timer
+from agent.runtime.timing import timer
 
 
 def run_console(*, graph, project_root, provider, session_config, restore_session, timer_factory=None):
@@ -15,7 +15,7 @@ def run_console(*, graph, project_root, provider, session_config, restore_sessio
     parser.add_argument("--memory-space", default=os.getenv("AI_MEMORY_NAMESPACE", "project"),
                         help="Shared long-term fact namespace, for example JeshlaAutoAI")
     args = parser.parse_args()
-    from agent.terminal_input import configure_input, read_message
+    from agent.interfaces.terminal_input import configure_input, read_message
     configure_input(args.input_mode)
     try:
         session_config(args.session or "default", args.user, args.memory_space)
@@ -116,6 +116,6 @@ def run_console(*, graph, project_root, provider, session_config, restore_sessio
 
 
         except Exception as error:
-            from agent.user_errors import print_agent_error
+            from agent.interfaces.errors import print_agent_error
             print_agent_error(error)
 

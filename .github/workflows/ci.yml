@@ -2,190 +2,80 @@ name: JeshlaAutoAI CI
 
 on:
   push:
-    branches: [ main, master, dev ]
+    branches: [main, master, dev]
   pull_request:
-    branches: [ main, master ]
+    branches: [main, master]
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 env:
   PYTHON_VERSION: "3.14"
-  LLM_PROVIDER: "groq"
-
-# ── Reusable .env block (anchored once, referenced in every job) ─────────────
-# GitHub Actions doesn't support YAML anchors natively, so the .env write
-# step is duplicated per job — but the content is identical and clear.
+  LLM_PROVIDER: groq
+  GROQ_API_KEY: fixture-key-not-real
+  GROQ_MODEL: fixture-model
+  AI_DEPLOYMENT_MODE: hosted
+  LLM_ALLOW_LOCAL_OLLAMA: "false"
+  LLM_FALLBACK_ENABLED: "false"
+  HF_HUB_OFFLINE: "1"
+  TRANSFORMERS_OFFLINE: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
 
 jobs:
-
-  # ───────────────────────────────────────────────────────────────────────────
-  # 1. OFFLINE TEST SUITE
-  #    Fix applied: install requirements-rag.txt (which includes core) so that
-  #    rank_bm25, pypdf, openpyxl and python-docx are all present.
-  #    The ScriptRunContext warnings are harmless — Streamlit emits them when
-  #    its UI components are imported outside a running server.
-  # ───────────────────────────────────────────────────────────────────────────
   test:
     name: Offline Tests
     runs-on: ubuntu-latest
-
+    timeout-minutes: 20
+    env:
+      JESHLA_HOME: ${{ runner.temp }}/jeshla-offline-state
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python ${{ env.PYTHON_VERSION }}
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
-
-      # ── FIX: was requirements-core.txt; RAG tests need the full set ────────
-      - name: Install RAG + core dependencies
-        run: pip install -r requirements-rag.txt
-
-      - name: Write minimal .env for offline tests
-        # python-dotenv rejects lines with leading spaces, so use printf
-        # (no heredoc indentation) to write a clean KEY=value file.
-        run: |
-          printf '%s\n' \
-            'LLM_PROVIDER=groq' \
-            'GROQ_API_KEY=test-stub' \
-            'GROQ_MODEL=llama-3.3-70b-versatile' \
-            'ANTHROPIC_API_KEY=test-stub' \
-            'OPENROUTER_API_KEY=test-stub' \
-            'OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free' \
-            'GEMINI_MODEL=gemini-2.0-flash' \
-            'JIRA_SITE_URL=https://example.atlassian.net' \
-            'JIRA_PROJECT_KEY=TEST' \
-            'JIRA_ALLOW_CREATE=false' \
-            'AI_MAX_STEPS=10' \
-            'AI_MAX_CONVERSATION_CHARS=8000' \
-          > .env
-
-      - name: Run offline test suite
+      - name: Install core and RAG test dependencies
+        run: python -m pip install -r requirements-rag.txt
+      - name: Check dependencies
+        run: python -m pip check
+      - name: Run guarded offline tests
         run: python tests/run_offline.py
-
-      - name: Upload test logs and outputs on failure
+      - name: Upload test progress on failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-logs
-          path: |
-            outputs/logs/
-            *.log
+          name: offline-test-progress
+          path: outputs/logs/offline-tests-*.jsonl
+          if-no-files-found: ignore
+          retention-days: 7
 
-
-  # ───────────────────────────────────────────────────────────────────────────
-  # 2. STREAMLIT SMOKE CHECK
-  # ───────────────────────────────────────────────────────────────────────────
-  streamlit-smoke:
-    name: Streamlit Smoke Check
-    runs-on: ubuntu-latest
+  startup:
+    name: Offline ${{ matrix.interface }} startup
     needs: test
-
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        interface: [console, browser]
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: pip
-
       - name: Install core dependencies
-        run: pip install -r requirements-core.txt
-
-      - name: Write minimal .env
-        run: |
-          printf '%s\n' \
-            'LLM_PROVIDER=groq' \
-            'GROQ_API_KEY=test-stub' \
-            'GROQ_MODEL=llama-3.3-70b-versatile' \
-            'ANTHROPIC_API_KEY=test-stub' \
-            'OPENROUTER_API_KEY=test-stub' \
-            'OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free' \
-            'GEMINI_MODEL=gemini-2.0-flash' \
-            'JIRA_SITE_URL=https://example.atlassian.net' \
-            'JIRA_PROJECT_KEY=TEST' \
-            'JIRA_ALLOW_CREATE=false' \
-            'AI_MAX_STEPS=10' \
-            'AI_MAX_CONVERSATION_CHARS=8000' \
-          > .env
-
-      - name: Verify streamlit_app.py imports cleanly
-        run: |
-          timeout 20 streamlit run streamlit_app.py \
-            --server.headless true \
-            --server.address 127.0.0.1 \
-            --server.port 8501 \
-            --logger.level error \
-          || EXIT=$?
-          # 124 = timeout while still running = healthy start = PASS
-          if [ "${EXIT:-0}" -ne 0 ] && [ "${EXIT:-0}" -ne 124 ]; then
-            echo "Streamlit exited with unexpected error code $EXIT"
-            exit 1
-          fi
-          echo "Streamlit smoke check passed."
-
-
-  # ───────────────────────────────────────────────────────────────────────────
-  # 3. LANGGRAPH AGENT SMOKE CHECK
-  # ───────────────────────────────────────────────────────────────────────────
-  langgraph-smoke:
-    name: LangGraph Agent Smoke Check
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+        run: python -m pip install -r requirements-core.txt
+      - name: Check dependencies
+        run: python -m pip check
+      - name: Verify actual startup with isolated state and blocked live calls
+        run: python -m evaluations.ci_smoke --interface ${{ matrix.interface }} --output-dir outputs/ci/${{ matrix.interface }}
+      - name: Upload scoped startup evidence
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: pip
-
-      - name: Install core dependencies
-        run: pip install -r requirements-core.txt
-
-      - name: Write minimal .env
-        run: |
-          printf '%s\n' \
-            'LLM_PROVIDER=groq' \
-            'GROQ_API_KEY=test-stub' \
-            'GROQ_MODEL=llama-3.3-70b-versatile' \
-            'ANTHROPIC_API_KEY=test-stub' \
-            'OPENROUTER_API_KEY=test-stub' \
-            'OPENROUTER_MODEL=nvidia/nemotron-3-super-120b-a12b:free' \
-            'GEMINI_MODEL=gemini-2.0-flash' \
-            'JIRA_SITE_URL=https://example.atlassian.net' \
-            'JIRA_PROJECT_KEY=TEST' \
-            'JIRA_ALLOW_CREATE=false' \
-            'AI_MAX_STEPS=10' \
-            'AI_MAX_CONVERSATION_CHARS=8000' \
-          > .env
-
-      - name: Verify agent graph imports and compiles
-        run: |
-          python - <<'PYEOF'
-          from agent.langgraph.langgraph_agent import graph, LLM_PROVIDER
-          print(f"Graph compiled OK | provider: {LLM_PROVIDER}")
-          import importlib.util
-          spec = importlib.util.spec_from_file_location("agent_main", "agent/langgraph/langgraph_agent.py")
-          assert spec is not None, "Could not locate langgraph_agent.py"
-          print("LangGraph entry-point located successfully.")
-          PYEOF
-
-
-# ── HOW TO ADD REAL API KEYS ──────────────────────────────────────────────────
-# GitHub repo → Settings → Secrets and variables → Actions → New repository secret
-#
-#   Secret name            maps to .env variable
-#   ─────────────────────  ──────────────────────
-#   GROQ_API_KEY           GROQ_API_KEY
-#   OPENROUTER_API_KEY     OPENROUTER_API_KEY
-#   ANTHROPIC_API_KEY      ANTHROPIC_API_KEY
-#   GEMINI_API_KEY         GOOGLE_AI_STUDEO_KEY
-#   SERPAPI_KEY            SERPAPI_KEY
-#   JIRA_SITE_URL          JIRA_SITE_URL
-#
-# Then replace stub values in the .env steps above with e.g.:
-#   'GROQ_API_KEY=${{ secrets.GROQ_API_KEY }}'
-# Never commit real keys into the repo.
+          name: startup-${{ matrix.interface }}
+          path: outputs/ci/${{ matrix.interface }}/
+          if-no-files-found: ignore
+          retention-days: 7

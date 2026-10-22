@@ -1,6 +1,6 @@
 import unittest
 from agent.citation_guard import citation_issue,visible_web_urls
-import test_conversation_sources as source_tests
+from tests import test_conversation_sources as source_tests
 
 class CitationGuardTests(unittest.TestCase):
     def test_unseen_url_and_internal_markers_rejected(self):
@@ -33,3 +33,20 @@ class CitationGuardTests(unittest.TestCase):
             {"action":"finish","answer":"Latest is 999."}],state={"question":"Latest version?","route":"web"},web=lambda **k:{"error":"offline"})
         self.assertEqual(result["task_status"],"incomplete")
         self.assertNotIn("999",result["answer"])
+
+
+class ReadSourceLabelTests(unittest.TestCase):
+    def test_missing_labels_preserve_code_and_only_add_actual_read_urls(self):
+        from agent.policies.citations import append_read_sources,citation_issue
+        url="https://official.example.test/rules"
+        content="Explanation.\n```java\nclass Example {}\n```"
+        result=append_read_sources(content,{url})
+        self.assertTrue(result.startswith(content))
+        self.assertIn(url,result);self.assertIsNone(citation_issue(result,{url}))
+
+    def test_unknown_url_and_internal_markers_are_never_replaced_by_added_labels(self):
+        from agent.policies.citations import append_read_sources,citation_issue
+        url="https://official.example.test/rules"
+        for content in ("[Unknown](https://unread.example.test)","Claim【commentary:functions.web_search#1】"):
+            self.assertEqual(append_read_sources(content,{url}),content)
+            self.assertIsNotNone(citation_issue(content,{url}))

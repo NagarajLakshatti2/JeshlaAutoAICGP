@@ -219,7 +219,8 @@ async def discover_jira_mappings(project_root, project_key, max_pages=100):
 
 
 def main():
-    load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+    from agent.config.paths import DATA_ROOT
+    load_dotenv(DATA_ROOT / ".env")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=os.getenv("AI_PROJECT_ROOT"))
     parser.add_argument("--project", default=os.getenv("JIRA_PROJECT_KEY"))

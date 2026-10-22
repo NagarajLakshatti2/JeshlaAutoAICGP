@@ -17,6 +17,7 @@ class LazyGraph:
     def _ensure(self):
         if self._graph is None:
             from langgraph.checkpoint.sqlite import SqliteSaver
+            self.path.parent.mkdir(parents=True,exist_ok=True)
             connection=sqlite3.connect(str(self.path),check_same_thread=False)
             try:graph=self.builder(SqliteSaver(connection))
             except BaseException:

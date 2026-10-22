@@ -17,7 +17,7 @@ from integrations.jira.test_case_agent import (
     validate_request, creation_enabled, unresolved_receipts,
 )
 
-APP_ROOT = Path(__file__).resolve().parents[2]
+from agent.config.paths import DATA_ROOT as APP_ROOT
 CONTROL = re.compile(
     r"^(?:APPROVE(?:\s+.*)?|CANCEL|STATUS|RESUME|REPLAN|RETRY DRAFT|REVIEW RECEIPTS|LOAD JIRA DRAFT .+|WORKFLOW HELP|"
     r"ALLOW CREATE (?:EPIC|STORY) (?:TRUE|FALSE)|"

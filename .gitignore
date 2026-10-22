@@ -1,4 +1,35 @@
-
+# Keep example configuration; exclude machine-specific credentials.
 .env
 .env.*
 !.env.example
+.streamlit/secrets.toml
+# Python generated files and local environments.
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+# Private runtime state, logs, receipts, caches and downloaded/generated output.
+/outputs/
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.log
+/rag/data/
+/rag/documents/
+/rag/chroma_db/
+/rag/indexes/
+/rag/faiss_index/
+/uploads/
+# Public fixtures or curated evidence need explicit review and exceptions.
+
+# Retained learning chat memory is local user state.
+/chat_history.json

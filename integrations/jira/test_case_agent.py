@@ -15,7 +15,7 @@ from pathlib import Path
 import re
 import sys
 
-APP_ROOT = Path(__file__).resolve().parents[2]
+from agent.config.paths import DATA_ROOT as APP_ROOT
 KEY = re.compile(r"[A-Z][A-Z0-9_]*-\d+")
 READ_FIELDS = ["summary", "description", "status", "issuetype", "parent"]
 

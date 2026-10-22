@@ -1,6 +1,0 @@
-{
-  "provider": "ollama",
-  "status": "P",
-  "error": "OLLAMA [CONTEXT_PREFLIGHT] | Estimated input 4952 tokens plus 256 reserve leaves insufficient output space in the configured 4096-token context. Narrow evidence/history or configure the model context correctly. Estimate is approximate; no request sent. | Attempts: 0. No action was executed from this failed response.",
-  "seconds": 0.0
-}

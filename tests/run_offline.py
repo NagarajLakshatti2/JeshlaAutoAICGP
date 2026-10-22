@@ -44,6 +44,12 @@ def offline_guard():
         raise RuntimeError("Offline tests require a mock for HTTP requests or browser launches")
 
     with ExitStack() as stack:
+        # Adapter fixtures simulate local/hosted policy explicitly. Do not let
+        # developer credentials/routing or CI flags alter unrelated unit tests.
+        stack.enter_context(patch.dict("os.environ", {
+            "LLM_FALLBACK_ENABLED": "false", "AI_TECHNICAL_VERIFICATION": "off", "AI_DEPLOYMENT_MODE": "local",
+            "GITHUB_ACTIONS": "false", "CI": "false", "CODESPACES": "false",
+            "STREAMLIT_SHARING_MODE": ""}))
         stack.enter_context(patch("socket.socket.connect", connect))
         stack.enter_context(patch("socket.socket.connect_ex", connect_ex))
         stack.enter_context(patch("requests.sessions.Session.request", blocked))
@@ -63,7 +69,7 @@ def main():
         print('Offline progress log:',path,flush=True)
     except OSError:
         handle=io.StringIO();print('Progress file unavailable; tests will still run.',flush=True)
-    with handle,patch.dict('os.environ',{'JESHLA_EXECUTION_MODE':'offline'}):
+    with handle,patch.dict('os.environ',{'JESHLA_EXECUTION_MODE':'offline','LLM_FALLBACK_ENABLED':'false','AI_DEPLOYMENT_MODE':'local','GITHUB_ACTIONS':'false','CI':'false','CODESPACES':'false','STREAMLIT_SHARING_MODE':''}):
         progress=writer(handle);progress('run_started')
         try:
             with offline_guard():

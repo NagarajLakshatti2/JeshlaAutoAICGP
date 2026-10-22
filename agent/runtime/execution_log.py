@@ -2,9 +2,9 @@
 import json,os,threading
 from datetime import datetime,timezone
 from pathlib import Path
-from agent.config.paths import APPLICATION_ROOT
+from agent.config.paths import DATA_ROOT as APPLICATION_ROOT  # Legacy patch/import name.
 _lock=threading.RLock()
-_stages={'Router node','Project node','Complete agent workflow','LLM request','LLM tool request'}
+_stages={'Router node','Project node','Complete agent workflow','LLM request','LLM tool request','Conversation summary','Technical source review','Long answer composition','Web search','Source-first documentation','Source coverage planning','Documentation retrieval','Grounded answer drafting','Grounding checks'}
 
 def log_execution(event,name,*,span,status=None,duration=None,error=None):
     try:
@@ -14,7 +14,7 @@ def log_execution(event,name,*,span,status=None,duration=None,error=None):
         if isinstance(duration,(int,float)) and 0<=duration<86400:record['duration_seconds']=round(duration,3)
         if error is not None:
             record['error_kind']='application_error'
-            categories={'CONFIGURATION','AUTHENTICATION','RATE_LIMIT','QUOTA_EXHAUSTED','TOOL_OUTPUT','OUTPUT_LIMIT','CONNECTION','CONNECT_TIMEOUT','RESPONSE_TIMEOUT','CONTEXT_PREFLIGHT','CONTEXT_LIMIT','INVALID_RESPONSE','PROVIDER_TEMPORARY'}
+            categories={'CONFIGURATION','AUTHENTICATION','RATE_LIMIT','QUOTA_EXHAUSTED','TOOL_OUTPUT','OUTPUT_LIMIT','CONNECTION','CONNECT_TIMEOUT','RESPONSE_TIMEOUT','CONTEXT_PREFLIGHT','CONTEXT_LIMIT','INVALID_RESPONSE','PROVIDER_TEMPORARY','ANSWER_REVIEW_FORMAT','GROUNDING_FORMAT','CONTINUATION_SAVE','ANSWER_REVIEW_REQUIRED','LONG_ANSWER_FORMAT','LONG_ANSWER_LIMIT','LONG_ANSWER_DUPLICATE'}
             category=getattr(error,'category',None)
             if category in categories:record.update(error_kind='provider_error',category=category)
             provider=getattr(error,'provider',None)

@@ -1,8 +1,0 @@
-{"time": "2026-10-18T16:26:42.005626+00:00", "event": "stage_started", "pid": 2960, "span": "b0e36c55520a4ac1bdf6faa89a15844c", "stage": "other", "mode": "runtime"}
-{"time": "2026-10-18T16:26:42.010989+00:00", "event": "stage_finished", "pid": 2960, "span": "b0e36c55520a4ac1bdf6faa89a15844c", "stage": "other", "mode": "runtime", "status": "FAILED / INTERRUPTED", "duration_seconds": 0.005}
-{"time": "2026-10-18T16:26:42.013107+00:00", "event": "stage_started", "pid": 2960, "span": "21ded45b1572408ca9bac9f4ce5052c7", "stage": "other", "mode": "runtime"}
-{"time": "2026-10-18T16:26:42.015067+00:00", "event": "stage_finished", "pid": 2960, "span": "21ded45b1572408ca9bac9f4ce5052c7", "stage": "other", "mode": "runtime", "status": "SUCCESS", "duration_seconds": 0.002}
-{"time": "2026-10-18T16:26:42.018850+00:00", "event": "stage_started", "pid": 2960, "span": "552dc2ff61584ad794ff709f7ec9c406", "stage": "other", "mode": "runtime"}
-{"time": "2026-10-18T16:26:42.021736+00:00", "event": "stage_finished", "pid": 2960, "span": "552dc2ff61584ad794ff709f7ec9c406", "stage": "other", "mode": "runtime", "status": "INCOMPLETE", "duration_seconds": 0.003}
-{"time": "2026-10-18T16:26:42.024389+00:00", "event": "stage_started", "pid": 2960, "span": "c90929d0fb3e46ffa4553b1ff27f9a6f", "stage": "other", "mode": "runtime"}
-{"time": "2026-10-18T16:26:42.026199+00:00", "event": "stage_finished", "pid": 2960, "span": "c90929d0fb3e46ffa4553b1ff27f9a6f", "stage": "other", "mode": "runtime", "status": "INCOMPLETE", "duration_seconds": 0.002}

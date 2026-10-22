@@ -99,3 +99,65 @@ class ConsoleInterfaceCompatibilityTests(unittest.TestCase):
         with patch("agent.interfaces.console.run_console",return_value="fixture") as run:
             self.assertEqual(scope["main"](),"fixture")
         run.assert_called_once_with(graph=graph,project_root=root,provider="fixture",session_config=session,restore_session=restore,timer_factory=timer)
+
+
+class RemainingHelperCompatibilityTests(unittest.TestCase):
+    """Relocation preserves caller patches, private state and worker entry points."""
+    def test_relocated_helpers_share_legacy_module_identity(self):
+        cases = {
+            "browser_action_ui": "interfaces.action_approval",
+            "browser_activity": "interfaces.activity",
+            "citation_guard": "policies.citations",
+            "clarification_guard": "policies.clarification",
+            "project_budget": "runtime.project_budget",
+            "project_context": "runtime.project_context",
+            "project_decisions": "runtime.project_decisions",
+            "project_native_specs": "runtime.project_native_specs",
+            "terminal_input": "interfaces.terminal_input",
+            "timing": "runtime.timing",
+            "user_errors": "interfaces.errors",
+            "web_page_worker": "tools.web_page_worker",
+            "web_pages": "tools.web_pages",
+        }
+        for old, new in cases.items():
+            with self.subTest(module=old):
+                self.assertIs(importlib.import_module("agent." + old),
+                              importlib.import_module("agent." + new))
+
+    def test_legacy_terminal_state_and_project_patch_reach_canonical_code(self):
+        terminal = importlib.import_module("agent.interfaces.terminal_input")
+        old_terminal = importlib.import_module("agent.terminal_input")
+        with patch.object(terminal, "_mode", "editor"), patch.object(terminal, "_session", object()):
+            old_terminal.configure_input("end")
+            self.assertEqual(terminal._mode, "end")
+            self.assertIsNone(terminal._session)
+        decisions = importlib.import_module("agent.runtime.project_decisions")
+        with patch("agent.project_decisions.call_tool_messages", return_value={"content": "Inspected evidence."}) as model:
+            self.assertIn("Inspected evidence.", decisions.call_project_decision([], []))
+            model.assert_called_once()
+
+    def test_both_page_worker_module_commands_return_safe_invalid_request(self):
+        import json
+        import subprocess
+        import sys
+        from agent.config.paths import APPLICATION_ROOT
+        for module in ("agent.web_page_worker", "agent.tools.web_page_worker"):
+            with self.subTest(module=module):
+                result = subprocess.run([sys.executable, "-m", module], input="{}", text=True,
+                                        capture_output=True, cwd=APPLICATION_ROOT, timeout=20)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                value = json.loads(result.stdout)
+                self.assertIn("error", value)
+                self.assertNotIn("text", value)
+
+    def test_agent_root_contains_only_compatibility_modules(self):
+        import ast
+        from agent.config.paths import APPLICATION_ROOT
+        for path in (APPLICATION_ROOT / "agent").glob("*.py"):
+            if path.name == "__init__.py":
+                continue
+            with self.subTest(module=path.name):
+                tree = ast.parse(path.read_text(encoding="utf-8"))
+                self.assertFalse(any(isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
+                                     for node in tree.body), "Active implementation belongs in a child package")
+                self.assertTrue((ast.get_docstring(tree) or "").startswith("Compatibility alias"))

@@ -69,7 +69,7 @@ class BudgetTests(unittest.TestCase):
 
     def test_agent_repository_keeps_its_context(self):
         from agent import project_budget
-        root=Path(project_budget.__file__).resolve().parents[1]
+        root=project_budget.APPLICATION_ROOT
         state={"question":"Review agent", "memory_context":"project_name: LocalAgent", "summary":"AgentSummary"}
         context=project_user_context(state,root,32000)
         self.assertIn("LocalAgent",context)

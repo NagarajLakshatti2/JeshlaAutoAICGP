@@ -14,8 +14,7 @@ from agent.llm_client import LLM_PROVIDER, call_llm
 # CONFIGURATION
 # ==================================================
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-RAG_DIR = PROJECT_ROOT / "rag"
+from rag.paths import PROJECT_ROOT, RAG_DIR
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
 OUTPUT_PDF = OUTPUT_DIR / "rag_answer.pdf"
 

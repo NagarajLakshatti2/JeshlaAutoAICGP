@@ -31,6 +31,9 @@ print('ok')
             self.assertEqual(list(Path(folder).iterdir()),[])
 
     def model_stubs(self):
+        # Load real C-extension dependencies before patch.dict snapshots modules.
+        # Otherwise exiting a stub context discards NumPy and a second import fails.
+        import rank_bm25
         hf=ModuleType('langchain_huggingface');hf.HuggingFaceEmbeddings=Mock(return_value=object())
         vs=ModuleType('langchain_community.vectorstores');vs.FAISS=Mock()
         vector=Mock();vs.FAISS.from_documents.return_value=vector

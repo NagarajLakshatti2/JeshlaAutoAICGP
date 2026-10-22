@@ -1,7 +1,7 @@
 """Keep advanced controls out of the everyday conversation view."""
 import streamlit as st
 from agent import browser_activity
-from agent.user_errors import user_error_message
+from agent.interfaces.errors import user_error_message
 
 
 def dismiss_dialog():st.session_state.ui_dialog=None

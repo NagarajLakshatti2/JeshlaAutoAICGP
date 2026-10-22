@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 from agent.storage.chats import ChatCatalog,validate_chat_command
 
-from agent.config.paths import APPLICATION_ROOT as ROOT
+from agent.config.paths import DATA_ROOT as ROOT
 
 class BrowserBackend:
     def __init__(self):

@@ -1,5 +1,0 @@
-{
-  "status": "P",
-  "scope": "temporary synthetic memory, cached MiniLM",
-  "note": "Local real-model check was interrupted after prolonged loading without a result. Mocked integration tests pass; real semantic quality and latency remain unverified. No model download requested."
-}

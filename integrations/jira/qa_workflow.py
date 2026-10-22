@@ -125,7 +125,7 @@ def main(argv=None, *, return_evidence=False):
     from agent.tools.feature_mapping import discover_feature_mappings
     from integrations.jira.feature_jira_mapping import discover_jira_mappings
 
-    app_root = Path(__file__).resolve().parents[2]
+    from agent.config.paths import DATA_ROOT as app_root
     load_dotenv(app_root / ".env")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=os.getenv("AI_PROJECT_ROOT"))

@@ -54,6 +54,20 @@ class BrowserTests(unittest.TestCase):
         self.app.run()
         self.assertEqual(len(self.backend.calls),1)
         self.assertTrue(any(row.value=="Test answer" for row in self.app.markdown))
+    def test_growing_chat_keeps_one_composer_outside_history(self):
+        self.app.run()
+        for message in ("hi", "how are you"):
+            self.app.chat_input[0].set_value(message).run()
+            self.assertFalse(self.app.exception)
+            self.assertEqual(len(self.app.chat_input),1)
+            self.assertEqual(len(self.app.container(key="message_composer").chat_input),1)
+            self.assertFalse(self.app.container(key="conversation_content").chat_input)
+        self.assertEqual(len(self.backend.calls),2)
+        self.assertEqual(len(self.app.container(key="conversation_content").chat_message),4)
+        self.app.run()
+        self.assertEqual(len(self.app.chat_input),1)
+        self.assertEqual(len(self.backend.calls),2)
+
     def test_memory_view_without_model(self):
         self.app.run()
         self.app.button(key="open_memory").click().run()

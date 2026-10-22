@@ -60,3 +60,13 @@ class ExecutionLoggingTests(unittest.TestCase):
             end=json.loads(text.splitlines()[-1])
             self.assertEqual(end['category'],'RATE_LIMIT');self.assertEqual(end['http_status'],429)
             self.assertNotIn('private-provider-message',text)
+
+
+    def test_summary_and_review_work_have_distinct_safe_stage_names(self):
+        with tempfile.TemporaryDirectory() as folder,patch('agent.runtime.execution_log.APPLICATION_ROOT',Path(folder)),redirect_stdout(io.StringIO()):
+            with timer('Conversation summary'):pass
+            with timer('Technical source review'):pass
+            with timer('Web search'):pass
+            rows=[json.loads(line) for line in next((Path(folder)/'outputs/logs').glob('execution-*.jsonl')).read_text().splitlines()]
+            self.assertEqual({row['stage'] for row in rows},{'Conversation summary','Technical source review','Web search'})
+            self.assertEqual(len(rows),6)

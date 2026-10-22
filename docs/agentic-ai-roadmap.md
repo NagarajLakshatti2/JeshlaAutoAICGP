@@ -1,6 +1,6 @@
 # JeshlaAutoAI — Agentic AI roadmap
 
-Updated: 18 October 2026
+Updated: 23 October 2026
 
 ## Your actual development position
 
@@ -34,20 +34,20 @@ Automation-framework development is deferred until the core-agent acceptance gat
 
 ## Current position
 
-Phase 1 foundations and Phase 2 RAG implementation already exist. Phase 3 integration and hardening is the current focus. The conversational foundation works: Groq, native tool calls, local memory commands, named chats, transcript archiving and editable terminal input have been exercised. Streamlit create/chat/reopen/shared-memory/download acceptance passed for the observed user/browser scope, with 199 offline tests and live action logs supporting current behavior. Web search works, but citations and factual grounding need improvement. Automatic summaries now use a validated registered function and pass synthetic live checks on Groq and OpenRouter. Actual-history summary format/quality and full live summary isolation remain P—parked; Ollama summary attribution also remains P. The precise generated-output defect is unconfirmed. Workstreams 5 and 6 now have scoped core acceptance Y; Workstream 7 scoped reliability acceptance is Y; Workstream 8 release gate is next. Document retrieval and advanced memory search require verification and development.
+Phase 1 foundations and Phase 2 RAG implementation already exist. Phase 3 integration and hardening is the current focus. The conversational foundation works: Groq, native tool calls, local memory commands, named chats, transcript archiving and editable terminal input have been exercised. Streamlit create/chat/reopen/shared-memory/download acceptance passed for the observed user/browser scope, with 199 offline tests and live action logs supporting current behavior. Web search works, but citations and factual grounding need improvement. Automatic summaries now use a validated registered function and pass synthetic live checks on Groq and OpenRouter. Actual-history summary format/quality and full live summary isolation remain P—parked; Ollama summary attribution also remains P. The observed Groq summary-function namespace defect is fixed for the sampled scope. Workstreams 5, 6 and 7 have scoped core acceptance Y. Workstream 8 local development preview is Y; broader full-release checks remain P. Document retrieval and semantic memory are implemented with passing sampled evidence; broader quality remains parked. See the 22 October actual-project audit in core-release-review.md; do not treat these implemented features as new development.
 
 ## Core-completion workstreams (not a restart of learning phases)
 
 | Workstream | Scope | Current status | Acceptance gate |
 |---|---|---|---|
 | **Y** — 1. Agent foundation | Provider adapter, native tool calls, direct answers, console/browser entry points | Four provider adapters are supported: Groq, OpenRouter, Ollama and Gemini. Earlier three-provider direct/tool acceptance is retained; Gemini direct use was user verified. Full four-provider live release acceptance is not claimed. | A direct answer and tool-result-answer cycle work; failures are understandable; available models/providers are explicit |
-| **P** — 2. Conversations and context | New/open/list chats, titles, transcript archive, session-specific summaries, editing and cancellation | Chats, shared facts, transcript download and observed browser-to-console restart recall work. Actual-history summary quality, Ollama summary acceptance and broader summary isolation remain parked. | Restart restores each chat; switching never mixes history; full new turns remain archived; summarization succeeds or safely degrades |
+| **P** — 2. Conversations and context | New/open/list chats, titles, transcript archive, session-specific summaries, editing and cancellation | Chats, shared facts, transcript download and observed browser-to-console restart recall work. Groq namespace-format failure is fixed; sampled actual-history retention, backend restart/switching and isolated Chrome summary reload/server-restart/switching passed. Broader actual-history quality, Ollama acceptance and actual-chat/provider UI coverage remain parked. | Restart restores each chat; switching never mixes history; full new turns remain archived; summarization succeeds or safely degrades |
 | **P** — 3. Useful long-term memory | Save/update/show/forget, relevant retrieval, user/project scope, provenance, conflict handling, archived-chat search | Fact storage, provenance, timestamps, revisions, scoped archive search and user-approved memory suggestions are implemented and tested. Broader semantic recall and conflict quality remain parked. | Retrieve relevant facts from a larger collection; keep unrelated scopes isolated; corrections supersede stale facts; explain where a fact came from |
 | **P** — 4. Reliable knowledge and search | Indexed documents, structured data, public web sources, full-page evidence, citations, combined answers | Scoped citation guards, page deadlines, structured tables and mixed-source grounding acceptance are verified. One broader relevance/entailment/hybrid quality gate remains parked. | Answer a mixed local/public query with verified source links; no invented citations; missing evidence produces clarification |
 | **Y** — 5. General agent reasoning | Dynamic clarification, task decomposition when useful, observe/replan, tool selection, explicit completion criteria | Bounded tool selection, clarification, real-file planning/recovery and complete/partial/blocked outcomes verified. Universal reasoning or semantic correctness is not claimed. | Complete a defined multi-step task; recover from a failed tool; avoid repeated calls; distinguish complete, partial and blocked outcomes |
 | **Y** — 6. Controlled actions | Classified local tools, exact console/browser approvals and durable receipts | Exact console/browser approval, decline, durable receipts and restart/replay protection verified for trusted local-user scope. OS sandboxing and public multi-user authentication are outside this scope. | Trusted local-user core; OS command containment and wider release hardening are not claimed |
 | **Y** — 7. Reliability and observability | Useful error types, timings, retries/backoff, budgets, concurrency, source/tool activity, regression coverage | Scoped crash/save recovery, simulated provider-failure presentation/recovery and configurable context budgets verified. Full offline regression: 343 tests passed on 18 October 2026. Live provider fault injection and exact token fit are not claimed. | Connection, quota, malformed output, interrupted process and concurrent-chat cases are handled; model-visible claims match real tool evidence |
-| **I** — 8. Core-agent release | Integrated acceptance suite, setup guide, repeatable installation, dependency cleanup, configuration and backup/recovery | NEXT, not started. Verify integrated core acceptance, clean installation, documentation and backup/recovery; review parked gaps and agree release limitations before marking complete. | The complete core-agent checklist passes in console and browser, with known limits documented |
+| **P** — 8. Core-agent release | Integrated acceptance, setup, dependency profiles and backup/recovery | **Y for the accepted trusted local-user development preview. P for full release.** Fresh core/RAG editable setup, scoped regressions and prepared-source archive/recovery checks passed. Installed-wheel data-root smoke and fresh isolated core-wheel acceptance passed; optional cold ML, fresh GitHub clone and broader quality acceptance remain parked; do not reopen completed setup. See the 22 October actual-project audit in core-release-review.md. | Full release requires its selected outstanding acceptance; local preview retains its completed scope |
 | **P** — 9. Automation-framework integration | Connect the completed agent to requirements, test design, UI inspection, code generation and execution/reporting | PARKED by plan. Start framework integration only after Workstream 8 release acceptance and user decision. Proposed UI milestone is scheduled between Workstreams 8 and 9 and has not started. | Begin only after Workstream 8 acceptance and user decision to move to framework work |
 
 ## Memory development details
@@ -96,36 +96,44 @@ An X item can be incomplete without being untouched; the item description should
 
 ### Workstream 2 — Conversations and context
 
-**Overall: P — parked with outstanding summary acceptance.** Working conversation/browser features retain their Y statuses. Proceed to Workstream 3 by user decision; this is not full Workstream 2 completion.
+**Overall: P — sampled Groq retention, backend restart/switching and isolated Chrome summary reload/restart/switching verified; broader quality remains parked.** Working conversation/browser features retain Y. Ollama and wider actual-history/UI summary acceptance remain pending; see the 20 October 2026 evidence below.
 
 - **Y** — Create, list and reopen named chats (user execution and offline tests).
-- **Y** — Case-insensitive startup Y/N and 80-character titles work (offline tests and user execution).
+- **Y** — Case-insensitive startup Y/N and 100-character titles work (offline tests and user execution; title limit updated with the browser follow-up).
 - **Y** — Editable console multiline input works without END (user execution).
 - **Y** — Save full newly successful turns in a transcript archive (offline persistence tests).
 - **Y** — Streamlit supports chat creation, multiline submission and memory viewing in headless tests; real startup passed.
 - **Y** — Summary failures pause retries, including across restarts (user output and offline checks).
 - **Y** — Implement and validate the registered summary path: 189 offline tests pass; synthetic long-chat summaries pass on Groq and OpenRouter. The exact cause of the historical HTTP 400 is unconfirmed.
+- **Y** — New-summary attribution-label guard and bounded correction preserve legacy summary reading and rejected-context state (22 October): 132 affected offline checks; one synthetic Groq source-attribution case passed 7/7 in 1.71s. This validates label presence and the sampled source distinction, not broad truth/entailment or changed-path Ollama acceptance. Evidence: outputs/acceptance/ws2-attribution-20261022.
+- **Y** — Sampled actual-default summary retention and read-only recall passed on Groq (22 October): PDF correction, undecided folder, assistant source distinction, no invented questions/current approvals, and unchanged checkpoint snapshot. One summary plus one recall request; no application changes or repeated generation. Broader actual-history/provider scope remains P. See outputs/acceptance/ws2-real-history-20261022/result.json.
+- **Y** — Scoped hosted Continue acceptance on Groq (22 October): three fresh processes preserve a completed section, resume only unfinished sections, and consolidate locally without section replay. Three real section-generation calls; initial overflow, outline and pause injected; temporary stores only. This is shared-backend acceptance, not UI clicks or all-provider/factual quality. See outputs/acceptance/ws2-live-continue-20261022/summary.json.
 - **Y** — Verify summary persistence, restart, chat switching and complete transcript preservation with real SQLite storage and mocked models.
-- **P — PARKED** — Actual-history summary accuracy: Groq format rejection and exhausted quota block live diagnosis; Ollama completed 6/7 grounding checks but failed source attribution. Resume later; see workstream-2-summaries.md.
+- **P — PARKED** — Broader actual-history summary accuracy and Ollama attribution: the reproduced Groq namespace rejection is fixed and one redacted actual-history sample passed on 20 October. Ollama previously passed 6/7 grounding checks but failed source attribution. These results do not close broad semantic accuracy; see workstream-2-summaries.md.
 - **Y** — User verified console restart recall and session switching; browser screenshots, separate transcript exports and live event logs verify sampled chat separation.
-- **P — PARKED** — Complete live summary-content isolation across restart/switch after actual-history summarization is reliable. Existing SQLite/model-mocked summary isolation tests pass.
+- **Y** — Scoped live-generated summary backend isolation across a fresh-process restart and alpha/beta/alpha switching passed on Groq, with full temporary transcript retention and other-user exclusion (20 October 2026). Full live UI summary-content restart/switch acceptance across actual chats/providers remains **P** and is not implied by this backend fixture.
+- **Y** — Isolated Chrome desktop UI summary reload and full server/browser restart with alpha/beta/alpha switching passed using real Groq summaries of synthetic chats (20 October 2026). Original turns, report formats and scope isolation were preserved; reopening made no summary generation calls. This fixture uses deterministic acknowledgement answers and does not close actual-chat/provider coverage.
+- **P — PARKED** — Complete the full live UI summary-content restart/switch scenario on actual chats after broader summary quality is accepted. Earlier chat/transcript separation checks retain their independent Y scope.
 - **Y** — Browser create/chat/reopen/shared-memory/download acceptance passed for the observed scope: separate browser/default transcript exports and user screenshots confirm distinct chats and shared saved facts. Page-jump usability remains separate.
 
 ### Workstream 3 — Long-term memory
 
-**Overall: P — remaining acceptance parked.** Storage, provenance, explicit corrections, archive search and controlled suggestions retain Y. Semantic relevance and broader contradiction accuracy remain P after the bounded local retry; move to Workstream 4 by user decision.
+**Overall: P — semantic relevance and live conflict-quality acceptance remain parked.** Storage, provenance, corrections, archive search and controlled suggestions retain Y. Large memory-review JSON evidence is now bounded safely and passes 89 focused offline checks; hosted quality checks remain unaccepted after the provider/evaluator issues recorded below.
 
 - **Y** — Save, update, show and forget explicit facts (offline tests; save/show/forget also user verified).
 - **Y** — Deleted seed facts are not automatically reinserted (offline regression).
 - **Y** — Memory persists across store reopen and is scoped by user/namespace (offline tests).
 - **Y** — Saved facts reach normal LLM conversation (user execution).
 - **Y** — Optional local-only MiniLM semantic retrieval is integrated with scoped SQLite facts and search_memory; lexical default preserved.
-- **P — PARKED** — Real semantic relevance calibration: bounded local retry loaded the model but returned no paraphrase match. Mocked scope/update/delete tests pass. No downloads or API calls.
+- **Y** — Sampled cached real-MiniLM baseline passed 8/8 fixed checks on 21 October: four paraphrase top-one matches, two unrelated-query rejections, correction and deletion, with scoped SQLite facts and the unchanged 0.35 threshold. No API calls/downloads; process-only thread limits used.
+- **P — PARKED** — Broader semantic calibration remains outside that small sample; fresh-environment sentence-transformers loading still exceeds its bounded import window.
 - **Y** — Bounded lexical archived-conversation search is connected to the shared agent, scoped to user/memory-space and current or explicitly selected chats, with chat/turn/time references. 210 offline tests and an actual local archive lookup pass; hosted tool-choice acceptance remains P.
 - **Y** — Fact provenance, existing timestamps and verification labels are stored and exposed in memory context/commands. Backward-compatible migration preserves all 5 existing database rows; 203 offline tests pass. See [workstream-3-memory.md](workstream-3-memory.md).
 - **Y** — Explicit same-key corrections preserve scoped revision history; normal retrieval uses current values only. MEMORY HISTORY key reviews revisions; FORGET deletes associated history. 206 offline tests pass.
 - **Y** — Advisory related-fact conflict candidates and configurable storage-age review are implemented; no automatic merge, deletion or truth claims.
-- **P — PARKED** — Broader semantic contradiction quality across keys/projects/timeframes: real HTML/PDF advisory smoke case passed, but general accuracy remains unverified.
+- **Y** — Large memory-review tool responses preserve complete JSON, whole visible facts, source metadata, valid visible candidate pairs and an explicit omitted-results warning. Four new regressions and 89 focused offline tests pass (20 October 2026); stored facts are unchanged.
+- **Y** — Reproduced exact-key/provenance confusion is guarded for explicit structured memory-key requests (22 October): one bounded correction, no key guessing or fact mutation; 145 affected offline checks pass including six new regressions. The preceding Groq run passed two cases, exposed this identifier error and then stopped on HTTP 429; post-fix live quality remains P. See outputs/acceptance/ws3-review-20261022/summary.json.
+- **P — PARKED** — Broader contradiction/review quality: OpenRouter connectivity verified; one-model baseline passed 7/8 in plain JSON. Generic scope guidance added and 61 focused plus 246 fresh offline checks passed. Live follow-up had five passes, an exact-source-key failure and HTTP 429 quota exhaustion before role-fix acceptance; no complete single-run 8/8 pass is claimed.
 - **Y** — Scoped suggestions require explicit ID-bound accept/reject; no automatic saved facts or existing-key overwrite. 214 offline tests and temporary command integration pass; live model suggestion selection remains unverified.
 
 ### Workstream 4 — Knowledge and evidence
@@ -138,6 +146,10 @@ An X item can be incomplete without being untouched; the item description should
 - **Y** — Implement CSV/Excel search, header detection and dataset routing in the rag modules.
 - **Y** — Implement RAG tool-calling/web agents and evaluation variants; saved reports document prior runs.
 - **Y** — Consolidate the three legacy RAG command entry points and default data/index paths with the current application. Package/standalone commands forward to the shared console, preserving arguments and avoiding historical provider/model/sample-question startup. Six launch paths covered by two regression tests; 251 offline tests pass. Historical direct-import functions remain learning/reference code; old JSON history is not automatically migrated.
+
+- **Y** — Deterministic execution-evidence disclosure guard fixes the saved Actual Execution/predicted-output defect (22 October): one bounded correction, repeated failure withheld, reviewer cannot override it; 234 affected offline checks pass including eleven new regressions. No code execution, live provider request or settings/data change. Separate factual/version/source-review quality remains P. Evidence: outputs/acceptance/ws4-execution-evidence-20261022/summary.json.
+- **Y** — Technical supported verdicts now require locally validated draft-claim/source-quote anchors in the existing review (22 October): one bounded correction, caller result format preserved, 245 affected offline tests pass. Three tiny Groq synthetic checks passed, including contradiction rejection and unchanged 1024-token default compatibility. Quote traceability is not semantic entailment or full-claim coverage; actual Java/source-version quality remains P. Evidence: outputs/acceptance/ws4-review-evidence-20261022/summary.json.
+Latest live-quality gate (22 October): the exact original Java request is still **P — parked** after a single-provider retest stopped on Groq HTTP 429 in 6.95s. Search completed, a page reader was called, then native TOOL_OUTPUT/JSON recovery reached quota before source review. No completed answer or factual pass is claimed; do not repeat unchanged requests. Implementation/offline and small synthetic checks below retain their scopes. See outputs/acceptance/ws4-real-java-20261022/summary.json.
 
 - **Y** — Public web search returns real snippets and links (live execution).
 - **Y** — A response can combine saved project facts with web results (user execution).
@@ -188,12 +200,27 @@ Acceptance is for a trusted local-user agent. Approved Python/build commands use
 - **Y** — Scoped bounded context acceptance: configurable AI_CHAT_MAX_CONVERSATION_CHARS (default 36,000), existing project-task/evidence limits and scoped lexical memory retrieval, plus four-provider preflight checks for oversized Unicode/schema input. Oversized tasks stop honestly before model calls; exact question is not silently shortened. Provider token estimates remain approximate and configured hosted context is required for fit preflight; broader relevance quality remains parked under Workstream 4.
 - **Y** — Scoped broad-suite fixture/isolation acceptance verified: the 331-test full offline run passed. Earlier 116-test/six-error results are historical; broader reliability and live-provider fault coverage remain pending.
 
+- **Y** — Ordered quota fallback: OpenRouter → Groq → Gemini → local-only Ollama, with hosted/CI exclusion, per-turn exhausted-provider tracking and preserved action approvals. 195 focused offline checks and one live OpenRouter primary smoke passed on 21 October 2026. Full live four-provider quota-chain acceptance is not claimed; see [provider-errors.md](provider-errors.md).
+
+- **Y** — Scoped long-answer recovery: ordered OpenRouter/Groq/Gemini quota/output fallback; bounded outline and complete sections assembled once, with repeated prose consolidated and actions/source checks retained. All three hosted providers passed a synthetic live sectioned-answer check; 248 related offline checks and 97 final focused checks passed (overlapping scopes). This does not certify exhaustive factual coverage or full release readiness. See [provider-errors.md](provider-errors.md).
+
 ### Workstream 8 — Core-agent release gate
 
-**Overall: I — release preparation active.** See workstream-8-release.md.
+**Overall: P — broader full-release checks parked; Y for the accepted trusted local-user development preview.** Actual-source/evidence audit on 22 October confirms completed setup and preview checks; see core-release-review.md and workstream-8-release.md.
 
-- **P** — Pass every core-agent acceptance item below. Evidence review completed in core-release-review.md; broad summary, semantic recall, retrieval quality and clean-install gates remain unfinished.
-- **P** — Clean core-profile installation, pip check, console help startup and browser initial rendering passed in a fresh Windows Python 3.14 environment (80.23 seconds). A second fresh core-profile environment passed 71 selected offline end-to-end checks. Full/RAG-profile installation and broad release gates remain pending; installation profiles are documented in dependency-audit.md.
+- **P** — Pass every core-agent acceptance item below. Evidence review completed in core-release-review.md; broad summary, semantic recall, retrieval quality and optional/full-profile install gates remain unfinished; current scoped core editable setup is accepted.
+- **Y** — Latest-source fresh core editable installation from 74 locally downloaded wheels passed on 21 October 2026: pip check, both console entry points, 222 selected offline tests and Streamlit AppTest initial rendering. Python 3.14.0 / Streamlit 1.66.0; isolated fixtures removed and working settings/packages unchanged. Earlier timeout and runner-only metadata failure remain historical evidence; see dependency-audit.md.
+- **Y** — Fresh RAG/integration package installation, pip check, both console entry points, eleven optional/API imports, 246 selected offline tests and Streamlit startup passed. Synthetic document/index save/reopen and keyword/vector lookups passed with fixture embeddings.
+- **P** — Optional sentence-transformers import timed out; pretrained semantic/hybrid quality, full learning-profile setup, fresh GitHub-clone acceptance and broader release gates remain pending.
+- **Y** — Existing-repository read-only review completed (23 October): user selected JeshlaAutoAICGP; GitHub confirms it is public and anonymous main SHA matches local HEAD with historical personal-document/database paths. Privacy/history strategy, actual hosted CI and exact remote clone remain **P**. No commit/push/rewrite/visibility change. WS9 planning may proceed with these boundaries explicit; full WS8 is not declared complete. See [github-readiness.md](github-readiness.md).
+- **Y** — CI false-positive fixes and local validation completed (23 October): actual console save/show/checkpoint reopen, real Streamlit initial-page assertions and five CI-harness regressions pass. New source-only candidate revision has 291 verified files/275 Python files, including reviewed CI. Application source unchanged. Actual GitHub-hosted execution, publication/licensing and exact remote clone remain **P**. See [github-readiness.md](github-readiness.md).
+- **Y** — Source-only publication candidate prepared (23 October): 288 files with inclusion/exclusion manifests and verified ZIP; no original Git history/private stores/internal reports. All 273 Python files parse; candidate console help and 14 compatibility checks pass using current dependencies with blocked networking. Original project preserved; no commit/push. Publication/licensing/CI and exact remote-clone acceptance remain **P**. See [github-readiness.md](github-readiness.md).
+- **Y** — Bounded local publication/privacy review completed (23 October). Historical personal-document/database paths remain; publication is **P** pending a source-only candidate or explicit reviewed history strategy. No remote exposure/secret-free claim or history rewrite. See [github-readiness.md](github-readiness.md).
+- **Y** — Git tracking/source preparation completed (23 October): 683 generated/local-data paths removed from tracking with every local file preserved; ignore rules applied and 24 missing canonical runtime modules staged with related source/tests/docs. All 273 staged Python files parse; staged whitespace check passes. No commit/push/history rewrite. Publication/privacy/history and remote-clone acceptance remain **P**. See [github-readiness.md](github-readiness.md).
+- **Y** — GitHub-readiness metadata/source review completed (23 October); publication readiness remains **P**. Tracked runtime data/bytecode and untracked canonical modules require a reviewed source/tracking/history plan before publishing or clone acceptance. No Git index/history or application code changed. See [github-readiness.md](github-readiness.md).
+- **Y** — Fresh dependency-isolated core-wheel acceptance passed (23 October): all 10 offline build/install/startup/persistence stages, pip check, both console entry points and Streamlit initial render; Python 3.14.0 / Streamlit 1.66.0. No working-venv/source fallback; default and explicit data folders work. Working settings/packages unchanged. Evidence: outputs/acceptance/ws8-fresh-wheel-20261023/result.json.
+- **Y** — Installed-wheel code/data-root separation passed (23 October): source defaults preserved; default OS data and JESHLA_HOME overrides work for console/browser backend, settings and RAG/Jira paths. Actual temporary wheel install used existing dependencies, not fresh dependency resolution. Installed code/cwd/inspected folder unchanged; final full offline suite 685 tests passes. Evidence: outputs/acceptance/ws8-data-roots-20261023/summary.json.
+- **Y** — Prepared-source offline wheel/source-archive build and metadata audit passed (21 October 2026): current canonical helpers and legacy aliases included, core/extra declarations and console entry point preserved, synthetic private-data canaries excluded. This does not certify installation, wheel runtime/data-root behavior or all tracked Git contents.
 - **Y** — Update outdated root README and installation instructions; clean-install acceptance remains separate.
 - **Y** — Scoped stopped-writer synthetic backup/recovery verified for facts, chats, real checkpoint history/summary and completed/uncertain receipts. Actual user-data restoration and optional RAG-index recovery are not claimed.
 - **P** — Review remaining limitations and explicitly agree on the release scope. User accepted the local development-preview scope; full core release agreement/acceptance is not claimed. See core-release-review.md.
@@ -201,13 +228,14 @@ Acceptance is for a trusted local-user agent. Approved Python/build commands use
 
 ### Additional milestone after Workstream 8 — Project structure
 
-**Overall: I — read-only inventory active; migration X.** Organize existing modules into meaningful parent/child packages, preserve entry points and persistent state, and verify a full backup before incremental migration. No refactoring now. See [project-structure-plan.md](project-structure-plan.md).
+**Overall: Y — scoped package organization verified.** Existing implementations now live in the interfaces, runtime, providers, storage, actions, policies, config, memory, tools and LangGraph packages. Original import/module entry points remain available through compatibility wrappers. See [project-structure-audit.md](project-structure-audit.md) and [developer-setup.md](developer-setup.md).
 
-- **I** — Static inventory parsed 75 source modules without syntax errors. Trace callers and initialization next; package migration and compatibility wrappers are not started. See project-structure-audit.md.
-- **X** — Verify full backup/restore, baseline behavior, incremental migration and final clean-install/regression acceptance.
-- **X** — Update developer documentation and diagrams; retain the backup through successful acceptance.
+- **Y** — Inventory, dependency boundaries and canonical package map documented; the final 13 top-level helpers moved into existing packages. agent/ has only compatibility modules and __init__.py at its top level.
+- **Y** — Original full backup retained and per-change source backup saved; all 13 relocated implementations match originals apart from module paths.
+- **Y** — Existing imports/shared state and both worker entry points verified. All 428 unique offline tests passed across two batches (324 + 104); the first full attempt reached its time cap, so no uninterrupted full-run claim. Final evidence reviewed 20 October 2026.
+- **Y** — Developer/package documentation and this structure milestone synchronized. Earlier Word architecture content remains; no Word update or page-layout QA was performed in this follow-up.
 
-Sequence: Workstream 8, project structure, proposed UI improvements, then deferred Workstream 9. Existing workstream numbering is unchanged.
+Full core release, optional RAG setup/quality, summary quality, public deployment and other previously parked gates retain their separate statuses. Preserve the private backup. Workstream numbering is unchanged.
 
 ### Workstream 9 — Deferred automation-framework work
 
@@ -636,3 +664,197 @@ X — planning only, requested 18 October 2026. Add/configure local projects, cr
 ## UI milestone implementation progress
 
 I — initial UI active. Recent-chat buttons and recent-title filtering verified; readable structured memory/details added. Current memory/sidebar/approval tests pass; eight Chrome/Edge emulated viewport checks pass at 360/390/768/1440. Actual devices, Safari/Firefox and every UI state are not claimed verified. See ui-improvements.md. Future local-project creation and GitHub access remain X planning-only.
+
+
+## WS2 summary format and scoped restart verification - 20 October 2026
+
+Y for the reproduced Groq response-name defect. The actual default-chat snapshot repeatedly produced valid facts/decisions/open_questions arguments under functions.submit_conversation_summary. The previous exact-name guard correctly rejected the unrecognized name. Production agent/runtime/summary_model.py now recognizes only that exact Groq-qualified alias as summary data, then performs the existing summary validation. Unknown functions/actions, extra fields, malformed values and repeated invalid output still fail. Request-scoped browser provider selection is respected. Other providers and their transport/request options remain unchanged; the forced-function experiment was removed after inconsistent live behavior. No content-specific answers or credentials were added.
+
+Y for a sampled redacted actual default-history check: 6,192 history characters summarized in one Groq request in 9.88 seconds. The saved checkpoint was read through a read-only/in-memory snapshot and was never replaced. Local review found retained project paths, PDF preference and historical action requests, with framework/version claims labelled assistant-reported. This is sampled retention/attribution evidence, not proof of every summary claim or every user history. Only structural metadata was saved in the report; generated actual summary text was not written to acceptance files.
+
+Y for scoped fresh-process backend summary restart/switch acceptance. Two synthetic chats generated real Groq summaries into temporary SQLite stores. A separate process reopened them, switched alpha -> beta -> alpha, used the restored summaries, retained their different report formats/reference markers, excluded the other chat/user, and preserved all original transcript turns. Reopening made zero summary calls. Temporary fixtures were removed. This covers the shared console/browser backend; it is not a fresh live UI click/relaunch test for every browser/provider. Earlier user console/browser separation evidence retains its stated scope.
+
+74 focused offline tests passed in 9.522 seconds on final code (six new namespace/provider-scope regressions). Checks include summary validation/failure cooldown, real SQLite session isolation, transport compatibility, CLI commands and legacy module identity. Prior 428-test package acceptance predates this change; no fresh 434-test full-suite claim is made. Earlier rate-limit and output-limit attempts remain recorded and do not count as passes. No retries of unchanged exhausted-quota requests or long Ollama runs were made.
+
+Overall Workstream 2 remains P. Remaining: broader representative actual-history accuracy and Ollama attribution/context-fit acceptance. Groq's reproduced namespace-format defect is fixed for the observed scope. Full live UI summary restart/switch remains outside this backend acceptance and must be checked before any broader claim. Restart running console/Streamlit processes to load the fix. Existing user chats, facts, action receipts and .env remain unchanged by this WS2 work.
+
+Evidence: outputs/acceptance/ws2-progress-20261020.json; ws2-diagnosis-saved-default-current.json; ws2-restart-groq.json; ws2-summary-focused-final-20261020.log. Diagnostic/acceptance runners are evaluations/summary_history_acceptance.py and evaluations/summary_restart_acceptance.py. Source backup retained at outputs/ws2-summary-before-20261020-210502.
+
+## WS2 isolated browser summary acceptance - 20 October 2026
+
+Y for the measured Chrome desktop scenario: the actual Streamlit entry point and BrowserBackend generated Groq summaries for two synthetic chats in temporary SQLite stores. Browser clicks and page reload retained each chat's reference marker and distinct PDF/HTML preference. After stopping the test server and browser, new processes reopened alpha -> beta -> alpha, used unchanged persisted summaries and preserved all original/full transcript turns. Other-chat/user data stayed excluded. Reopening made zero summary-generation invocations. The test server and browser drivers stopped; temporary stores were removed. User chats, facts, receipts and provider settings were not changed.
+
+The fixture's normal answers are deterministic acknowledgements/probes; only summary generation is live. Graph dependencies are preloaded before Streamlit watchers, so this is not production cold-start or normal model-answer-quality acceptance. One offline browser fixture passed. Initial offline/live startup attempts timed out; a stack sample showed LangGraph/LangSmith import work. The isolated harness now prepares those imports before serving the UI and tracks/cleans its owned browser process tree. Earlier failures remain recorded and are not passes. No application module changed in this step.
+
+Overall WS2 remains P for broader representative actual-history accuracy, Ollama attribution/context-fit acceptance and wider actual-chat/provider UI coverage. The synthetic Chrome browser restart gate is Y for its stated scope only.
+
+Evidence: outputs/acceptance/ws2-browser-groq/result.json and ws2-browser-offline/result.json. Initial timeout evidence: ws2-browser-initial-timeout.json and ws2-browser-groq/initial-result.json. Reusable runners are evaluations/summary_browser_acceptance.py and evaluations/summary_browser.cjs. New acceptance code belongs in the existing evaluations area; application changes should reuse the appropriate agent subpackage, with new subpackages only when necessary.
+
+## WS3 bounded memory-review evidence - 20 October 2026
+
+Y for a reproduced shared-conversation defect and its fix. Six synthetic long facts produced an 8,012-character tool message cut mid-JSON; the advisory note was missing. agent/memory/evidence.py now bounds review_memory responses by omitting whole trailing facts and their unmatched candidate pairs, retaining complete values/metadata and explicit coverage warnings. Small responses keep their existing contract. An oversized envelope fails with a bounded structured error. The shared conversation applies this before tracking tool success/failure. No facts, revisions, verification labels or other tool outputs are rewritten.
+
+The exact reproduction now delivers valid JSON of 7,915 characters with four complete facts, the review guidance and truncated=true. Stored facts are unchanged. All 89 focused offline checks pass in 4.82 seconds, including four new whole-record/metadata/pair/loop regressions, memory provenance/revisions/suggestions, existing conversation/grounding guards and package compatibility. Initial runner selection/import-path errors were corrected; they are retained in diagnostic logs and are not passing application results. No fresh full-suite release pass is claimed.
+
+P for live contextual conflict quality. The first three Groq review cycles did not yield accepted evaluation records; the initial collector retained only generic exceptions, so their precise failure reason and semantic accuracy are not established. The fourth case stopped on HTTP 429 RATE_LIMIT. The configured Gemini fallback encountered a temporary 503 followed by TLS_CERTIFICATE failure on its bounded retry. No certificate checks were disabled, no further blocked requests were made and the saved default provider stayed unchanged. The evaluator now records safe error kinds and synthetic response diagnostics, with explicit array types in its output contract.
+
+The eight-case evaluator fixture passed offline with scripted replies, real temporary SQLite reviews, scope canaries and database no-mutation checks. This validates the harness only, not live semantic quality. Cases cover unresolved equal-authority values, different projects/years/roles, explicit correction, equal values, storage age and instructions embedded in a saved value. Only the registered review_memory schema is exposed for focused quality evaluation; broad tool selection is outside that scope. Existing real embedding calibration and broader live contradiction acceptance remain P. No local model was loaded or downloaded.
+
+Implementation: agent/memory/evidence.py and agent/runtime/conversation.py. Regressions extend tests/test_memory_review.py. The new acceptance runner is evaluations/memory_review_acceptance.py; no extra package or active top-level agent module was added. Evidence: outputs/acceptance/ws3-review-truncation-before.json, ws3-review-truncation-after.json, ws3-review-focused.json/.log, ws3-memory-review-groq-all.json, ws3-memory-review-gemini-same_scope_conflict.json and ws3-memory-review-offline-all.json. Backups are under outputs/ws3-review-before-20261020. Temporary stores were removed; user facts, chats, receipts and .env were not changed. Restart console/Streamlit processes to load the shared-conversation fix.
+
+## WS8 current-source build/install follow-up — 21 October 2026
+
+Y for an offline prepared-source sdist/wheel build and audit: current helpers/aliases and entry point are included, declared dependency profiles match metadata, and synthetic private-data canaries are excluded. P for the latest-source fresh editable install: build-dependency acquisition timed out before install/startup/tests. Earlier core-install evidence retains its historical scope. Working packages/provider settings are unchanged and disposable fixtures/processes were cleaned up. This is not wheel-runtime, full/RAG, Git-publication or full-release acceptance. See workstream-8-release.md and outputs/acceptance/ws8-source-build-current/result.json; the failed install is recorded separately under ws8-core-fresh-20261020. The reusable runner lives in evaluations/core_install_acceptance.py. Next prerequisite is reliable package access or a prepared local wheelhouse, not another unchanged download attempt.
+
+
+## WS8 local-wheelhouse recovery — 21 October 2026
+
+Y for latest-source fresh core editable installation and selected acceptance. Public package access recovered: two build-tool wheels downloaded in 2.90 seconds and core dependencies in 45.17 seconds (74 wheels total). A new Windows Python 3.14.0 environment, with no system-site-packages, installed exclusively from these wheels with build isolation enabled and the package index disabled. Pip check, the legacy module --help and installed jeshla-auto-ai --help passed. All 222 selected offline regressions passed in 68.679 seconds, and the actual Streamlit AppTest initial screen rendered without errors with newly resolved Streamlit 1.66.0. Total successful rehearsal: 257.26 seconds, including setup and cleanup. This is selected synthetic core acceptance, not the entire project suite, real-browser/provider acceptance, optional RAG installation or fresh GitHub-clone acceptance.
+
+The first wheelhouse rehearsal passed installation and entry points, then exposed a runner-only metadata lookup error: editable source egg-info shadowed installed dist-info. The runner now checks the fresh environment's installed metadata and exact editable source URL. That earlier report is retained under ws8-core-wheelhouse-20261021; the corrected successful run is ws8-core-wheelhouse-fixed-20261021/result.json. No application implementation was changed. Working package and .env fingerprints remained unchanged, no real settings or persistent user data were copied, and disposable fixtures and owned processes were cleaned up. No provider/model requests ran; tests blocked external requests in their Python process.
+
+The reusable runner remains evaluations/core_install_acceptance.py; --wheelhouse selects downloaded wheels and --output-dir preserves previous reports. Wheel filenames and SHA-256 hashes are recorded in the successful report. The wheelhouse is a local Windows/Python-specific acceptance cache, not a universal dependency lock or publishing artifact. The earlier timeout is historical and no longer blocks scoped core editable setup. Full/RAG setup, broader WS2/WS3/WS4 quality, non-editable wheel runtime/data roots, release scope and general release completion remain pending. Workstream 8 stays I; Word synchronization is not claimed.
+
+## Optional profile acceptance and remaining gates on 21 October 2026
+
+Y for fresh RAG plus integration package installation, dependency consistency and both console entry points. Public resolution selected 129 distributions; the local cache contains 131 wheel files including the earlier build tools. The first installation reached its 300-second cap while installing packages. Deferring install-time bytecode compilation with --no-compile then passed installation in 72.80 seconds. A further fresh run with separately bounded ML import repeated installation successfully in 142.54 seconds. These timings are observations, not a guaranteed speedup. Python may compile bytecode on first use; no working environment or dependency versions were changed to obtain these results.
+
+Y for 246 selected offline regressions (88.051 seconds), zero failures/errors, and actual Streamlit AppTest initial rendering in the fresh Python 3.14.0 / Streamlit 1.66.0 environment. The 246 include the earlier 222 selected core checks; do not add these counts. Eleven optional imports passed, including openpyxl, pypdf, docx, FAISS, LangChain adapters, MCP, httpx2 and the actual Jira client module. No authentication or live Jira session was started. Real temporary TXT/DOCX/CSV ingestion produced three chunks, saved/reopened FAISS and BM25 indexes and returned the expected synthetic sources. A blank generated PDF was opened successfully; this does not certify arbitrary PDF extraction. The vector smoke deliberately uses fixture embeddings, not a pretrained model or a semantic-quality benchmark.
+
+P for the optional ML runtime/import gate: direct sentence_transformers import did not finish within 180 seconds in the first runtime attempt. The evaluator now isolates that import in an owned child with a 45-second cap, allowing unrelated parser/index and regression checks to finish. That child timed out at 45.60 seconds and stopped. The final report is intentionally pending/nonzero despite all 246 regressions passing. Its worker status reflects the incomplete optional runtime gate, not a failed regression. Total final rehearsal 388.01 seconds, including setup and cleanup. No model downloads occurred. Working package/.env fingerprints remained unchanged; disposable environments and owned processes were removed.
+
+Evidence: outputs/acceptance/ws8-rag-resolution-20261021, ws8-rag-fresh-20261021, ws8-rag-no-compile-20261021 and ws8-rag-bounded-import-20261021/result.json. Existing evaluations/core_install_acceptance.py gained --profile rag and --no-compile, scoped optional imports and synthetic parser/index checks; no application implementation or flat agent module was added. The Windows/Python-specific wheel cache and exact resolution list are acceptance evidence, not a universal lock file. Full learning-profile installation, non-editable wheel runtime, GitHub-clone acceptance and broad WS2/WS3/WS4 quality remain unaccepted. Word synchronization is not claimed.
+
+A separate live synthetic Groq memory review passed three cases: equal-authority conflict with both values and clarification, different projects, and different years. The fourth case hit HTTP 429 and the run stopped; five of eight cases remain unfinished. The evaluator previously rejected a complete JSON Markdown code block. It now accepts only a single complete JSON fence or plain JSON for semantic scoring and records plain-JSON request compliance separately. The three semantic passes used fences and do not establish plain-JSON compliance. Seven positive/negative parser checks and the eight scripted offline fixtures passed; these validate the harness, not additional live model cases. No private user histories or real project facts were sent, and temporary databases were unchanged and removed. Evidence: outputs/acceptance/ws3-memory-review-groq-all.json and ws8-memory-quality-probe-20261021. Groq quota remains the observed live-evaluation blocker; no persistent provider switch or blocked fallback retry was made.
+
+Workstream 8 remains I. Setup is no longer the unresolved core/RAG installation issue: remaining work is optional ML runtime and broader quality/release gates. Keep existing Y scope and parked P items distinct; do not rerun the same heavy import or rate-limited requests without a changed prerequisite or a targeted diagnostic.
+
+## Current OpenRouter and semantic follow-up on 21 October 2026
+
+OpenRouter worked for synthetic reviews but subsequently exhausted quota. Best full one-model baseline: 7/8; post-guidance live acceptance remains P after an exact-source-key failure and quota interruption. Cached real MiniLM baseline: Y for eight fixed local samples, not broad calibration. Fresh RAG checks: all 246 tests and UI startup passed again, but cold ML import still timed out at 60 seconds with thread limits. Workstream 8 stays I. See workstream-3-memory.md and workstream-8-release.md for exact scope, failures and reports. The saved provider/model configuration was not changed.
+
+
+#### WS2 scoped verification update — 2026-10-21
+
+- **Y** — Preserve the complete immediately preceding question/answer for follow-up transformations rather than silently using only its last 4,000 characters. Source scope and explicit overall input budgets remain enforced. Real temporary SQLite restart/compaction/chat-switch tests passed; one synthetic live OpenRouter check returned all ten topic names exactly once from a 12,216-character answer. Evidence: outputs/acceptance/followup-context-20261021 (122 targeted offline checks). Broader representative-history summary and factual-quality items retain their existing status.
+
+
+#### WS7 scoped recovery update — 2026-10-22
+
+- **Y** — Output-limit recovery can preserve a short requested answer without forcing multiple sections; internal data-schema rejection receives one changed correction and then bounded recovery through the configured provider order. 129 targeted offline checks passed. Synthetic live checks verified real Groq and Gemini completion with injected triggering failures. Evidence: outputs/acceptance/brief-answer-recovery-20261022. This does not change broader summary/RAG/factual-quality acceptance or certify all provider failures in production.
+
+
+#### WS2 / WS4 scoped update — 2026-10-22
+
+- **Y** — Per-chat summary batching and separate timing, with history-pressure override. Existing-chat long-answer/follow-up fixture: two summary calls at compatibility interval 1 versus one at interval 3. Restart/isolation/archive guards pass.
+- **Y** — Automatic bounded documentation consultation, targeted section excerpts, local non-executing syntax/format checks, actual-read citation checks and a bounded data-only source review before publishing technical explanations. New code is under existing policies/runtime/tools packages. 198 targeted regressions pass.
+- **Y** — Scoped live guard acceptance: real OpenRouter review rejected unsupported claims in the earlier public technical-answer fixture. One active Java example from that earlier fixture compiled; no generated program was run.
+- **P** — Broad factual quality and positive live acceptance of the final review-gated generation remain pending. These checks do not certify all claims, commented alternatives, providers or release readiness.
+- **X** — Partial validated sections plus Continue/resume and final consolidation are queued after the current retest. No provider token pooling or quota bypass is promised.
+
+Details: [answer-quality-and-summary-overhead.md](answer-quality-and-summary-overhead.md). Existing broader workstream statuses and prior diagrams remain unchanged.
+
+
+#### WS2 / WS4 corrective update — 2026-10-22
+
+- **Y** — Automatic failed/empty documentation lookup no longer blocks an ordinary public explanation: return a clearly labeled general-knowledge answer under existing syntax/citation guards. Explicit verification remains strict. Single-engine search has separate safe timing; no hidden DDGS engine fan-out.
+- **Y** — Previous-answer transformations use the published exchange and its status; an empty failed reply cannot become invented topics. Useful partial content, explicit source comparisons, checkpoint restart and old provider/approval behavior are regression checked. Final general-answer output-limit recovery remains available.
+- **Y** — 203 targeted offline checks pass. Public-only live lookup took 2.23s and the live follow-up reproduced the published main headings in order. This is scoped workflow evidence.
+- **P** — Broad factual answer quality and positive live regeneration after the final guards remain pending. Manual inspection found factual/code mistakes accepted by the model reviewer. The later local fragment guard catches the recorded false completeness claim, but does not prove all technical semantics. No full-release or universal source-entailment acceptance is claimed.
+- **X** — Partial validated sections plus Continue remain queued.
+
+Details and evidence: [answer-quality-and-summary-overhead.md](answer-quality-and-summary-overhead.md). Existing diagrams/content retained. This Markdown update does not claim the Word document was synchronized.
+
+
+#### WS2 / WS4 explicit-documentation corrective update — 2026-10-22
+
+- **Y** — Bounded alternate search and known-public-document fallback after search outage, actual-read-only reference labels/redirect aliases, precise reference correction and one confined read-only format correction. Existing network/approval safeguards and user settings are preserved.
+- **Y** — 142 focused source/provider regressions pass. An isolated rerun of the earlier browser approval-decline harness timeout also passes; no full release acceptance is implied.
+- **P** — Positive end-to-end explicit-verification and broad factual-quality acceptance. Public probes stopped on OpenRouter connection failure, Groq tool-format rejection, then a changed Groq probe's TLS certificate failure. TLS verification remains enabled. Do not claim the user's original pasted run had a certificate error or that quotas were exhausted.
+
+See [answer-quality-and-summary-overhead.md](answer-quality-and-summary-overhead.md). Prior content and diagrams retained; Word not synchronized.
+
+
+#### WS4 browser documentation handoff — 2026-10-22
+
+- **Y** — Corrected contradictory direct-read capability and premature no-links return. Public explicit-documentation requests now get a bounded fetch-only recovery phase; private-source and network safeguards remain.
+- **Y** — 146 focused regressions passed; a direct secured Oracle Java 17 section read succeeded independently of search (3.36s).
+- **P** — Whole-model/browser acceptance and broad factual answer quality. Controlled live probe stopped at Gemini temporary service failure; the successful user terminal answer still contains factual/verification gaps.
+
+See [answer-quality-and-summary-overhead.md](answer-quality-and-summary-overhead.md). Existing content/diagrams preserved; Word not synchronized.
+
+
+#### WS4 / WS7 confined source-tool failover — 2026-10-22
+
+- **Y** — Generated TOOL_OUTPUT format rejections may advance to the next configured provider only for the confined read-only documentation/source-review registry. Invalid drafts are discarded, retrieved evidence is retained and file-action approvals keep existing behavior.
+- **Y** — 219 focused offline regressions passed. Controlled injected Groq format failure -> actual Gemini tool-request smoke passed (11.82s); no tool was executed by that smoke.
+- **P** — Full live browser workflow and broad factual-quality acceptance remain pending. An adapter smoke does not establish either. Restart Streamlit before retest; Continue remains queued.
+
+See [answer-quality-and-summary-overhead.md](answer-quality-and-summary-overhead.md). Existing content and diagrams retained; Word not synchronized.
+
+
+#### WS4 verified technical answers — browser retest failed, parked (2026-10-22)
+
+- **P** — Confirmed acceptance blocker for the explicit official-source technical-answer workflow. The user's Java 17 browser retest ended with insufficient grounding after review. This supersedes the previous pending-retest note; the earlier scoped fallback tests remain valid but do not establish end-to-end acceptance.
+- The returned message identifies grounding/review failure, not a demonstrated quota failure. The exact missing evidence/claim coverage and actual provider are not established by the pasted response. No tested/generated program execution is claimed.
+- Park repeated live retries and proceed with independent work. Resume with a targeted evidence-coverage diagnostic and require the original browser question to complete with supported references and an accurately labeled example. Keep existing verification and approval guards. This is a scoped capability blocker; it does not declare the whole project blocked.
+
+Evidence: outputs/acceptance/grounding-review-parked-20261022/user-browser-retest.json. Existing roadmap content/diagrams retained; no Word synchronization in this update.
+
+
+#### WS4 grounding blocker — bounded diagnosis and next design (2026-10-22)
+
+- **Y** — One bounded public-only diagnostic reproduced the actual grounding failure and identified insufficient source coverage plus inconsistent/advisory model-review findings. Evidence: outputs/acceptance/grounding-diagnostic-20261022/findings.json.
+- **P** — End-to-end explicit official-verification acceptance remains parked. Stop unchanged live retries; existing provider fallback is not the root design gap demonstrated by this diagnostic.
+- **X** — Proposed source-first coverage and drafting flow, with relevant official section retrieval and separate precise blocking/advisory checks. Scope-limited output must remain partial when the requested coverage is incomplete. This proposal is not implemented by the diagnostic.
+
+Details: [answer-quality-and-summary-overhead.md](answer-quality-and-summary-overhead.md). No production/settings/dependency changes; earlier content and diagrams retained. Word not synchronized.
+
+
+#### WS4 source-first implementation — opt-in, acceptance still parked (2026-10-22)
+
+- **Y** — Implemented coverage planning, complementary public-source retrieval, exact-quote evidence validation, per-topic output and separate blocking/advisory findings in the existing runtime package. Useful supported sections survive unrelated gaps and remain explicitly partial. No generated code executes.
+- **Y** — 264 focused offline regressions pass, including existing memory, provider, citation, project-action and approval behavior. Source drafts have a scoped configurable output budget; ordinary chat settings are preserved.
+- **P** — Structured-draft provider compatibility and complete live/factual acceptance. First public probe stopped on Groq output cap -> Gemini temporary failure; changed probe stopped on Groq TOOL_OUTPUT -> Gemini temporary failure. API retries stopped. The new feature remains opt-in and defaults off; do not mark the original browser question resolved.
+- **X** — Persistent Continue/resume remains queued. Current partial output does not implement continuation.
+
+Next targeted work: data-only draft response compatibility, then exact-question acceptance once an eligible provider is available. Details: [answer-quality-and-summary-overhead.md](answer-quality-and-summary-overhead.md). Existing content and diagrams preserved; Word not synchronized.
+
+
+#### WS2 / WS7 general-text answer continuation — 2026-10-22
+
+This supersedes earlier X/queued status for general-text continuation only; prior historical notes and diagrams remain.
+
+- **Y** — Persist completed section progress per scoped chat; return useful partial output after later provider/budget/data-format failure. Incomplete/truncated/invalid code stays unpublished. This is local completeness/syntax checking, not universal factual verification.
+- **Y** — CONTINUE resumes the next unfinished section without re-planning or regenerating completed sections. FULL ANSWER consolidates in original order; CANCEL ANSWER cancels pending text. Follow-ups receive the published logical answer. These controls cannot replay or approve actions.
+- **Y** — 309 focused offline regressions pass, including existing memory/project-action/headless browser approval behavior. Three fresh-process SQLite acceptance phases prove partial -> restart/resume -> restart/consolidation, with scripted providers and blocked network.
+- **P** — Real hosted-provider/end-user release acceptance and broader source-sensitive continuation. Source-verified/RAG/project/action flows remain outside this feature; the parked grounding problem is unchanged. No quota bypass or code-execution claim.
+
+Commands work through the shared console/browser backend after restarting the running processes. A new ordinary message supersedes that chat's pending text; switching to another chat preserves it. Repeatable offline proof: python evaluations/answer_continuation_acceptance.py. Details: [answer-quality-and-summary-overhead.md](answer-quality-and-summary-overhead.md). Evidence: outputs/acceptance/answer-continuations-20261022. Word not synchronized.
+
+
+### WS4 / WS7 documentation compatibility check — 2026-10-22
+
+- **Y** — Scoped Groq native-tool-format failure recovery via one validated JSON-only response; no write/action/approval scope expansion. 318 focused offline checks pass, including existing browser actions, memory and text continuation.
+- **P** — Exact official Java 17 explanation live acceptance remains blocked. A single new public probe completed search/two reads, then Groq quota and Gemini 503 stopped generation (19.98s). It did not exercise JSON recovery; no final verified answer pass claimed. Further live retries stopped; source-first remains default off. Evidence: outputs/acceptance/read-only-json-20261022.
+
+
+## WS8 installed code/settings/data roots — 23 October 2026
+
+Y for the non-editable wheel runtime/data-root gap in its measured scope. APPLICATION_ROOT remains the immutable code anchor. New DATA_ROOT defaults to the existing checkout root when its project markers exist; a wheel defaults to the user's OS application-data folder. JESHLA_HOME selects an absolute explicit directory before startup, independently of AI_PROJECT_ROOT and cwd. Relative overrides fail clearly. The resolver performs no directory/database creation and loads no .env. Existing source users retain their current paths and commands with no configuration change or automatic data migration.
+
+Console/browser settings, chats, checkpoints, memory, receipts and logs now share DATA_ROOT. RAG defaults/retrieval/export paths and integrated Jira helpers use it too. Code imports and the public-page subprocess keep APPLICATION_ROOT; runtime data is not added to Python's import path. Legacy logging/budget root patch names remain available. LazyGraph creates a missing checkpoint parent on explicit first use, preserving import/help without opening a database. The install rehearsal strips inherited JESHLA_HOME so it cannot accidentally use an existing user store. No project boundary, approval hash, receipt identity, database row or provider setting was rewritten.
+
+An actual offline-built wheel was installed non-editably into a temporary target using the current environment's dependencies. Separate processes from an unrelated cwd passed CLI help, actual console REMEMBER/SHOW, browser-backend chat/fact/archive persistence, data-root settings editing, aligned RAG/Jira paths and the page worker's code-root anchor. Both default OS-data and explicit-home scenarios passed. Installed files, cwd and the inspected folder were unchanged; synthetic state stayed under its selected data root. Build/install plus the six startup/runtime stages finished in 15.41s. Temporary fixtures were removed, working distribution fingerprints and .env were unchanged. This is not a fresh dependency-resolved wheel installation, actual browser click test, cold ML test or live Jira/provider test. The path implementation was unchanged after that smoke; a later safe diagnostic string and fixture sanitization were covered by final regressions.
+
+Final full discovered offline suite: **685 tests passed**, zero failures/errors, 93.080s in unittest (106.86s for its whole owned runner). External network was blocked. Ten new methods cover source/install/OS/override separation, relative-path rejection, side-effect-free imports, selected .env resolution, fresh checkpoint parents and install-fixture isolation. Initial focused testing exposed a pre-existing RAG stub that unloaded NumPy during sys.modules cleanup; preload before its mock snapshot fixes isolation without changing dependencies or retrieval behavior. The first full run passed 683/684 and exposed the unknown-provider diagnostic's missing LLM_PROVIDER label; restoring that secret-safe label yielded the final complete pass. Initial failure logs remain, and their counts are not added to the final 685. No generated examples or live providers were executed.
+
+Existing packages were reused; the new reusable runner is evaluations/wheel_runtime_acceptance.py. No flat agent helper, new dependency, user-data move, saved .env edit or model download was added. Backups, exact diffs, full offline logs and the installed-wheel report are under outputs/acceptance/ws8-data-roots-20261023. Setup details are in docs/developer-setup.md. Full WS8 remains P for dependency-isolated wheel/clone acceptance, optional cold ML/full-learning setup and broader quality/release gates. Existing editable core/RAG setup remains Y and was not reinstalled. Word synchronization is separate.
+
+## WS8 fresh core-wheel acceptance - 23 October 2026
+
+**Y for dependency-isolated, non-editable core-wheel installation and measured startup/persistence.** A new Windows Python 3.14.0 virtual environment, with system-site-packages disabled, resolved and installed core dependencies exclusively from cached wheels. All 10 stages passed in 202.43 seconds: artifact build, environment creation, offline installation, pip check, both console entry points and actual console/browser-backend memory/archive/settings behavior in default OS-data and explicit JESHLA_HOME scenarios. The installed Streamlit 1.66.0 entry point passed its initial AppTest rendering. The worker verified installed-wheel metadata and excluded the working venv and source checkout from runtime imports.
+
+Installed files, inspected project, working packages and saved settings were unchanged; disposable fixtures were removed. No hosted-provider calls, model downloads, Jira authentication or generated-code execution ran. Only the existing evaluations/wheel_runtime_acceptance.py evaluator changed; application code was unchanged. The previous 685-test offline result remains separate and was not rerun or added to this count.
+
+**Overall WS8 remains P for its wider release scope.** Fresh GitHub-clone acceptance, optional cold ML/full-learning setup and broader WS2/WS3/WS4 quality remain pending/parked. This test does not certify actual browser clicks, semantic RAG quality, all dependency profiles or a public release. Evidence: outputs/acceptance/ws8-fresh-wheel-20261023/result.json and per-stage logs; the cache manifest is platform-specific acceptance evidence, not a universal lock. Word synchronization is not claimed.

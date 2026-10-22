@@ -63,3 +63,36 @@ class WebPageTests(unittest.TestCase):
         self.assertIn("Search first",str(messages[1]))
         self.assertIn("Page evidence",str(messages[-1]))
         self.assertIn("https://docs.test/final",result["answer"])
+
+
+class DocumentationFragmentTests(unittest.TestCase):
+    def test_requested_section_is_visible_after_a_long_page_preamble(self):
+        body=("<title>Language rules</title><p>"+"Old preamble "*600+"</p><h3 id='rules'>Target rule</h3><p>Explicit implementation is required.</p>").encode()
+        result=fetch_web_page("https://host.test/spec#rules",resolver=lambda *a:["8.8.8.8"],connection_factory=lambda *a:Connection(Response(body)))
+        self.assertTrue(result["fragment_found"])
+        self.assertTrue(result["text"].startswith("Target rule"))
+        self.assertIn("Explicit implementation",result["text"])
+        self.assertNotIn("Old preamble",result["text"])
+
+    def test_missing_fragment_is_explicit_and_limits_remain_bounded(self):
+        result=fetch_web_page("https://host.test/spec#missing",resolver=lambda *a:["8.8.8.8"],connection_factory=lambda *a:Connection(Response(b"<p>Visible page</p>")))
+        self.assertFalse(result["fragment_found"])
+        self.assertEqual(result["text"],"Visible page")
+
+
+    def test_same_discovered_page_can_be_read_at_a_different_fragment(self):
+        import json
+        from types import SimpleNamespace
+        from agent.runtime.conversation import answer_question
+        base="https://docs.example.test/spec"
+        decisions=iter([
+            {"tool_calls":[{"id":"search","function":{"name":"web_search","arguments":json.dumps({"query":"official specs"})}}]},
+            {"tool_calls":[{"id":"read","function":{"name":"fetch_web_page","arguments":json.dumps({"url":base+"#target"})}}]},
+            {"content":"[Source]("+base+"#target) provides the rule."}])
+        fetched=[]
+        def page(url):fetched.append(url);return {"url":url,"text":"Specific rule"}
+        tools=SimpleNamespace(root="fixture",list_files=lambda **k:{},read_file=lambda **k:{},search_text=lambda **k:{})
+        result=answer_question({"question":"Read official specs","route":"web"},model=lambda *a:next(decisions),tools=tools,
+            project_root=".",document_search=lambda **k:{},web=lambda **k:{"results":[{"url":base}]},page_fetch=page)
+        self.assertEqual(fetched,[base+"#target"])
+        self.assertEqual(result["execution_outcome"],"completed")

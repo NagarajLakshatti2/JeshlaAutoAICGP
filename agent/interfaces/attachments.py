@@ -98,7 +98,7 @@ def attachment_question(question,attachment):
 
 def render_attachments(session):
     import streamlit as st
-    from agent.user_errors import user_error_message
+    from agent.interfaces.errors import user_error_message
     attachments=st.session_state.setdefault("attachments_by_chat",{})
     with st.expander("Attach a document",icon=":material/attach_file:"):
         st.caption("Up to 1 MB; UTF-8 text/Markdown/CSV/JSON, PDF, DOCX or XLSX. Excel: first 3 sheets, 100 rows and 30 columns per sheet; cached cell values only, no formula recalculation. PDF: first 10 pages; extracted text: first 12,000 characters. No OCR or automatic RAG indexing.")

@@ -1,6 +1,6 @@
 # Project structure milestone
 
-Status I for read-only inventory; migration remains X. Requested by the user on 18 October 2026. Schedule after Workstream 8, before UI expansion and Workstream 9 framework work. This document records the task; no Python files are moved and no imports or runtime behavior change now.
+Status Y for the scoped package relocation; final regression evidence is recorded in the latest section below. Requested 18 October 2026 and continued 19 October 2026. Earlier checklist entries record historical stages; full release and optional-feature quality remain separate gates.
 
 ## Purpose
 
@@ -47,3 +47,30 @@ Code migration Y for the agreed incremental scope: policies, stable config path 
 
 P: final post-console full regression and isolated browser acceptance, after unusually slow timed attempts. Earlier full359 and fresh-core86 precede console extraction; focused31 passed after it.
 Y: package map and Word content/diagram synchronization. P: Word page-layout visual QA, renderer unavailable. Backup retained. Full release and optional RAG/semantic/summary/relevance quality remain separate pending gates. Do not remove the private backup until final verification is accepted.
+
+
+## Remaining top-level helper cleanup - 19 October 2026
+
+Y for the bounded implementation relocation: all 13 remaining active top-level helpers now live in existing child packages. No additional package layer was needed. Top-level agent/*.py files, apart from __init__.py, are compatibility forwarders only; they intentionally remain so existing imports and patches continue to work. New code should import the canonical modules below. Never duplicate implementation inside a wrapper or delete a wrapper without separately checking its external callers.
+
+| Previous import (retained) | Canonical implementation |
+|---|---|
+| `agent.browser_action_ui` | `agent.interfaces.action_approval` |
+| `agent.browser_activity` | `agent.interfaces.activity` |
+| `agent.citation_guard` | `agent.policies.citations` |
+| `agent.clarification_guard` | `agent.policies.clarification` |
+| `agent.project_budget` | `agent.runtime.project_budget` |
+| `agent.project_context` | `agent.runtime.project_context` |
+| `agent.project_decisions` | `agent.runtime.project_decisions` |
+| `agent.project_native_specs` | `agent.runtime.project_native_specs` |
+| `agent.terminal_input` | `agent.interfaces.terminal_input` |
+| `agent.timing` | `agent.runtime.timing` |
+| `agent.user_errors` | `agent.interfaces.errors` |
+| `agent.web_page_worker` | `agent.tools.web_page_worker` |
+| `agent.web_pages` | `agent.tools.web_pages` |
+
+Project orchestration/context/budgets and timing belong in runtime; frontend presentation, terminal input and browser activity belong in interfaces; deterministic citation/clarification rules belong in policies; public-page reading and its bounded worker belong in tools. Existing providers, actions, storage, memory, config and LangGraph packages retain their responsibilities. Tests belong under tests/, acceptance runners under evaluations/. Entry points remain streamlit_app.py and python -m agent.langgraph.langgraph_agent.
+
+Final verification reviewed on 20 October 2026: all 428 unique offline tests passed across two nonoverlapping batches (324 before the full-run 300-second cap, then the remaining 104 in 38.747 seconds). This is complete suite coverage across batches, not one uninterrupted full-suite run. Both batches used the offline guard. The 97 focused checks also passed. Source equivalence was rechecked for all 13 moves; agent/ now contains 29 compatibility modules plus __init__.py, with no active top-level function/class implementations. Evidence: outputs/acceptance/package-helpers-summary.json, package-helpers-full.log and package-helpers-remainder.log. The original timeout remains honestly recorded. Existing imports, module commands and working behavior are preserved within the tested scope. No new live provider/browser acceptance or full core release is claimed.
+
+Backups: outputs/package-helpers-before-20261019-151846 contains pre-change sources; the earlier full private backup remains retained. No .env, saved chats, facts, receipts or data-root settings are intentionally changed. Restart running interfaces after acceptance to load the relocated code.

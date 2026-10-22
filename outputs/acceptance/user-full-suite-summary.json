@@ -1,9 +1,0 @@
-{
-  "status": "passed",
-  "tests": 365,
-  "seconds": 35.087,
-  "source": "outputs/acceptance/user-test-run.log",
-  "command": "python -u -m unittest discover -s tests -p \"test_*.py\" -v",
-  "guard_scope": "direct unittest command; outer offline guard not enabled",
-  "note": "Full discovery passed; does not prove live provider, optional model or every user workflow acceptance."
-}

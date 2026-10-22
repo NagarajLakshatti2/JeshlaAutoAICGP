@@ -8,10 +8,10 @@ from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
-from agent.timing import timed
+from agent.runtime.timing import timed
 from agent.providers.errors import request_model, ProviderError, read_model_json
 
-from agent.config.paths import APPLICATION_ROOT as PROJECT_ROOT
+from agent.config.paths import DATA_ROOT as PROJECT_ROOT
 load_dotenv(PROJECT_ROOT / ".env")
 LLM_PROVIDER = os.getenv("LLM_PROVIDER", "ollama").strip().lower()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
@@ -87,8 +87,7 @@ def call_ollama(prompt: str | list[dict], *, json_mode=False, max_tokens=None) -
     print(f"Total model time: {seconds('total_duration'):.2f}s")
     print("Stop reason:", data.get("done_reason", "Not provided"))
     if data.get("done_reason") == "length":
-        raise RuntimeError("Ollama output hit its token limit; no partial action was executed. "
-                           "Increase OLLAMA_NUM_PREDICT or request a smaller change.")
+        raise ProviderError("ollama","OUTPUT_LIMIT","Local output reached its token limit; partial reply discarded.")
     answer = data.get("message", {}).get("content")
     if not isinstance(answer, str) or not answer.strip():
         raise RuntimeError("Ollama returned no usable text.")
@@ -140,7 +139,7 @@ def call_openrouter(prompt: str | list[dict], *, json_mode=False, max_tokens=Non
     if not choices:
         raise RuntimeError("OpenRouter returned no choices.")
     if choices[0].get("finish_reason") == "length":
-        raise RuntimeError("OpenRouter output was truncated; no partial action was executed.")
+        raise ProviderError("openrouter","OUTPUT_LIMIT","Output reached its token limit; partial reply discarded.")
     answer = choices[0].get("message", {}).get("content")
     if not isinstance(answer, str) or not answer.strip():
         raise RuntimeError("OpenRouter returned no usable text.")
@@ -180,6 +179,8 @@ def call_groq(prompt: str | list[dict], *, json_mode=False, max_tokens=None) -> 
         answer = choice["message"]["content"]
     except (ValueError, KeyError, IndexError, TypeError):
         raise ProviderError("groq","INVALID_RESPONSE","Provider returned an invalid response; no automatic retry.") from None
+    if choice.get("finish_reason") == "length":
+        raise ProviderError("groq","OUTPUT_LIMIT","Output reached its token limit; partial reply discarded.")
     if choice.get("finish_reason") != "stop":
         raise ProviderError("groq","INCOMPLETE_RESPONSE","Output did not finish normally. Check output-token budget or narrow the request; no retry performed.")
     if not isinstance(answer, str) or not answer.strip():
@@ -206,7 +207,7 @@ def call_gemini(prompt: str | list[dict], *, json_mode=False, max_tokens=None) -
     except (ValueError,KeyError,IndexError,TypeError):
         raise ProviderError("gemini","INVALID_RESPONSE","Google returned an invalid response; no automatic retry.") from None
     reason=choice.get("finish_reason")
-    if reason=="length":raise ProviderError("gemini","OUTPUT_LIMIT","Output reached its token budget. Narrow the request or review GEMINI_MAX_TOKENS; no automatic retry.")
+    if reason=="length":raise ProviderError("gemini","OUTPUT_LIMIT","Output reached its token budget; partial reply discarded. Review GEMINI_MAX_TOKENS if no configured fallback can complete.")
     if reason=="content_filter":raise ProviderError("gemini","CONTENT_FILTER","Google filtered the response; no automatic retry.")
     if reason!="stop" or not isinstance(answer,str) or not answer.strip():
         raise ProviderError("gemini","INCOMPLETE_RESPONSE","Google returned no complete usable answer; no automatic retry.")
@@ -219,15 +220,14 @@ PROVIDERS = {"ollama": call_ollama, "openrouter": call_openrouter, "groq": call_
 
 @timed("LLM request")
 def call_llm_messages(messages: list[dict], *, json_mode=False, max_tokens=None) -> str:
-    from agent.providers.selection import current_provider
-    provider = PROVIDERS.get(current_provider(LLM_PROVIDER))
-    if provider is None:
-        raise ProviderError("model","CONFIGURATION","Set LLM_PROVIDER to ollama, openrouter, groq or gemini in .env and restart.",attempts=0)
+    from agent.providers.fallback import call_with_fallback
+    if max_tokens is not None and (type(max_tokens) is not int or not 64 <= max_tokens <= 16384):
+        raise ValueError("Requested output budget must be an integer between 64 and 16384.")
+    validated = validate_messages(messages)
+    options = {"json_mode": json_mode}
     if max_tokens is not None:
-        if type(max_tokens) is not int or not 64 <= max_tokens <= 16384:
-            raise ValueError("Requested output budget must be an integer between 64 and 16384.")
-        return provider(validate_messages(messages), json_mode=json_mode, max_tokens=max_tokens)
-    return provider(validate_messages(messages), json_mode=json_mode)
+        options["max_tokens"] = max_tokens
+    return call_with_fallback(LLM_PROVIDER, lambda provider: PROVIDERS[provider](validated, **options))
 
 
 def call_llm(prompt: str) -> str:

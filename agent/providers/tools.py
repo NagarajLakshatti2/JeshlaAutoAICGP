@@ -5,8 +5,23 @@ import time
 import uuid
 import requests
 from agent.providers.text import LLM_PROVIDER, OLLAMA_URL, OLLAMA_MODEL, OPENROUTER_URL, OPENROUTER_MODEL, env_int
-from agent.timing import timed
+from agent.runtime.timing import timed
 from agent.providers.errors import request_model, ProviderError, read_model_json
+
+
+_READ_ONLY_FALLBACK_FUNCTIONS = frozenset({
+    "web_search", "fetch_web_page", "submit_answer_review",
+    "submit_documentation_plan", "submit_grounded_sections", "submit_grounding_findings"})
+
+
+def _read_only_fallback_registry(specs):
+    """Opt in only when every offered function is a confined read/data tool."""
+    return bool(specs) and isinstance(specs, (list, tuple)) and all(
+        isinstance(spec, dict) and spec.get("type") == "function"
+        and isinstance(spec.get("function"), dict)
+        and isinstance(spec["function"].get("name"), str)
+        and spec["function"]["name"] in _READ_ONLY_FALLBACK_FUNCTIONS
+        for spec in specs)
 
 
 def ollama_text_tool_call(content, tools):
@@ -36,8 +51,35 @@ def call_tool_messages(messages, tools, *, max_tokens=None, forced_function=None
         registered={item.get("function",{}).get("name") for item in tools if isinstance(item,dict)}
         if not isinstance(forced_function,str) or forced_function not in registered:
             raise ValueError("Forced function must be registered in this request.")
+    if (max_tokens is None and _read_only_fallback_registry(tools) and len(tools) == 1
+            and tools[0]["function"]["name"] == "submit_grounded_sections"):
+        # Structured sections plus quotations/code need a draft-specific budget.
+        # Ordinary chat, planning, checks and explicit caller budgets stay intact.
+        max_tokens = env_int("AI_DOCUMENTATION_DRAFT_TOKENS", 4096, 256, 16384)
+    from agent.providers.fallback import call_with_fallback, messages_for_provider
     from agent.providers.selection import current_provider
-    provider = current_provider(LLM_PROVIDER)
+    def invoke(provider):
+        prepared = messages_for_provider(messages, provider, imported_history=provider != current_provider(LLM_PROVIDER))
+        try:
+            return _call_tool_provider(provider, prepared, tools,
+                max_tokens=max_tokens, forced_function=forced_function, require_tool=require_tool)
+        except ProviderError as error:
+            if provider != "groq" or error.category != "TOOL_OUTPUT" or not _read_only_fallback_registry(tools):
+                raise
+            # One changed-encoding attempt before provider failover. No invalid
+            # generation is recovered from provider error bodies or executed.
+            from agent.providers.read_only_json import prepare, normalize
+            converted, required = prepare(prepared, tools, forced_function=forced_function, require_tool=require_tool)
+            print("Groq documentation compatibility: trying one JSON response without native tools; validation remains required.")
+            reply = _call_tool_provider(provider, converted, [],
+                max_tokens=max_tokens if max_tokens is not None else env_int("AI_DOCUMENTATION_DRAFT_TOKENS", 4096, 256, 16384),
+                json_mode=True)
+            return normalize(reply, tools, required=required, forced_function=forced_function)
+    return call_with_fallback(LLM_PROVIDER, invoke,
+        allow_tool_output_fallback=_read_only_fallback_registry(tools))
+
+
+def _call_tool_provider(provider, messages, tools, *, max_tokens=None, forced_function=None, require_tool=False, json_mode=False):
     payload = {"messages": messages, "tools": tools, "stream": False}
     headers = {"Content-Type": "application/json"}
     if provider == "ollama":
@@ -85,19 +127,32 @@ def call_tool_messages(messages, tools, *, max_tokens=None, forced_function=None
     if provider=="groq" and require_tool:
         payload["tool_choice"]="required"
         payload["parallel_tool_calls"]=False
+    if not tools:
+        # Text-only finalization must not send an empty function registry or
+        # auto tool choice to providers that reject that combination.
+        payload.pop("tools", None)
+        payload.pop("tool_choice", None)
+    if json_mode:
+        if provider != "groq" or tools:
+            raise ValueError("JSON compatibility requires a Groq request with no native tools.")
+        payload["response_format"] = {"type": "json_object"}
     started = time.perf_counter()
     response = request_model(provider,url,headers=headers,json=payload,
                              timeout=(10,timeout),allow_redirects=False)
     try:
         data = read_model_json(response,provider)
         if provider == "ollama":
-            if data.get("done_reason") == "length" or data.get("error"):
+            if data.get("done_reason") == "length":
+                raise ProviderError(provider,"OUTPUT_LIMIT","Local output reached its token limit; partial reply discarded.")
+            if data.get("error"):
                 raise ValueError()
             message = data["message"]
         else:
             choice = data["choices"][0]
             if choice.get("finish_reason") == "length":
-                raise ProviderError(provider,"OUTPUT_LIMIT","Model output reached its token limit. Increase the output budget within model limits or narrow the task; no automatic retry.")
+                error=ProviderError(provider,"OUTPUT_LIMIT","Model output reached its token limit; partial text and tool proposals were discarded. Try the next configured provider or review the output budget.")
+                error.tool_call_output=json_mode or bool(choice.get("message",{}).get("tool_calls"))
+                raise error
             if choice.get("finish_reason") == "content_filter":
                 raise ProviderError(provider,"CONTENT_FILTER","Provider filtered this response; no automatic retry.")
             if choice.get("finish_reason") not in {"stop", "tool_calls"}:

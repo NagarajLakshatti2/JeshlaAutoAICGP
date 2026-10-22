@@ -1,6 +1,6 @@
 """Explicit shared-fact editing through the existing memory command adapter."""
 import streamlit as st
-from agent.user_errors import user_error_message
+from agent.interfaces.errors import user_error_message
 
 
 def render_memory_editor(backend):

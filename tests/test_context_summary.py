@@ -51,7 +51,7 @@ class SummaryTests(unittest.TestCase):
             invoke=lambda state,config:{"final_answer":"answer","answer":"answer","route":"direct"},
             update_state=lambda config,values:saved.update(values),
         )
-        with tempfile.TemporaryDirectory() as folder,patch.dict(os.environ,{}),patch("sys.argv",["agent","--session","default","--input-mode","end"]),patch("builtins.input",side_effect=["question one","END","question two","END","EXIT"]),patch("builtins.print"),patch("agent.context_summary.compact_context",side_effect=RuntimeError("failure")) as compact:
+        with tempfile.TemporaryDirectory() as folder,patch.dict(os.environ,{"AI_SUMMARY_MIN_TURNS":"1"}),patch("sys.argv",["agent","--session","default","--input-mode","end"]),patch("builtins.input",side_effect=["question one","END","question two","END","EXIT"]),patch("builtins.print"),patch("agent.context_summary.compact_context",side_effect=RuntimeError("failure")) as compact:
             scope={"argparse":argparse,"hashlib":hashlib,"json":json,"os":os,"re":re,"time":time,"PROJECT_ROOT":Path(folder),"LLM_PROVIDER":"groq","graph":graph,"timer":lambda label:nullcontext()}
             exec(compile(ast.Module(body=nodes,type_ignores=[]),"summary-cli","exec"),scope)
             scope["main"]()
@@ -94,3 +94,45 @@ class SummaryTests(unittest.TestCase):
         with self.assertRaises(ValueError):compact_context("","",Mock(),threshold=3000,keep=4000)
 
 if __name__=="__main__":unittest.main()
+
+
+class RecentConversationContextTests(unittest.TestCase):
+    def test_structured_exchange_preserves_literal_role_labels_inside_text(self):
+        from agent.runtime.summaries import recent_conversation_context
+        exchange={"question":"Question", "answer":"Code sample\nUser: literal\nAssistant: literal"}
+        context=recent_conversation_context("old context", exchange)
+        self.assertEqual(context["previous_exchange"], exchange)
+        self.assertEqual(context["recent_conversation"], "old context")
+
+    def test_older_context_remains_bounded_and_marked(self):
+        from agent.runtime.summaries import recent_conversation_context
+        older="older " * 2000
+        context=recent_conversation_context(older + "\nUser: Q\nAssistant: A")
+        self.assertEqual(context["previous_exchange"], {"question":"Q", "answer":"A"})
+        self.assertEqual(context["recent_conversation"], older[-4000:])
+        self.assertTrue(context["recent_conversation_truncated"])
+
+    def test_legacy_empty_or_invalid_structured_context_remains_usable(self):
+        from agent.runtime.summaries import recent_conversation_context
+        for value in (None, {}, {"question":1, "answer":False}):
+            context=recent_conversation_context("User: Q\nAssistant: A", value)
+            self.assertEqual(context["previous_exchange"], {"question":"Q", "answer":"A"})
+        self.assertEqual(recent_conversation_context("")["previous_exchange"], {})
+
+
+class SummaryScheduleTests(unittest.TestCase):
+    def test_short_followup_defers_summary_until_interval(self):
+        from agent.runtime.summaries import summary_due
+        self.assertFalse(summary_due("x"*12000,2))
+        self.assertTrue(summary_due("x"*12000,3))
+
+    def test_history_pressure_overrides_interval(self):
+        from agent.runtime.summaries import summary_due
+        self.assertTrue(summary_due("x"*16001,1,minimum_turns=10))
+
+    def test_interval_is_configurable_and_validated(self):
+        from agent.runtime.summaries import summary_due
+        self.assertTrue(summary_due("small",1,minimum_turns=1))
+        for value in (0,101,False,"3"):
+            with self.subTest(value=value),self.assertRaises(ValueError):
+                summary_due("",0,minimum_turns=value)

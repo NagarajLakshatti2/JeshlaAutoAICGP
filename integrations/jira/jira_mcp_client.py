@@ -17,7 +17,8 @@ from mcp.client.auth import AuthorizationCodeResult, OAuthClientProvider
 from mcp.client.streamable_http import streamable_http_client
 from mcp.shared.auth import OAuthClientInformationFull, OAuthClientMetadata, OAuthToken
 
-load_dotenv(Path(__file__).resolve().parents[2] / '.env')
+from agent.config.paths import DATA_ROOT
+load_dotenv(DATA_ROOT / '.env')
 MCP_URL = os.getenv('ATLASSIAN_MCP_URL', 'https://mcp.atlassian.com/v2/mcp').strip()
 JIRA_URL = os.getenv('JIRA_SITE_URL', os.getenv('JIRA_URL', '')).strip()
 CALLBACK_URL = 'http://localhost:3000/callback'

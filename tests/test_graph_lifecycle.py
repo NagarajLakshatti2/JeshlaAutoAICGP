@@ -59,3 +59,15 @@ with offline_guard(),patch('sqlite3.connect',side_effect=AssertionError('Unexpec
 """
         run=subprocess.run([sys.executable,'-c',code],cwd=Path(__file__).resolve().parents[1],capture_output=True,text=True,timeout=30)
         self.assertEqual(run.returncode,0,run.stderr)
+
+
+class FreshRuntimeDirectoryTests(unittest.TestCase):
+    def test_checkpoint_parent_is_created_only_on_explicit_first_use(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder)/"new-runtime";path=root/"agent_memory.db"
+            graph=LazyGraph(path,build)
+            self.assertFalse(root.exists())
+            try:
+                graph.invoke({"value":"fixture"},{"configurable":{"thread_id":"a"}})
+                self.assertTrue(path.exists())
+            finally:graph.close()

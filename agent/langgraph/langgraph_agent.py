@@ -12,7 +12,7 @@ from typing import TypedDict
 from dotenv import load_dotenv
 from langgraph.graph import END, START, StateGraph
 
-from agent.timing import timer, timed
+from agent.runtime.timing import timer, timed
 
 import sqlite3
 from langgraph.checkpoint.sqlite import SqliteSaver
@@ -22,10 +22,10 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 # ENVIRONMENT
 # ============================================================
 
-from agent.config.paths import APPLICATION_ROOT as PROJECT_ROOT
+from agent.config.paths import DATA_ROOT as PROJECT_ROOT, APPLICATION_ROOT
 
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+if str(APPLICATION_ROOT) not in sys.path:
+    sys.path.insert(0, str(APPLICATION_ROOT))
 
 load_dotenv(PROJECT_ROOT / ".env")
 
@@ -48,16 +48,20 @@ class AgentState(TypedDict):
     execution_outcome: str
     history: str
     previous_route: str
+    previous_exchange: dict
+    previous_response_status: dict
+    answer_available: bool
     memory_context: str
     project_root: str
     conversation_session: str
     summary: str
     summary_retry_at: float
+    summary_turns: int
 
 
 def load_long_term_memory_node(state: AgentState):
     from agent.memory.long_term_memory import LongTermMemory
-    from agent.project_context import resolve_project_root
+    from agent.runtime.project_context import resolve_project_root
     selected_root = resolve_project_root(state, PROJECT_ROOT)
 
     user = os.getenv("AI_MEMORY_USER_ID", "local-user")
@@ -534,7 +538,7 @@ def approve_local_action(action, arguments):
         return bool(handler(action, arguments))
     print("\nProposed local action:", action)
     print(json.dumps(arguments, ensure_ascii=False, indent=2))
-    from agent.terminal_input import read_confirmation
+    from agent.interfaces.terminal_input import read_confirmation
     print("Execute this exact action? Reply yes or no. No action has run yet.")
     try:
         reply = read_confirmation()
@@ -548,8 +552,8 @@ def approve_local_action(action, arguments):
 def project_node(state: AgentState):
     """Execute JSON actions, retain evidence, and invalidate caches after edits."""
     import inspect
-    from agent.project_decisions import call_project_decision
-    from agent.project_budget import project_input_budget, project_user_context
+    from agent.runtime.project_decisions import call_project_decision
+    from agent.runtime.project_budget import project_input_budget, project_user_context
     from agent.llm_client import call_llm_messages
     from agent.tools.project_tools import ProjectTools
 

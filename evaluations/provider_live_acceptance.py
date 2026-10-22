@@ -17,17 +17,18 @@ sys.path.insert(0,str(ROOT))
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument("--provider",required=True,choices=["openrouter","groq","ollama"])
+    parser.add_argument("--provider",required=True,choices=["openrouter","groq","gemini","ollama"])
     parser.add_argument("--check",choices=["all","direct_answer","native_tool_result_answer"],default="all")
     args=parser.parse_args()
     from dotenv import load_dotenv
     load_dotenv(ROOT/".env")
     os.environ["LLM_PROVIDER"]=args.provider
+    os.environ["LLM_FALLBACK_ENABLED"]="false"
     from agent.llm_client import call_llm_messages,OLLAMA_MODEL,OPENROUTER_MODEL
     from agent.tool_llm import call_tool_messages
     from agent.user_errors import user_error_message
     budget=256 if args.provider=="ollama" else 4096
-    model={"ollama":OLLAMA_MODEL,"openrouter":OPENROUTER_MODEL,"groq":os.getenv("GROQ_MODEL","")}[args.provider]
+    model={"ollama":OLLAMA_MODEL,"openrouter":OPENROUTER_MODEL,"groq":os.getenv("GROQ_MODEL",""),"gemini":os.getenv("GEMINI_MODEL","")}[args.provider]
     report={"provider":args.provider,"model":model,"scope":"direct answer and real temporary-file native tool/result cycle","checks":{}}
     def check(name,function):
         start=time.perf_counter()

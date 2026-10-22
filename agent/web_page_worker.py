@@ -1,16 +1,8 @@
-"""Private worker for the bounded public page reader; never launches model code."""
-import json
+"""Compatibility alias for agent.tools.web_page_worker."""
 import sys
-from agent.web_pages import _fetch_in_process
+from agent.tools import web_page_worker as _implementation
 
-
-def main():
-    try:
-        request=json.loads(sys.stdin.read(4096))
-        result=_fetch_in_process(request["url"])
-    except Exception:
-        result={"error":"Public page reader failed; no page evidence retrieved."}
-    sys.stdout.write(json.dumps(result,ensure_ascii=True))
-
-if __name__=="__main__":
-    main()
+if __name__ == "__main__":
+    _implementation.main()
+else:
+    sys.modules[__name__] = _implementation

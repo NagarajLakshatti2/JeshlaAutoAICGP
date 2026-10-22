@@ -1,8 +1,40 @@
 # Core agent release review
 
+## Latest WS8 scope update — 23 October 2026
+
+**Y for fresh dependency-isolated core-wheel acceptance**, in addition to the earlier installed-wheel data-root smoke. A new Windows Python 3.14.0 environment resolved core dependencies offline, passed pip check, both console entry points, synthetic memory/archive/settings persistence under default/explicit data roots, and Streamlit 1.66.0 initial rendering. All 10 stages passed in 202.43 seconds. The working environment/settings were unchanged and fixtures removed. Evidence: outputs/acceptance/ws8-fresh-wheel-20261023/result.json. Application code did not change; the earlier 685-test full offline result was not rerun. Fresh GitHub clone, optional cold ML/full-learning setup, broader WS2/WS3/WS4 quality and full release remain P. Historical audits below retain their dated scopes.
+
+GitHub-readiness follow-up (23 October): local path/source review completed, but publication/clone acceptance remains P due to tracked runtime artifacts and untracked canonical modules. See github-readiness.md for counts, scope and the ordered preparation plan. No source or Git index/history changes were made.
+
+Tracking follow-up (23 October): reviewed source and index cleanup is Y; 683 local files remain on disk after index-only removals and 24 canonical runtime modules are now staged. No application-source edit or commit/push/history rewrite. Full publication and clean-clone acceptance remain P. See github-readiness.md and outputs/acceptance/ws8-git-tracking-20261023/result.json.
+
+## Current evidence audit — 22 October 2026
+
+This snapshot supersedes older current-status summaries below for the stated scopes. Historical records and diagrams remain. Audit method: inspect actual canonical implementations, related test code and existing JSON/log evidence. No tests, model requests, ML imports, clean installations, user databases or application changes were made for this audit. Historical reports prove their recorded source/fixture scope; their counts are not added into a current full-suite claim.
+
+| Area | Already implemented and evidenced; do not reopen as new development | Actual remaining boundary |
+|---|---|---|
+| WS2 | Chat/archive/isolation and validated summaries exist in runtime/summaries.py, runtime/summary_model.py and storage/chats.py. Saved Groq backend fresh-process and Chrome reload/server-restart/switch checks passed. General-text Continue is implemented and its three-process persistence proof passed. | Ollama attribution failed one of seven checks; broader actual-history quality and live hosted Continue acceptance are pending. Scope does not require repeating the already passing synthetic restart check. |
+| WS3 | LongTermMemory implements provenance, revision history, scoped retrieval, advisory review and explicit suggestion acceptance. Local archive search passed; cached real MiniLM baseline passed 8/8 fixed cases. | Broader calibration is unmeasured. Live interpretation baseline was 7/8; follow-up had an exact returned-source-key defect and quota interruption. These are model-quality acceptance limits, not absent storage/semantic implementation. |
+| WS4 | Ingestion, FAISS/BM25, reranking, structured tables, read-page/citation guards and sampled mixed-tool answers exist. Keyword benchmark passed 8/8 audited cases and excerpt consistency 64/64. | Hybrid benchmark timed out before completing cases. Broad entailment is unaccepted. Explicit official-documentation workflow remains parked after grounding failures, with recent retries additionally blocked by provider limits/503. Source-first implementation exists but defaults off; old X/proposed descriptions are historical. |
+| WS8 | Trusted local-user development preview is Y. Fresh core editable setup passed 222 selected tests/startup; fresh RAG setup passed package/parser/index checks and 246 selected regressions. Prepared-source archive audit and scoped backup/recovery passed. | Optional cold sentence_transformers import timed out at 60.32s despite the other 246 checks passing. Non-editable wheel/data-root runtime, fresh GitHub clone, full learning profile and broad full-release acceptance have no completed acceptance here. Full release is P, not Y. |
+
+Existing evidence anchors:
+
+- WS2: outputs/acceptance/ws2-progress-20261020.json; ws2-restart-groq.json; ws2-browser-groq/result.json; summary-grounding-ollama.json.
+- WS3: outputs/acceptance/ws8-semantic-memory-20261021/result.json; ws8-openrouter-memory-20261021/result-lightning-all-4096.json; result-after-scope-guidance.json; archive-search-local.json.
+- WS4: outputs/acceptance/document-keyword-normalized.json; document-source-consistency.json; document-hybrid-local.json; mixed-real-tools-gemini.json; grounding-diagnostic-20261022; read-only-json-20261022.
+- WS8: outputs/acceptance/ws8-core-wheelhouse-fixed-20261021/result.json; ws8-rag-thread-limited-20261021/result.json; ws8-source-build-current/result.json.
+- Recent independent changes: outputs/acceptance/answer-continuations-20261022/summary.json (309 scoped offline checks and three-process proof); read-only-json-20261022/regression.json (318 scoped checks); composer-rerender-20261022/final-ui-tests.json and accepted-browser/results.json (34 focused checks plus four real headless-browser viewport cases). These overlapping counts must not be summed.
+
+Status-reporting correction: earlier replies used done for the local preview, then treated broader parked quality/full-release checks as a new implementation cycle. The implementation is already present. P can mean a known failed case, a blocked acceptance or optional untested breadth; it does not imply an unfinished feature. WS7's old P entries are superseded by its final scoped Y acceptance. General-text Continue's earlier X entries are superseded by its implementation evidence. Optional source-sensitive continuation is outside that accepted feature, not a new mandatory prerequisite by implication.
+
+Work policy: retain Y for its exact recorded scope; revisit it only for a changed relevant path, a new observed failure or an explicitly selected acceptance requirement. Keep genuine blocked/optional work P and identify the prerequisite before another run. Do not launch another WS2 -> WS3 -> WS4 -> WS8 implementation pass by default. WS9 planning can proceed with these limits explicit; autonomous execution must separately meet the acceptance for its selected workflow. Word synchronization is not claimed.
+
+
 Prepared 18 October 2026. Decision: keep the full core release pending. The current implementation supports a useful trusted local-user development preview; this report does not declare a release or waive the parked acceptance gates.
 
-## Evidence baseline
+## Historical release evidence baseline — 18 October 2026
 
 The full Workstream 7 offline suite passed 343 tests in 45.360 seconds (outputs/acceptance/workstream-7-offline-final.log). The subsequent synthetic backup rehearsal passed one additional scenario independently; a full 344-test run is not claimed. Installed pip check found no broken requirements. A no-index install probe could not resolve langchain; fresh-install acceptance is unverified, not proven incompatible.
 
@@ -23,21 +55,21 @@ The broad acceptance checklist remains P wherever its full scenario exceeds the 
 | Both-interface approval | Live browser approval/decline, console controls and offline all-action dispatch tests | Arbitrary command effects and all provider-generated plans are not certified |
 | Restart cancellation replay | Durable receipt tests, fresh-process crashes and synthetic restored receipt checks | No automatic uncertain-outcome clearing, external rollback or relocated-root approval reuse |
 | Provider and context failures | Four-label/six-category console/browser simulations, transport retry checks and configured budget preflight | Not every provider fault tested live; token estimates approximate and hosted limits operator supplied |
-| Setup backup regression | 343-test full baseline, installed pip check, stopped-writer synthetic core-store restoration | Fresh install, optional format/index stores and actual user-data restoration unverified |
+| Setup backup regression | Historical 343-test baseline; 18 October fresh core setup/71 selected checks; scoped recovery; 21 October prepared-source archive build/audit | Latest-source fresh core editable install passed: 222 selected tests, entry points and AppTest startup; fresh RAG installation, 246 selected checks and synthetic index smoke also passed; optional ML import, full learning profile, wheel runtime and broader release acceptance remain pending |
 
-## Proposed preview scope for later agreement
+## Accepted local development-preview scope
 
-Trusted local-user Windows use through console and loopback Streamlit, configurable existing providers, explicit memory commands, scoped saved chats, read-only evidence tools and exact approved local actions with durable receipts. Treat source and model output as evidence requiring review. Use the existing configured environment; a clean distributable installation is not yet accepted.
+Trusted local-user Windows use through console and loopback Streamlit, configurable existing providers, explicit memory commands, scoped saved chats, read-only evidence tools and exact approved local actions with durable receipts. Treat source and model output as evidence requiring review. The existing configured environment and fresh core/RAG editable source setup have scoped acceptance; non-editable wheel runtime and full release quality remain unaccepted.
 
 Exclude public hosting/multi-user authentication, OS command sandboxing, guaranteed semantic recall or conflict resolution, universal citation entailment, unattended long-running tasks, unlimited hosted API access, automatic provider switching, uncertain-action replay and new automation-framework development.
 
-This is a proposed scope, not user agreement. Existing Jira uncertain receipts remain intact and must not be cleared to pass a release check. Parked quality items remain P unless independently verified or explicitly excluded through a concrete agreed release scope.
+User accepted this local development-preview scope on 18 October 2026; full release acceptance remains pending. Existing Jira uncertain receipts remain intact and must not be cleared to pass a release check. Parked quality items remain P unless independently verified or explicitly excluded through a concrete agreed release scope.
 
 ## Next actions
 
-1. Complete the optional-dependency audit and a bounded connected clean-install rehearsal when packages/network resources are available. Do not treat an installed-environment check as clean setup.
-2. Prepare explicit startup, installation and state-store smoke acceptance in the fresh environment.
-3. Decide whether to continue the full core gate or agree a narrower development-preview scope after reviewing this report. Even a preview does not change unfinished quality gates to Y.
+1. Fresh core and RAG/integration editable setup are accepted within the recorded scope. Diagnose the separately bounded sentence-transformers import before claiming pretrained-runtime or model-quality acceptance.
+2. Retain the passing fresh startup, dependency, parser/index and 246-test evidence; broader actual-history, semantic and hybrid quality gates remain parked.
+3. Continue the full core gate while retaining the accepted local development-preview scope. Preview agreement does not change unfinished quality gates to Y.
 4. Synchronize the Word roadmap after the release evidence and scope are settled. UI changes remain a separate proposed milestone before Workstream 9.
 
 ## Evidence references
@@ -51,6 +83,37 @@ This is a proposed scope, not user agreement. Existing Jira uncertain receipts r
 
 ## Updated core preview evidence
 
-Fresh core-profile installation and 71 selected offline end-to-end checks passed on 18 October 2026. Installation plus run took 117.7 seconds; tests took 12.872 seconds. Source-only isolated data and mocked provider calls were used. This closes the scoped core setup/rehearsal concern for a development preview, not every broad release acceptance item. Full-profile/RAG install, model/index behavior and parked quality remain P. User agreement to preview scope remains pending.
+Fresh core-profile installation and 71 selected offline end-to-end checks passed on 18 October 2026. Installation plus run took 117.7 seconds; tests took 12.872 seconds. Source-only isolated data and mocked provider calls were used. This closes the scoped core setup/rehearsal concern for a development preview, not every broad release acceptance item. Full-profile/RAG install, model/index behavior and parked quality remain P. User agreement to the local preview is recorded in workstream-8-release.md; full release agreement is separate.
 
-Proposed decision for the user: accept the current trusted local-user core as a development preview and proceed to UI improvements, while retaining full release and Workstream 9 as pending. This is not approval to perform new external writes or clear uncertain receipts.
+Current decision: retain the accepted trusted local-user development preview while full release and Workstream 9 remain pending. This is not approval to perform new external writes or clear uncertain receipts.
+
+## WS8 current-source build/install follow-up — 21 October 2026
+
+Y for an offline prepared-source sdist/wheel build and audit: current helpers/aliases and entry point are included, declared dependency profiles match metadata, and synthetic private-data canaries are excluded. P for the latest-source fresh editable install: build-dependency acquisition timed out before install/startup/tests. Earlier core-install evidence retains its historical scope. Working packages/provider settings are unchanged and disposable fixtures/processes were cleaned up. This is not wheel-runtime, full/RAG, Git-publication or full-release acceptance. See workstream-8-release.md and outputs/acceptance/ws8-source-build-current/result.json; the failed install is recorded separately under ws8-core-fresh-20261020. The reusable runner lives in evaluations/core_install_acceptance.py. Next prerequisite is reliable package access or a prepared local wheelhouse, not another unchanged download attempt.
+
+
+## WS8 local-wheelhouse recovery — 21 October 2026
+
+Y for latest-source fresh core editable installation and selected acceptance. Public package access recovered: two build-tool wheels downloaded in 2.90 seconds and core dependencies in 45.17 seconds (74 wheels total). A new Windows Python 3.14.0 environment, with no system-site-packages, installed exclusively from these wheels with build isolation enabled and the package index disabled. Pip check, the legacy module --help and installed jeshla-auto-ai --help passed. All 222 selected offline regressions passed in 68.679 seconds, and the actual Streamlit AppTest initial screen rendered without errors with newly resolved Streamlit 1.66.0. Total successful rehearsal: 257.26 seconds, including setup and cleanup. This is selected synthetic core acceptance, not the entire project suite, real-browser/provider acceptance, optional RAG installation or fresh GitHub-clone acceptance.
+
+The first wheelhouse rehearsal passed installation and entry points, then exposed a runner-only metadata lookup error: editable source egg-info shadowed installed dist-info. The runner now checks the fresh environment's installed metadata and exact editable source URL. That earlier report is retained under ws8-core-wheelhouse-20261021; the corrected successful run is ws8-core-wheelhouse-fixed-20261021/result.json. No application implementation was changed. Working package and .env fingerprints remained unchanged, no real settings or persistent user data were copied, and disposable fixtures and owned processes were cleaned up. No provider/model requests ran; tests blocked external requests in their Python process.
+
+The reusable runner remains evaluations/core_install_acceptance.py; --wheelhouse selects downloaded wheels and --output-dir preserves previous reports. Wheel filenames and SHA-256 hashes are recorded in the successful report. The wheelhouse is a local Windows/Python-specific acceptance cache, not a universal dependency lock or publishing artifact. The earlier timeout is historical and no longer blocks scoped core editable setup. Full/RAG setup, broader WS2/WS3/WS4 quality, non-editable wheel runtime/data roots, release scope and general release completion remain pending. Workstream 8 stays I; Word synchronization is not claimed.
+
+## Optional profile acceptance and remaining gates on 21 October 2026
+
+Y for fresh RAG plus integration package installation, dependency consistency and both console entry points. Public resolution selected 129 distributions; the local cache contains 131 wheel files including the earlier build tools. The first installation reached its 300-second cap while installing packages. Deferring install-time bytecode compilation with --no-compile then passed installation in 72.80 seconds. A further fresh run with separately bounded ML import repeated installation successfully in 142.54 seconds. These timings are observations, not a guaranteed speedup. Python may compile bytecode on first use; no working environment or dependency versions were changed to obtain these results.
+
+Y for 246 selected offline regressions (88.051 seconds), zero failures/errors, and actual Streamlit AppTest initial rendering in the fresh Python 3.14.0 / Streamlit 1.66.0 environment. The 246 include the earlier 222 selected core checks; do not add these counts. Eleven optional imports passed, including openpyxl, pypdf, docx, FAISS, LangChain adapters, MCP, httpx2 and the actual Jira client module. No authentication or live Jira session was started. Real temporary TXT/DOCX/CSV ingestion produced three chunks, saved/reopened FAISS and BM25 indexes and returned the expected synthetic sources. A blank generated PDF was opened successfully; this does not certify arbitrary PDF extraction. The vector smoke deliberately uses fixture embeddings, not a pretrained model or a semantic-quality benchmark.
+
+P for the optional ML runtime/import gate: direct sentence_transformers import did not finish within 180 seconds in the first runtime attempt. The evaluator now isolates that import in an owned child with a 45-second cap, allowing unrelated parser/index and regression checks to finish. That child timed out at 45.60 seconds and stopped. The final report is intentionally pending/nonzero despite all 246 regressions passing. Its worker status reflects the incomplete optional runtime gate, not a failed regression. Total final rehearsal 388.01 seconds, including setup and cleanup. No model downloads occurred. Working package/.env fingerprints remained unchanged; disposable environments and owned processes were removed.
+
+Evidence: outputs/acceptance/ws8-rag-resolution-20261021, ws8-rag-fresh-20261021, ws8-rag-no-compile-20261021 and ws8-rag-bounded-import-20261021/result.json. Existing evaluations/core_install_acceptance.py gained --profile rag and --no-compile, scoped optional imports and synthetic parser/index checks; no application implementation or flat agent module was added. The Windows/Python-specific wheel cache and exact resolution list are acceptance evidence, not a universal lock file. Full learning-profile installation, non-editable wheel runtime, GitHub-clone acceptance and broad WS2/WS3/WS4 quality remain unaccepted. Word synchronization is not claimed.
+
+A separate live synthetic Groq memory review passed three cases: equal-authority conflict with both values and clarification, different projects, and different years. The fourth case hit HTTP 429 and the run stopped; five of eight cases remain unfinished. The evaluator previously rejected a complete JSON Markdown code block. It now accepts only a single complete JSON fence or plain JSON for semantic scoring and records plain-JSON request compliance separately. The three semantic passes used fences and do not establish plain-JSON compliance. Seven positive/negative parser checks and the eight scripted offline fixtures passed; these validate the harness, not additional live model cases. No private user histories or real project facts were sent, and temporary databases were unchanged and removed. Evidence: outputs/acceptance/ws3-memory-review-groq-all.json and ws8-memory-quality-probe-20261021. Groq quota remains the observed live-evaluation blocker; no persistent provider switch or blocked fallback retry was made.
+
+Workstream 8 remains I. Setup is no longer the unresolved core/RAG installation issue: remaining work is optional ML runtime and broader quality/release gates. Keep existing Y scope and parked P items distinct; do not rerun the same heavy import or rate-limited requests without a changed prerequisite or a targeted diagnostic.
+
+## Follow-up on 21 October 2026
+
+OpenRouter synthetic connectivity verified; one-model baseline 7/8, then live follow-up blocked by exact-source formatting and HTTP 429 quota exhaustion. Generic scope guidance passed 61 focused and 246 fresh offline tests; its targeted live role acceptance is unfinished. Cached real MiniLM sample passed 8/8 locally. Fresh RAG runtime still has a 60-second cold sentence-transformers import timeout; its 246 tests, other imports, parser/index smoke and UI startup passed. Working packages and .env stayed unchanged. Workstream 8 remains I; details and evidence are in workstream-8-release.md and workstream-3-memory.md. Word is not synchronized by this update.

@@ -1,6 +1,6 @@
 # Project structure audit
 
-Status I. Read-only source audit started 18 October 2026; no source files moved.
+Status Y for the scoped package relocation, including the remaining 13 helpers on 19 October 2026. Historical milestones and separate release limitations follow.
 
 ## Inventory
 
@@ -134,3 +134,30 @@ Supplied restarted-console transcript confirms persisted refactor_check, restore
 ## Post-refactor live browser approval passed
 
 User approved proposal 03ce876bed30401ca4dade7a73b71a7e. Read-only verification confirms outputs/refactor-approval-check.txt exists with exact requested content, 30 bytes, completed browser proposal and completed durable action receipt. No bypass file creation or additional commands were run. Evidence refactor-browser-approval-live.json. Core manual console/browser checks and exact create approval now have observed successes. Full365 user regression precedes the memory-summary fix; 23 affected checks plus fast console memory verification cover that fix. Word visual layout and broader full-release/RAG gates remain separate pending limitations. Backup retained.
+
+
+## Remaining top-level helper cleanup - 19 October 2026
+
+Y for the bounded implementation relocation: all 13 remaining active top-level helpers now live in existing child packages. No additional package layer was needed. Top-level agent/*.py files, apart from __init__.py, are compatibility forwarders only; they intentionally remain so existing imports and patches continue to work. New code should import the canonical modules below. Never duplicate implementation inside a wrapper or delete a wrapper without separately checking its external callers.
+
+| Previous import (retained) | Canonical implementation |
+|---|---|
+| `agent.browser_action_ui` | `agent.interfaces.action_approval` |
+| `agent.browser_activity` | `agent.interfaces.activity` |
+| `agent.citation_guard` | `agent.policies.citations` |
+| `agent.clarification_guard` | `agent.policies.clarification` |
+| `agent.project_budget` | `agent.runtime.project_budget` |
+| `agent.project_context` | `agent.runtime.project_context` |
+| `agent.project_decisions` | `agent.runtime.project_decisions` |
+| `agent.project_native_specs` | `agent.runtime.project_native_specs` |
+| `agent.terminal_input` | `agent.interfaces.terminal_input` |
+| `agent.timing` | `agent.runtime.timing` |
+| `agent.user_errors` | `agent.interfaces.errors` |
+| `agent.web_page_worker` | `agent.tools.web_page_worker` |
+| `agent.web_pages` | `agent.tools.web_pages` |
+
+Project orchestration/context/budgets and timing belong in runtime; frontend presentation, terminal input and browser activity belong in interfaces; deterministic citation/clarification rules belong in policies; public-page reading and its bounded worker belong in tools. Existing providers, actions, storage, memory, config and LangGraph packages retain their responsibilities. Tests belong under tests/, acceptance runners under evaluations/. Entry points remain streamlit_app.py and python -m agent.langgraph.langgraph_agent.
+
+Final verification reviewed on 20 October 2026: all 428 unique offline tests passed across two nonoverlapping batches (324 before the full-run 300-second cap, then the remaining 104 in 38.747 seconds). This is complete suite coverage across batches, not one uninterrupted full-suite run. Both batches used the offline guard. The 97 focused checks also passed. Source equivalence was rechecked for all 13 moves; agent/ now contains 29 compatibility modules plus __init__.py, with no active top-level function/class implementations. Evidence: outputs/acceptance/package-helpers-summary.json, package-helpers-full.log and package-helpers-remainder.log. The original timeout remains honestly recorded. Existing imports, module commands and working behavior are preserved within the tested scope. No new live provider/browser acceptance or full core release is claimed.
+
+Backups: outputs/package-helpers-before-20261019-151846 contains pre-change sources; the earlier full private backup remains retained. No .env, saved chats, facts, receipts or data-root settings are intentionally changed. Restart running interfaces after acceptance to load the relocated code.

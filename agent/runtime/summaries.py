@@ -2,6 +2,51 @@
 import json
 
 
+def recent_conversation_context(history, previous_exchange=None, *, keep=4000):
+    """Keep the immediately preceding exchange intact, separate from older context.
+
+    Checkpoints supply structured question/answer data so quoted role labels in
+    code or uploaded text cannot split the latest exchange. Legacy/direct callers
+    can recover the last exchange from the existing text history. The caller's
+    serialized input budget still applies; this helper never cuts an answer.
+    """
+    history = history if isinstance(history, str) else ""
+    exchange = None
+    if isinstance(previous_exchange, dict):
+        question, answer = previous_exchange.get("question"), previous_exchange.get("answer")
+        if isinstance(question, str) and isinstance(answer, str) and question.strip() and answer.strip():
+            exchange = {"question": question, "answer": answer}
+    if exchange is None:
+        before, separator, answer = history.rpartition("\nAssistant: ")
+        if separator:
+            prefix, user_separator, question = before.rpartition("\nUser: ")
+            if not user_separator and before.startswith("User: "):
+                question, user_separator = before[6:], "User: "
+            if user_separator and question.strip() and answer.strip():
+                exchange = {"question": question, "answer": answer}
+    older = history
+    if exchange:
+        suffix = "User: " + exchange["question"] + "\nAssistant: " + exchange["answer"]
+        if history.endswith(suffix):
+            older = history[:-len(suffix)].rstrip("\n")
+        elif history and ("\n" + suffix).endswith(history):
+            # The checkpoint's capped history is only the end of this answer.
+            older = ""
+    return {"previous_exchange": exchange or {}, "recent_conversation": older[-keep:],
+            "recent_conversation_truncated": len(older) > keep}
+
+
+def summary_due(history, turns_since_summary, *, minimum_turns=3, history_limit=16000):
+    """Batch ordinary summary work, but never defer at the checkpoint boundary.
+
+    compact_context still owns threshold, complete-turn and format validation.
+    The interval is persisted per chat, not shared between users or sessions.
+    """
+    if type(minimum_turns) is not int or not 1 <= minimum_turns <= 100:
+        raise ValueError("Summary interval must be from 1 to 100 turns.")
+    return turns_since_summary >= minimum_turns or len(history) > history_limit
+
+
 def compact_context(summary, history, model, *, threshold=10000, keep=4000, question_lookup=None):
     """Return summary, recent history, changed flag; errors preserve original context."""
     if not 2000 <= keep < threshold <= 16000:
@@ -37,8 +82,8 @@ def compact_context(summary, history, model, *, threshold=10000, keep=4000, ques
             "facts, decisions, and open_questions; each is a list of at most 10 short strings. "
             "Combine the prior summary and older turns. Retain concrete user-provided details, "
             "corrections, paths, goals and unresolved questions. Distinguish user assertions "
-            "from tool-verified results. Label retained facts as user-stated, assistant-reported, "
-            "or tool-verified only when actual tool evidence is present. An assistant claim "
+            "from tool-verified results. Begin EVERY fact and decision with exactly user-stated:, assistant-reported:, "
+            "or tool-verified:, followed by its content. Use tool-verified: only when actual tool evidence is present. An assistant claim "
             "that it checked a file is still assistant-reported without tool evidence. "
             "Keep distinct projects separate; never turn a project identity into a renamed other project. "
             "Only include open_questions explicitly asked in the supplied conversation and still unanswered. "
@@ -81,6 +126,25 @@ def validate_summary(raw):
     encoded=json.dumps(value,ensure_ascii=False)
     if len(encoded)>5000:
         raise ValueError("Summary too large; original context retained.")
+    return encoded
+
+
+
+def validate_generated_summary(raw):
+    """Require attribution on new data; legacy persisted summaries stay readable.
+
+    A source label is a model assertion, not proof of semantic entailment. This
+    guard detects omitted/unknown labels without guessing provenance or changing
+    a fact. The caller's existing one-correction budget owns recovery.
+    """
+    encoded=validate_summary(raw)
+    value=json.loads(encoded)
+    labels={"user-stated","assistant-reported","tool-verified"}
+    for field in ("facts","decisions"):
+        for item in value[field]:
+            label,separator,claim=item.partition(":")
+            if not separator or label.strip().casefold() not in labels or not claim.strip():
+                raise ValueError("New summary facts and decisions require an explicit source label; original context retained.")
     return encoded
 
 

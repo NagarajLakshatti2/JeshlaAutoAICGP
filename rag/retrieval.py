@@ -13,8 +13,8 @@ RERANK_TOP_K = 3
 
 RERANK_MODEL = "BAAI/bge-reranker-base"
 
-# Always resolve indexes relative to this file.
-DATA_DIR = Path(__file__).resolve().parent
+# Runtime indexes share the configured data root; code remains installed separately.
+from rag.paths import RAG_DIR as DATA_DIR
 
 
 @lru_cache(maxsize=1)

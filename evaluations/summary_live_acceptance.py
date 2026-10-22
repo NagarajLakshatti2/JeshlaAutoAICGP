@@ -2,9 +2,9 @@
 import argparse,json,os,secrets,sys,time
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
-parser=argparse.ArgumentParser();parser.add_argument("--provider",required=True,choices=["openrouter","groq","ollama"]);args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument("--provider",required=True,choices=["openrouter","groq","gemini","ollama"]);args=parser.parse_args()
 from dotenv import load_dotenv
-load_dotenv(ROOT/".env");os.environ["LLM_PROVIDER"]=args.provider
+load_dotenv(ROOT/".env");os.environ["LLM_PROVIDER"]=args.provider;os.environ["LLM_FALLBACK_ENABLED"]="false"
 from agent.context_summary import compact_context
 from agent.summary_model import call_summary_messages
 from agent.user_errors import user_error_message

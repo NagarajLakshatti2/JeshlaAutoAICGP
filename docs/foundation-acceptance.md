@@ -37,3 +37,12 @@ These use existing credentials/compute and consume hosted quota. --check native_
 ## Scope limits
 
 Verification covers these configured models and acceptance cases, not every possible model/prompt or complete production readiness. Full live browser workflows, summary correctness, advanced memory, grounding, side-effect recovery and core release acceptance remain in their respective workstreams. A different model requires fresh live acceptance.
+
+
+## OpenRouter endpoint recovery - 20 October 2026
+
+User console/browser failed with MODEL_OR_ENDPOINT HTTP 404 for nvidia/nemotron-3-super-120b-a12b:free. A synthetic direct API check independently reproduced 404, so this is not caused by the package relocation. OpenRouter public endpoint metadata reported 0% uptime over the previous 30 minutes at inspection; that supports availability trouble but does not establish the exact upstream cause. No rate/quota error was observed for this request.
+
+The free router passed a synthetic tool/result cycle but its greeting chose unnecessary reads and was slow, so it was not selected as the default. Groq passed a synthetic greeting through the shared conversation loop using openai/gpt-oss-20b, completed with no tool calls. Default LLM_PROVIDER changed to groq only; API keys, all provider models/budgets, chats and facts retained. Restart the console; select Groq in the browser or restart Streamlit for the new default. This does not implement automatic provider failover or restore the unavailable OpenRouter endpoint.
+
+Evidence: outputs/acceptance/openrouter-404-diagnostic.json, openrouter-free-tool-check.json, groq-recovery-greeting.json and provider-recovery-settings.json. Only synthetic requests were sent; no saved user history/files. An initial greeting-check script incorrectly expected task_status on successful answers; the final check uses the actual execution_outcome contract. No production Python code changed in this recovery. Prior 428-test package acceptance remains historical; no broad-suite rerun was needed for this one-key configuration change.

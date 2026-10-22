@@ -15,7 +15,7 @@ import threading
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from agent.config.paths import APPLICATION_ROOT
+from agent.config.paths import DATA_ROOT
 from typing import Any
 
 
@@ -33,7 +33,7 @@ class LongTermMemory:
     """
 
     def __init__(self, db_path: str | Path | None = None) -> None:
-        project_root = APPLICATION_ROOT
+        project_root = DATA_ROOT
         if db_path is None:
             db_path = project_root / "data" / "long_term_memory.sqlite3"
         self.db_path = str(db_path)

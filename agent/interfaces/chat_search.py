@@ -1,7 +1,7 @@
 """Explicit, bounded navigation through locally archived conversation text."""
 import streamlit as st
 from agent import browser_activity
-from agent.user_errors import user_error_message
+from agent.interfaces.errors import user_error_message
 
 
 def render_chat_search(backend):

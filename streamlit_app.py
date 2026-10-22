@@ -1,9 +1,9 @@
 """JeshlaAutoAI browser chat; run with python -m streamlit run streamlit_app.py."""
 import json,time
 import streamlit as st
-from agent.browser_backend import make_browser_backend
-from agent.user_errors import user_error_message
-from agent.browser_activity import log_browser_event
+from agent.interfaces.browser import make_browser_backend
+from agent.interfaces.errors import user_error_message
+from agent.interfaces.activity import log_browser_event
 from agent.interfaces.sidebar import initialize_chat,ensure_message_chat,render_sidebar
 from agent.interfaces.attachments import chat_attachments,attachment_question,render_upload_menu
 from agent.interfaces.chat_toolbar import provider_options,render_provider_picker
@@ -28,33 +28,36 @@ render_header_actions(backend,session)
 
 with st.container(horizontal=True,horizontal_alignment="center"):
     with st.container(width=960):
-        opened=st.session_state.chat_opened
-        turns=backend.turns(session) if opened else []
-        if not opened:
-            st.space("large");st.space("large")
-            st.title("What would you like to build?",text_alignment="center",anchor=False)
-            st.caption("Ask, explore, and work with your agent.",text_alignment="center")
-            st.space("large")
-        else:
-            if len(turns)>100:st.caption("Showing the latest 100 turns. The conversation download includes the full archive.")
-            for turn in turns[-100:]:
-                with st.chat_message("user"):st.markdown(turn["question"].split("\n\nUploaded document evidence (",1)[0])
-                with st.chat_message("assistant"):st.markdown(turn["answer"])
-            unsaved=st.session_state.get("unsaved_response",{}).get(session)
-            if unsaved:
-                with st.chat_message("user"):st.markdown(unsaved["question"].split("\n\nUploaded document evidence (",1)[0])
-                with st.chat_message("assistant"):st.markdown(unsaved["answer"])
-            with st.popover("Conversation",icon=":material/more_horiz:",type="tertiary"):
-                if turns:
-                    if st.download_button("Download conversation",json.dumps(turns,ensure_ascii=False,indent=2),file_name="conversation.json",mime="application/json"):
-                        log_browser_event("download_clicked",session=session,turns=len(turns))
-                latest=st.session_state.get("answer_downloads",{}).get(session)
-                if latest:st.download_button("Download latest answer",latest,file_name="answer.md",mime="text/markdown",key="download_answer_"+session)
+        # History and notices grow between reruns. Keep them in one stable
+        # sibling slot so an old composer cannot linger between chat messages.
+        with st.container(key="conversation_content"):
+            opened=st.session_state.chat_opened
+            turns=backend.turns(session) if opened else []
+            if not opened:
+                st.space("large");st.space("large")
+                st.title("What would you like to build?",text_alignment="center",anchor=False)
+                st.caption("Ask, explore, and work with your agent.",text_alignment="center")
+                st.space("large")
+            else:
+                if len(turns)>100:st.caption("Showing the latest 100 turns. The conversation download includes the full archive.")
+                for turn in turns[-100:]:
+                    with st.chat_message("user"):st.markdown(turn["question"].split("\n\nUploaded document evidence (",1)[0])
+                    with st.chat_message("assistant"):st.markdown(turn["answer"])
+                unsaved=st.session_state.get("unsaved_response",{}).get(session)
+                if unsaved:
+                    with st.chat_message("user"):st.markdown(unsaved["question"].split("\n\nUploaded document evidence (",1)[0])
+                    with st.chat_message("assistant"):st.markdown(unsaved["answer"])
+                with st.popover("Conversation",icon=":material/more_horiz:",type="tertiary"):
+                    if turns:
+                        if st.download_button("Download conversation",json.dumps(turns,ensure_ascii=False,indent=2),file_name="conversation.json",mime="application/json"):
+                            log_browser_event("download_clicked",session=session,turns=len(turns))
+                    latest=st.session_state.get("answer_downloads",{}).get(session)
+                    if latest:st.download_button("Download latest answer",latest,file_name="answer.md",mime="text/markdown",key="download_answer_"+session)
 
-        for notice in st.session_state.get("chat_notices",[]):st.warning(notice)
-        if opened:render_status(st.session_state.get("request_status_by_chat",{}).get(session))
-        from agent.browser_action_ui import render_pending_actions
-        render_pending_actions(backend,session)
+            for notice in st.session_state.get("chat_notices",[]):st.warning(notice)
+            if opened:render_status(st.session_state.get("request_status_by_chat",{}).get(session))
+            from agent.interfaces.action_approval import render_pending_actions
+            render_pending_actions(backend,session)
 
         with st.container(border=True,key="message_composer"):
             prompt=st.chat_input("Message JeshlaAutoAI…",key="message",height=100,submit_mode="disable",disabled=st.session_state.get("work_mode","Chat")=="Cowork")

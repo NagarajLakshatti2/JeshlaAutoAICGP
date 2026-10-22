@@ -14,3 +14,19 @@ def provider_selection(provider):
     token=_selected.set(provider)
     try:yield
     finally:_selected.reset(token)
+
+
+_output_limit_mode=ContextVar("output_limit_passthrough",default=None)
+
+
+@contextmanager
+def output_limit_passthrough(*, data_only=False):
+    """Let the conversation composer handle truncation; never accept a draft."""
+    token=_output_limit_mode.set("data" if data_only else "text")
+    try:yield
+    finally:_output_limit_mode.reset(token)
+
+
+def defer_output_limit(error):
+    mode=_output_limit_mode.get()
+    return mode=="data" or (mode=="text" and not getattr(error,"tool_call_output",False))

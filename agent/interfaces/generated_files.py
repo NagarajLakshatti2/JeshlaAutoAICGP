@@ -1,6 +1,6 @@
 """Download only explicit snapshots of unchanged, approved file creations."""
 import streamlit as st
-from agent.user_errors import user_error_message
+from agent.interfaces.errors import user_error_message
 from agent.actions.receipts import ActionBlocked
 
 

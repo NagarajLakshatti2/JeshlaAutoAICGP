@@ -82,7 +82,8 @@ def discover_feature_mappings(project_root, limit=500, jira_tag_pattern=None):
 
 def main():
     from dotenv import load_dotenv
-    load_dotenv(Path(__file__).resolve().parents[2] / ".env")
+    from agent.config.paths import DATA_ROOT
+    load_dotenv(DATA_ROOT / ".env")
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=os.getenv("AI_PROJECT_ROOT"))
     parser.add_argument("--limit", type=int, default=500)

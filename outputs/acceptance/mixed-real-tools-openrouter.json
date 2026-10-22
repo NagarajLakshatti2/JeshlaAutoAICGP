@@ -1,8 +1,0 @@
-{
-  "provider": "openrouter",
-  "status": "P",
-  "error": "OPENROUTER [QUOTA_EXHAUSTED] | HTTP 429 | Account quota appears exhausted. Check the dashboard/reset time; no automatic retry. | Attempts: 1. No action was executed from this failed response.",
-  "tool_activity": [],
-  "seconds": 1.69,
-  "scope": "Live configured model; real temporary scoped SQLite and BM25 retrieval plus actual public search/page tools. No private project/history export; no embeddings or production index change. Sample facts/title/source checks only."
-}

@@ -1,1 +1,0 @@
-Refactor approval test passed.
