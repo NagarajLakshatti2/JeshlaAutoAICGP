@@ -27,8 +27,6 @@ jobs:
     name: Offline Tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    env:
-      JESHLA_HOME: ${{ runner.temp }}/jeshla-offline-state
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -40,6 +38,8 @@ jobs:
       - name: Check dependencies
         run: python -m pip check
       - name: Run guarded offline tests
+        env:
+          JESHLA_HOME: ${{ runner.temp }}/jeshla-offline-state
         run: python tests/run_offline.py
       - name: Upload test progress on failure
         if: failure()
