@@ -552,3 +552,18 @@ class ExecutionEvidenceTests(unittest.TestCase):
         self.assertEqual(result["task_status"],"incomplete")
         self.assertFalse(result["answer_available"])
         self.assertNotIn("it passed",result["answer"])
+
+    def test_bold_actual_heading_colon_requires_real_run_disclosure(self):
+        from agent.policies.answer_quality import execution_claim_issue
+        for heading in ("**Actual Execution:**", "### **Actual Output:**", "**Observed output:**", "**Execution results:**", "**Actual Execution**:"):
+            with self.subTest(heading=heading):
+                self.assertIsNotNone(execution_claim_issue(heading+"\nWhen you run the code, the output matches the expected result exactly."))
+                self.assertIsNone(execution_claim_issue(heading+"\nThe example was not run here; the result above is expected output."))
+
+    def test_bold_actual_heading_is_corrected_once_in_shared_answer_flow(self):
+        bad={"content":"**Actual Execution:**\nWhen you run the code, the output matches the expected result exactly."}
+        good={"content":"**Expected Output:**\nPredicted: 42.\n**Actual Execution:**\nThe example was not run here."}
+        result,model=self.answer([bad,good])
+        self.assertEqual(model.call_count,2)
+        self.assertEqual(result["execution_outcome"],"completed")
+        self.assertEqual(result["answer"],good["content"])

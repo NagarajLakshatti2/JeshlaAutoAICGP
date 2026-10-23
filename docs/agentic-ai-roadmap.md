@@ -36,21 +36,46 @@ Automation-framework development is deferred until the core-agent acceptance gat
 
 The general agent's console/browser core, storage, controlled actions and scoped reliability checks work. GitHub CI for ead9aa8 passed 701 tests and both startup jobs. An exact fresh GitHub clone passed dependency-isolated core installation and documented Python-module console/browser acceptance. The trusted local-user preview remains Y; full release remains P.
 
-Remaining limits are explicit: WS2 Ollama summary acceptance timed out; WS3 expanded semantic import is blocked by Windows Application Control and a full hosted review remains unaccepted; WS4 hybrid and source-verified answer quality remain P despite the new 18/18 keyword pass. A native Windows installed launcher is separately blocked by signing policy. Historical privacy/history, optional full-profile setup and full release-scope agreement remain open. Completed checks are not reopened merely because these wider gates are parked.
+Latest WS3 validation: Gemini passed all eight post-fix synthetic memory-review cases in one coherent run (90.06s evaluator; 99.76s including the preceding quota-stopped OpenRouter/Groq attempts). This finite hosted-review gate is now Y; expanded local semantic calibration remains P. No application or settings change was needed. Earlier 85 focused offline passes and the subsequent broad-suite timeout retain their separate scope. See workstream-3-memory.md.
+
+Remaining limits are explicit: WS2 Ollama summary acceptance is explicitly parked by the user; WS3 expanded semantic import is blocked by Windows Application Control; its finite eight-case hosted review now passes on Gemini; WS4 hybrid and source-verified answer quality remain P despite the new 18/18 keyword pass. A native Windows installed launcher is separately blocked by signing policy. Historical privacy/history, optional full-profile setup and full release-scope agreement remain open. Completed checks are not reopened merely because these wider gates are parked.
+
+**User-directed parking — 23 October 2026:** Ollama-related development, performance investigations and outstanding live acceptance are parked until explicitly resumed. Current development focus is OpenRouter, Groq and Gemini. Parking a task does not disable/uninstall Ollama or alter configured runtime fallback; existing completed evidence and the P marker remain.
+
+## Pending gates and blocker labels - 23 October 2026
+
+P means unfinished; the reason label distinguishes an external block, user-directed parking, a pending fix, and a release decision. Completed Y evidence remains accepted within its stated scope. This current register supersedes historical pending CI/clone statements elsewhere in the document.
+
+| Workstream | P checklist rows | Current reason | What closes the gate |
+|---|---:|---|---|
+| WS2 | 1 | **P - PARKED BY USER**: Ollama summary/performance/context-fit acceptance | Explicit user resumption, then bounded local acceptance; no Ollama work resumes automatically |
+| WS3 | 1 | **P - BLOCKED**: Windows Application Control blocks the SciPy native component required for expanded semantic calibration | Approved compatible native build/runtime, followed by the existing calibration; do not bypass device policy |
+| WS4 | 1 | **P - BLOCKED / PENDING FIX**: hybrid runtime is policy-blocked; factual/source-coverage acceptance is unfinished and now parked after the bounded check | Approved hybrid runtime plus a corrected, independently source-audited answer-quality pass; provider quotas are temporary test constraints, not proof of correctness |
+| WS8 | 4 | **P - BLOCKED BY DEPENDENCIES**: core acceptance depends on the above; native launcher signing is blocked; optional ML shares the native-runtime block. Full release scope is **P - AWAITING USER DECISION** | Resolve the dependencies and approved launcher/runtime requirements, or explicitly agree a smaller release scope with limitations; the existing Python-module/browser preview remains accepted |
+
+**WS1-WS8 total: 7 P checklist rows, 1 X release-completion row.** WS8 umbrella rows overlap earlier gates; these are not seven independent implementation tasks. WS1, WS5, WS6 and WS7 have no P checklist rows. No runtime, security policy, provider configuration, installed package or accepted release scope changes are made by these labels.
+
+## WS4 bounded negative-review routing check - 23 October 2026
+
+**Y - conservative review routing; P - broader factual/source quality PARKED after one changed-path live check.** A valid review marked supported while listing concrete issues is now treated as revise, with every issue preserved and no asserted supported source. The existing shared answer flow gets one revision and a new review; repeated concerns still withhold the answer. Invalid negative-review format corrections still cannot erase earlier concerns. No action permissions, provider settings or module layout changed.
+
+Three regressions reproduced the routing failure before the fix; all **287 affected offline tests pass** afterward. One isolated Gemini run finished in **30.08 seconds** (30.35 seconds including control/cleanup), eight model calls, and exercised concern-to-answer revision without a format-retry dead end. Manual review did **not** accept overall quality: the omitted-extends rule was overbroad and the retrieved section did not ground the example's method-dispatch/field-hiding claims. No Java was compiled or executed. No second live attempt is made. Hybrid remains policy-blocked; Ollama remains user-parked.
+
+Evidence: `outputs/acceptance/ws4-negative-review-routing-20261023-123215/summary.json`, `after.json`, `live/live.json` and `manual-audit.json`. WS1-WS8 remains **7 P checklist rows and 1 X**. This is focused compatibility coverage, not a new full-suite or full-release pass.
 
 ## Core-completion workstreams (not a restart of learning phases)
 
 | Workstream | Scope | Current status | Acceptance gate |
 |---|---|---|---|
 | **Y** — 1. Agent foundation | Provider adapter, native tool calls, direct answers, console/browser entry points | Four provider adapters are supported: Groq, OpenRouter, Ollama and Gemini. Earlier three-provider direct/tool acceptance is retained; Gemini direct use was user verified. Full four-provider live release acceptance is not claimed. | A direct answer and tool-result-answer cycle work; failures are understandable; available models/providers are explicit |
-| **P** — 2. Conversations and context | Named chats, archived transcripts, summaries and restart isolation | Selected actual-chat Chrome reload/restart/switch and Groq actual-history samples pass. Ollama changed-path summary acceptance remains parked after timeout. | Complete the outstanding Ollama gate; wider universal quality is not claimed |
-| **P** — 3. Useful long-term memory | Scoped facts, provenance, revisions, retrieval and controlled suggestions | Storage and exact-key guard work; the fixed live case passes. Full hosted review is incomplete and expanded real-encoder calibration is blocked by SciPy Code Integrity policy. | Approved embedding runtime and a complete available-provider review run |
-| **P** — 4. Reliable knowledge and search | Documents, structured data, indexed retrieval, web pages and citations | Existing source/citation guards plus 18 new current-corpus keyword cases pass. Hybrid and actual source-verified answer quality remain parked. | Approved model runtime and successful wider retrieval/answer acceptance |
+| **P - PARKED BY USER** — 2. Conversations and context | Named chats, archived transcripts, summaries and restart isolation | Selected actual-chat Chrome reload/restart/switch and Groq actual-history samples pass. Remaining Ollama acceptance is explicitly user-parked; do not resume it until requested. | Retain completed hosted/core checks; defer the Ollama gate without claiming it passed |
+| **P - BLOCKED** — 3. Useful long-term memory | Scoped facts, provenance, revisions, retrieval and controlled suggestions | Storage/exact-key guards work. Gemini passed one complete post-fix eight-case review with exact sources, scope exclusion and no mutation. Expanded real-encoder calibration remains blocked by SciPy Code Integrity policy. | Approved embedding runtime for the remaining semantic calibration |
+| **P - BLOCKED / PENDING FIX** — 4. Reliable knowledge and search | Documents, structured data, indexed retrieval, web pages and citations | Exact passage selection and conservative negative-review routing pass 287 affected tests. One changed-path Gemini run completed the real answer revision; manual audit still rejected factual/source coverage, so wider quality is parked. Hybrid remains blocked by the native runtime. | Approved embedding runtime plus successful factual/source-coverage acceptance |
 | **Y** — 5. General agent reasoning | Dynamic clarification, task decomposition when useful, observe/replan, tool selection, explicit completion criteria | Bounded tool selection, clarification, real-file planning/recovery and complete/partial/blocked outcomes verified. Universal reasoning or semantic correctness is not claimed. | Complete a defined multi-step task; recover from a failed tool; avoid repeated calls; distinguish complete, partial and blocked outcomes |
 | **Y** — 6. Controlled actions | Classified local tools, exact console/browser approvals and durable receipts | Exact console/browser approval, decline, durable receipts and restart/replay protection verified for trusted local-user scope. OS sandboxing and public multi-user authentication are outside this scope. | Trusted local-user core; OS command containment and wider release hardening are not claimed |
 | **Y** — 7. Reliability and observability | Useful error types, timings, retries/backoff, budgets, concurrency, source/tool activity, regression coverage | Scoped crash/save recovery, simulated provider-failure presentation/recovery and configurable context budgets verified. Full offline regression: 343 tests passed on 18 October 2026. Live provider fault injection and exact token fit are not claimed. | Connection, quota, malformed output, interrupted process and concurrent-chat cases are handled; model-visible claims match real tool evidence |
-| **P** — 8. Core-agent release | Integrated acceptance, setup, dependency profiles and backup/recovery | Y for trusted local preview, GitHub 701-test CI/startup and exact-clone Python-module/browser setup. P for native launcher signing, optional/full-profile quality, historical privacy/history and full release scope. | Resolve or explicitly scope the remaining release gates; existing setup passes retain Y |
-| **P** — 9. Automation-framework integration | Connect the completed agent to requirements, test design, UI inspection, code generation and execution/reporting | PARKED by plan. Start framework integration only after Workstream 8 release acceptance and user decision. Proposed UI milestone is scheduled between Workstreams 8 and 9 and has not started. | Begin only after Workstream 8 acceptance and user decision to move to framework work |
+| **P - BLOCKED / AWAITING RELEASE DECISION** — 8. Core-agent release | Integrated acceptance, setup, dependency profiles and backup/recovery | Y for trusted local preview, GitHub 701-test CI/startup and exact-clone Python-module/browser setup. P for native launcher signing, optional/full-profile quality, historical privacy/history and full release scope. | Resolve or explicitly scope the remaining release gates; existing setup passes retain Y |
+| **P** — 9. AI-assisted testing and automation integration | Manual test design, Jira/MCP traceability, API/web/mobile adapters, project-aligned tests and evidence-based reporting | PLAN READY: named planning chat reviewed; stages and first local-requirement pilot defined below. Implementation/execution remains parked pending pilot scope. | Selected workflow acceptance and explicit scope decision; WS8 remains P |
 
 ## Memory development details
 
@@ -98,7 +123,7 @@ An X item can be incomplete without being untouched; the item description should
 
 ### Workstream 2 — Conversations and context
 
-**Overall: P — one parked acceptance gate remains: changed-path Ollama summary attribution/context fit (latest request timed out).** Groq actual-default sampling passed 13 checks across three historical windows. Actual-chat Chrome reload/full server-browser restart and alpha/beta/alpha switching now pass on isolated copies of two saved chats, retaining exact summaries and all 77 original turns; 15 focused offline tests pass. Existing working features retain Y. Wider all-chat/all-browser/all-provider quality is not claimed; see workstream-2-summaries.md.
+**Overall: P — remaining Ollama acceptance is explicitly PARKED BY USER (23 October).** Hosted/core chat, actual-history samples and selected actual-chat browser restart/switch checks retain Y. Do not retry Ollama inference, troubleshoot its performance/context fit, download a replacement model or request memory cleanup for this gate until the user explicitly resumes Ollama work. This parks development/testing only; the installed runtime, adapter and provider/fallback configuration are unchanged. Independent OpenRouter/Groq/Gemini work can continue.
 
 - **Y** — Create, list and reopen named chats (user execution and offline tests).
 - **Y** — Case-insensitive startup Y/N and 100-character titles work (offline tests and user execution; title limit updated with the browser follow-up).
@@ -112,7 +137,7 @@ An X item can be incomplete without being untouched; the item description should
 - **Y** — Scoped hosted Continue acceptance on Groq (22 October): three fresh processes preserve a completed section, resume only unfinished sections, and consolidate locally without section replay. Three real section-generation calls; initial overflow, outline and pause injected; temporary stores only. This is shared-backend acceptance, not UI clicks or all-provider/factual quality. See outputs/acceptance/ws2-live-continue-20261022/summary.json.
 - **Y** — Verify summary persistence, restart, chat switching and complete transcript preservation with real SQLite storage and mocked models.
 - **Y** — Additional actual-default historical-window accuracy sampling (23 October): project identity/source roles, PDF correction with undecided folder, and historical approved/pending action distinction; 3 windows / 13 checks pass on Groq in 5.71s. No archive/checkpoint changes; this is finite sampled coverage, not universal summary accuracy. Evidence: outputs/acceptance/ws2-completion-20261023/actual-default-windows.json.
-- **P — PARKED** — Changed-path Ollama summary attribution acceptance: one context-fitting synthetic retest ended in RESPONSE_TIMEOUT after 423.75s, before producing summary data. No new attribution verdict or repeated slow run. Saved settings unchanged; successful local inference is the remaining prerequisite. Earlier 6/7 evidence predates the label guard.
+- **P — PARKED BY USER** — All remaining Ollama-specific acceptance/performance/context-fit work is deferred until explicit user resumption. The previous qwen2.5-coder:7b summary ended in RESPONSE_TIMEOUT after 423.75s with no summary verdict; the later resource preflight did not run inference. No new retry, model download/replacement, uninstall or provider/fallback configuration change is authorized by this parking instruction. Earlier completed Ollama foundation evidence retains its historical Y scope.
 - **Y** — User verified console restart recall and session switching; browser screenshots, separate transcript exports and live event logs verify sampled chat separation.
 - **Y** — Scoped live-generated summary backend isolation across a fresh-process restart and alpha/beta/alpha switching passed on Groq, with full temporary transcript retention and other-user exclusion (20 October 2026). Full live UI summary-content restart/switch acceptance across actual chats/providers remains **P** and is not implied by this backend fixture.
 - **Y** — Isolated Chrome desktop UI summary reload and full server/browser restart with alpha/beta/alpha switching passed using real Groq summaries of synthetic chats (20 October 2026). Original turns, report formats and scope isolation were preserved; reopening made no summary generation calls. This fixture uses deterministic acknowledgement answers and does not close actual-chat/provider coverage.
@@ -121,7 +146,7 @@ An X item can be incomplete without being untouched; the item description should
 
 ### Workstream 3 — Long-term memory
 
-**Overall: P — two gates are parked: complete hosted conflict review and expanded local semantic quality.** Groq passed the fixed exact-key case before quota exhaustion; no full eight-case provider run passed. The new 16-case local calibration stopped before encoding because Windows Application Control blocked a SciPy native component; zero semantic cases were evaluated. Seven focused offline tests passed. Storage/provenance/corrections and prior cached 8/8 evidence retain Y. See workstream-3-memory.md for prerequisites.
+**Overall: P — BLOCKED: expanded local semantic calibration requires an approved native runtime.** The complete post-fix eight-case hosted review now passes on Gemini, including explicit role distinctions, unresolved conflict, current corrections, age review and instructions embedded in facts. All nine checks pass for every case in that single run; no provider results were pooled. The 16-case local semantic calibration remains blocked before encoding by Windows Application Control. Existing storage/provenance/correction evidence retains Y. See workstream-3-memory.md.
 
 - **Y** — Save, update, show and forget explicit facts (offline tests; save/show/forget also user verified).
 - **Y** — Deleted seed facts are not automatically reinserted (offline regression).
@@ -129,19 +154,20 @@ An X item can be incomplete without being untouched; the item description should
 - **Y** — Saved facts reach normal LLM conversation (user execution).
 - **Y** — Optional local-only MiniLM semantic retrieval is integrated with scoped SQLite facts and search_memory; lexical default preserved.
 - **Y** — Sampled cached real-MiniLM baseline passed 8/8 fixed checks on 21 October: four paraphrase top-one matches, two unrelated-query rejections, correction and deletion, with scoped SQLite facts and the unchanged 0.35 threshold. No API calls/downloads; process-only thread limits used.
-- **P — PARKED** — Expanded local semantic calibration: 16 new expectations are defined, but the 23 October working-environment run stopped before the first encoder output. An import-only trace identifies Windows Application Control blocking scipy.sparse.csgraph._traversal; an approved native build/runtime is required. No matching-quality failure or threshold change is inferred. Seven offline tests pass; prior cached 8/8 and separate fresh-install timeout retain their historical scope. Evidence: outputs/acceptance/ws3-semantic-calibration-20261023/summary.json.
+- **P — BLOCKED** — Expanded local semantic calibration: 16 new expectations are defined, but the 23 October working-environment run stopped before the first encoder output. An import-only trace identifies Windows Application Control blocking scipy.sparse.csgraph._traversal; an approved native build/runtime is required. No matching-quality failure or threshold change is inferred. Seven offline tests pass; prior cached 8/8 and separate fresh-install timeout retain their historical scope. Evidence: outputs/acceptance/ws3-semantic-calibration-20261023/summary.json.
 - **Y** — Bounded lexical archived-conversation search is connected to the shared agent, scoped to user/memory-space and current or explicitly selected chats, with chat/turn/time references. 210 offline tests and an actual local archive lookup pass; hosted tool-choice acceptance remains P.
 - **Y** — Fact provenance, existing timestamps and verification labels are stored and exposed in memory context/commands. Backward-compatible migration preserves all 5 existing database rows; 203 offline tests pass. See [workstream-3-memory.md](workstream-3-memory.md).
 - **Y** — Explicit same-key corrections preserve scoped revision history; normal retrieval uses current values only. MEMORY HISTORY key reviews revisions; FORGET deletes associated history. 206 offline tests pass.
 - **Y** — Advisory related-fact conflict candidates and configurable storage-age review are implemented; no automatic merge, deletion or truth claims.
 - **Y** — Large memory-review tool responses preserve complete JSON, whole visible facts, source metadata, valid visible candidate pairs and an explicit omitted-results warning. Four new regressions and 89 focused offline tests pass (20 October 2026); stored facts are unchanged.
-- **Y** — Reproduced exact-key/provenance confusion is guarded for explicit structured memory-key requests (22 October): one bounded correction, no key guessing or fact mutation; 145 affected offline checks pass including six new regressions. Post-fix live Groq different_projects now passes all nine case checks with exact saved keys (23 October); the full eight-case run remains P after quota exhaustion. See outputs/acceptance/ws3-completion-20261023/summary.json.
-- **P — PARKED** — Complete eight-case contradiction/review acceptance: 23 October independent runs stopped on OpenRouter INVALID_RESPONSE (1 pass), Groq HTTP 429 (2 passes, including the fixed exact-key case), and Gemini RESPONSE_TIMEOUT (no completed case). No coherent 8/8 pass, pooled-provider pass or strict Gemini wall-time guarantee is claimed. Previous 7/8 and offline evidence retains its historical scope. Capacity/connectivity and valid output are prerequisites for the next bounded retest.
+- **Y** — Reproduced exact-key/provenance confusion is guarded for explicit structured memory-key requests (22 October): one bounded correction, no key guessing or fact mutation; 145 affected offline checks pass including six new regressions. Post-fix live Groq different_projects now passes all nine case checks with exact saved keys (23 October); the later coherent Gemini eight-case run now passes; earlier quota-stopped runs remain historical evidence. See outputs/acceptance/ws3-completion-20261023/summary.json.
+- **Y** — Role-review guidance correction (23 October): removed unconditional clarification instructions from the memory tool description/result note, retaining scope comparison and clarification for unresolved facts. The previously failing different_roles case passes all nine checks on OpenRouter after the change; 85 focused offline tests pass. Memory storage, candidate scoring and approvals are unchanged. Evidence: outputs/acceptance/ws3-review-followup-20261023-035750/role-after.json.
+- **Y** — Complete finite eight-case contradiction/review acceptance (23 October): Gemini gemini-3.1-flash-lite passed all eight post-fix cases in one coherent run, all nine checks per case, plain JSON throughout and unchanged temporary databases. Evaluator 90.06s; total provider sequence 99.76s. Earlier OpenRouter quota exhaustion and Groq rate-limit attempts remain separately recorded and are not pooled into the pass. No application/settings/user-memory changes. Evidence: outputs/acceptance/ws3-bounded-review-20261023-042338/gemini.json and summary.json. This is sampled review quality, not universal semantic or all-provider acceptance.
 - **Y** — Scoped suggestions require explicit ID-bound accept/reject; no automatic saved facts or existing-key overwrite. 214 offline tests and temporary command integration pass; live model suggestion selection remains unverified.
 
 ### Workstream 4 — Knowledge and evidence
 
-**Overall: P — local keyword retrieval coverage extended; hybrid and actual-answer quality remain parked.** On 23 October, 18 new current-file TXT/DOCX/CSV source/location/evidence cases and 13 focused offline tests passed, with source/index hashes unchanged. Two wider gates remain: hybrid/semantic retrieval with an approved embedding runtime, and hosted source-verified entailment/version accuracy. No production code change was needed; see workstream-4-grounding.md.
+**Overall: P — BLOCKED / QUALITY PARKED after a bounded check.** Hybrid needs an approved native runtime. Conservative concern-to-answer revision now passes 287 affected tests and one actual Gemini flow; manual audit still rejected the final factual/source coverage. Stop repeated live attempts; existing scoped Y evidence is retained. See workstream-4-grounding.md.
 
 - **Y** — Implement document ingestion, metadata and recursive chunking in rag/ingest.py; artifacts are present.
 - **Y** — Implement FAISS/BM25 hybrid retrieval and BGE reranking in rag/retrieval.py openand rag/query.py.
@@ -164,7 +190,11 @@ Latest live-quality gate (22 October): the exact original Java request is still 
 - **Y** — Re-evaluated existing keyword indexes locally: baseline 1/8 expected source/location/keyword cases; report document-keyword-baseline.json.
 - **Y** — Normalized/source-aware keyword ranking and bounded same-page context pass 8/8 audited source/location/keyword cases (6/8 original labels; two page errors independently checked against PDF). 240 offline tests pass.
 - **Y** — Extended current-corpus keyword coverage (23 October): 18 new predeclared cases across TXT/DOCX/CSV and absent-keyword queries pass; 16 positive labels independently match current source locations before search. Structured visible evidence and source/index immutability verified; 13 focused offline tests pass. No application/ranking change or API/model call. Scope: candidate-source coverage, not semantic precision or answer entailment. Evidence: outputs/acceptance/ws4-relevance-20261023/summary.json.
-- **P — PARKED** — Wider hybrid/semantic relevance and actual source-verified answer quality remain outside the earlier 8-case and new 18-case keyword samples. An approved embedding runtime and available hosted review are prerequisites; no repeated blocked ML or live Java attempt was made. Historical 64/64 excerpt consistency and 256 offline tests retain their scope, not complete-file/external freshness proof.
+- **Y** — Bold execution-heading follow-up (23 October): colon-inside-bold forms such as **Actual Execution:** now require a local not-run disclosure or supplied-log attribution. Two regressions reproduced the miss before editing; all 175 affected offline checks pass afterward. Captured public draft now returns revise locally with zero provider calls. Existing source-review validation is unchanged. Evidence: outputs/acceptance/ws4-gemini-public-20261023-043042/guard-after.json.
+- **Y** — Source-review feedback implementation (23 October): explicit draft-versus-source field descriptions, safe indexed validation errors and one changed correction; four new regressions plus existing guards pass (179 affected tests). A 302-case before/after comparison found no changed acceptance decisions. Unsupported quotes, unread URLs, absent draft claims and repeated invalid reviews remain rejected. Live source-quality acceptance is separately P. Evidence: outputs/acceptance/ws4-review-feedback-20261023-045648/offline-tests.json and validator-comparison.json.
+- **Y** — Exact passage-selection implementation and concern-preserving correction guard (23 October): supplied IDs resolve to exact draft/source text and pass the existing provenance checks; old exact-text replies remain supported. Unknown/stale IDs, wrong-page citations, mixed shapes and duplicate anchors are rejected. A format-only retry cannot clear substantive issues and approve the same draft. Ten new regressions and all 285 affected tests pass; a single live ID-format workflow completed, but its factual quality was not accepted. Evidence: outputs/acceptance/ws4-passage-selection-20261023-052742/final-tests.json, manual-audit.json and postfix-replay.json.
+- **Y** — Conservative negative-review routing (23 October): a supported verdict with valid concrete issues becomes revise with issues preserved; the existing one-answer-revision/new-review flow handles it. Repeated concerns still stop publication; invalid negative format repairs cannot erase concerns. Three regressions failed before the fix; all 287 affected tests pass. One public Gemini run confirms routing, not broad factual quality. Evidence: outputs/acceptance/ws4-negative-review-routing-20261023-123215/summary.json.
+- **P — BLOCKED / PENDING FIX** — Wider hybrid/semantic relevance is blocked by native-runtime policy; actual source-verified answer quality needs a correction and independent acceptance. Hybrid requires an approved native runtime. Passage-ID selection resolved the observed copying failure, but the live answer failed manual source/factual review; format compliance is not entailment. The final guard blocks concern-erasing approval in a captured local replay; The later changed-path live run exercised real answer revision, but manual audit still rejected source coverage and an overbroad rule; factual quality is now PARKED after that bounded attempt. No further identical request is scheduled. Ollama is separately user-parked.
 - **Y** — Structured indexed source IDs, bounded excerpts and document-citation validation are integrated while legacy text/hybrid entry points remain compatible. 237 offline tests pass.
 - **Y** — Integrate structured CSV/Excel retrieval in the active conversation loop: real temporary CSV/XLSX row, sheet/header selection, truncation and failed/empty-read integration verified by 245 offline tests. General calculations, answer entailment and live provider acceptance remain pending.
 - **Y** — Sampled real-tool mixed-source acceptance passed on Gemini 3.1 Flash-Lite in 19.49 seconds: scoped temporary SQLite memory, real temporary normalized BM25 document retrieval, actual official web search and page reading produced a correct combined answer with returned DOC ID and source URL. All eight sample checks passed, including unrelated-user exclusion. General entailment/novel-query quality remain under the broader P quality item; earlier Groq/OpenRouter quota blocks remain historical.
@@ -210,14 +240,14 @@ Acceptance is for a trusted local-user agent. Approved Python/build commands use
 
 ### Workstream 8 — Core-agent release gate
 
-**Overall: P — trusted local preview, hosted CI and exact-clone Python-module/browser core setup are Y.** GitHub ead9aa8 passed 701 tests and both startup jobs. Direct fresh clone/install/provenance and console persistence/browser render passed. The native Windows launcher remains P under Code Integrity signing policy; historical privacy, optional ML, wider model quality and full release agreement also remain pending.
+**Overall: P — BLOCKED BY DEPENDENCIES / AWAITING RELEASE DECISION. Trusted local preview, hosted CI and exact-clone Python-module/browser core setup are Y.** GitHub ead9aa8 passed 701 tests and both startup jobs. Direct fresh clone/install/provenance and console persistence/browser render passed. The native Windows launcher remains P under Code Integrity signing policy; historical privacy, optional ML, wider model quality and full release agreement also remain pending.
 
-- **P** — Pass every core-agent acceptance item below. Evidence review completed in core-release-review.md; broad summary, semantic recall, retrieval quality and optional/full-profile install gates remain unfinished; current scoped core editable setup is accepted.
+- **P — BLOCKED BY DEPENDENCIES** — Complete the remaining core acceptance gates: user-parked WS2 Ollama acceptance, policy-blocked WS3/WS4 semantic/hybrid checks and WS4 factual quality. Hosted summary and scoped core editable setup passes remain accepted. See the current blocker register and core-release-review.md.
 - **Y** — Exact remote-clone core setup for ead9aa8 passed (23 October): direct editable install in a dependency-isolated venv from cached wheels, pip check/provenance, documented module CLI, real console checkpoint persistence and Streamlit initial rendering. Original packages/settings and cloned tracked source unchanged; fixtures removed. Evidence: outputs/acceptance/ws8-github-module-route-ead9aa8-20261023/summary.json.
-- **P — PARKED** — Native Windows jeshla-auto-ai.exe launcher requires an approved build/signing policy. Code Integrity events 3033/3077 identify the blocked owned test binary. Python-module/browser checks passed independently; no security-policy change or repeated launcher execution.
+- **P — BLOCKED** — Native Windows jeshla-auto-ai.exe launcher requires an approved build/signing policy. Code Integrity events 3033/3077 identify the blocked owned test binary. Python-module/browser checks passed independently; no security-policy change or repeated launcher execution.
 - **Y** — Latest-source fresh core editable installation from 74 locally downloaded wheels passed on 21 October 2026: pip check, both console entry points, 222 selected offline tests and Streamlit AppTest initial rendering. Python 3.14.0 / Streamlit 1.66.0; isolated fixtures removed and working settings/packages unchanged. Earlier timeout and runner-only metadata failure remain historical evidence; see dependency-audit.md.
 - **Y** — Fresh RAG/integration package installation, pip check, both console entry points, eleven optional/API imports, 246 selected offline tests and Streamlit startup passed. Synthetic document/index save/reopen and keyword/vector lookups passed with fixture embeddings.
-- **P** — Optional/full-learning and pretrained semantic/hybrid quality remain pending; the latest local import diagnosis identifies Windows Application Control blocking a SciPy native component. The exact GitHub clone module/browser milestone below is now Y; its native launcher remains P.
+- **P — BLOCKED** — Optional/full-learning and pretrained semantic/hybrid quality remain pending; the latest local import diagnosis identifies Windows Application Control blocking a SciPy native component. The exact GitHub clone module/browser milestone below is now Y; its native launcher remains P.
 - **Y** — Actual GitHub CI passed for pushed ead9aa8 (23 October): 701 offline tests in 30.785s, console startup and browser startup. The earlier inherited-provider fixture defect is fixed on the remote commit. Run 39893395567; no agent commit/push or remote dispatch.
 - **Y** — Existing-repository read-only review completed (23 October): user selected JeshlaAutoAICGP; GitHub confirms it is public and anonymous main SHA matches local HEAD with historical personal-document/database paths. Privacy/history strategy, actual hosted CI and exact remote clone remain **P**. No commit/push/rewrite/visibility change. WS9 planning may proceed with these boundaries explicit; full WS8 is not declared complete. See [github-readiness.md](github-readiness.md).
 - **Y** — CI false-positive fixes and local validation completed (23 October): actual console save/show/checkpoint reopen, real Streamlit initial-page assertions and five CI-harness regressions pass. New source-only candidate revision has 291 verified files/275 Python files, including reviewed CI. Application source unchanged. Actual GitHub-hosted execution, publication/licensing and exact remote clone remain **P**. See [github-readiness.md](github-readiness.md).
@@ -230,7 +260,7 @@ Acceptance is for a trusted local-user agent. Approved Python/build commands use
 - **Y** — Prepared-source offline wheel/source-archive build and metadata audit passed (21 October 2026): current canonical helpers and legacy aliases included, core/extra declarations and console entry point preserved, synthetic private-data canaries excluded. This does not certify installation, wheel runtime/data-root behavior or all tracked Git contents.
 - **Y** — Update outdated root README and installation instructions; clean-install acceptance remains separate.
 - **Y** — Scoped stopped-writer synthetic backup/recovery verified for facts, chats, real checkpoint history/summary and completed/uncertain receipts. Actual user-data restoration and optional RAG-index recovery are not claimed.
-- **P** — Review remaining limitations and explicitly agree on the release scope. User accepted the local development-preview scope; full core release agreement/acceptance is not claimed. See core-release-review.md.
+- **P — AWAITING USER DECISION** — Review remaining limitations and explicitly agree on the release scope. User accepted the local development-preview scope; full core release agreement/acceptance is not claimed. See core-release-review.md.
 - **X** — Mark the general AI-agent milestone complete.
 
 
@@ -246,10 +276,112 @@ Acceptance is for a trusted local-user agent. Approved Python/build commands use
 
 Full core release, optional RAG setup/quality, summary quality, public deployment and other previously parked gates retain their separate statuses. Preserve the private backup. Workstream numbering is unchanged.
 
-### Workstream 9 — Deferred automation-framework work
+### Workstream 9 — AI-assisted testing and automation integration
 
-- **P** — Begin only after the core-agent release gate passes and the user chooses to proceed.
-- **P** — Create a separate framework-integration roadmap at that time.
+**Overall: P — PLAN READY; implementation/execution remains parked pending the selected pilot's scope and acceptance decision.** The user requested WS9 planning and review of the chat **Plan AI-assisted testing roadmap**. All seven turns were reviewed on 23 October 2026 (chat ID 01a1535b-7adc-7d00-93ed-8403e6629a2a). Its target covers AI-assisted manual testing, Jira/MCP requirements and traceability, API, web, mobile, controlled execution, and evidence-based reporting. This section is the consolidated implementation plan in the existing roadmap; it does not mark WS8 complete or start a new application/framework.
+
+Product naming in that chat used **JeshlaAutoAgent**. The current repository/application still uses **JeshlaAutoAI**. Naming is recorded without renaming paths, packages, entry points or repository metadata.
+
+**Status convention:** Y = the stated deliverable is complete within its evidence scope; X = not implemented/started for this WS9 gate; I = actively being implemented; P = existing building blocks or a parked/pending gate. Code presence is not end-to-end acceptance. No WS9 execution gate becomes Y solely because a reusable component exists.
+
+- **Y** — Read the named planning chat and reconcile its manual/API/web/mobile/Jira scope with this roadmap.
+- **Y** — Define delivery order, reusable package boundaries, the first pilot and measurable stage gates below.
+- **P — PARKED** — WS9 implementation and application execution await a selected pilot scope. Full WS8 remains P; a narrower pilot decision must list accepted limitations rather than silently declaring the general release complete.
+
+#### Existing components to reuse
+
+| Component | Inspected evidence | Boundary to preserve |
+|---|---|---|
+| Project inspection | agent/tools/project_tools.py: ProjectTools(root), bounded file/list/search operations | Root is selected/configured for the task; no hardcoded automation-project path |
+| Jira requirements through MCP | integrations/jira/jira_mcp_client.py: Jira read allowlist, issue lookup/JQL, OAuth session | Connect only for explicit Jira work; reading a local attachment must not trigger Jira login |
+| Jira drafting and reviewed plans | integrations/jira/test_case_agent.py and agent/langgraph/jira_workflow_node.py | Reuse existing validation/approval/receipt behavior; live integrated WS9 acceptance remains pending |
+| Test selection and execution | integrations/jira/qa_workflow.py and agent/tools/test_results.py: run_tests_and_parse | Existing Gradle/Jira workflow has eligibility and normal-scenario limits; do not claim unsupported Scenario Outline coverage |
+| Report parsing | agent/tools/test_results.py: JUnit/TestNG XML and Cucumber JSON parsing | Reading a saved report is not proof of a new run; retain run identity, command, timing and report freshness |
+| Shared agent/UI/permissions | Existing agent/runtime, agent/interfaces, agent/policies and agent/actions packages | Same backend and approval rules for browser/console; protect current working behavior |
+| Separate local QA MCP server | integrations/qa_mcp/qa_mcp_server.py currently contains a commented import | Incomplete prototype; distinct from the implemented Atlassian MCP client. Do not make completing it a prerequisite without a concrete need |
+
+This is a read-only component inventory. No live Jira connection, automation-project run, API request to a test application, device session or generated test was executed for this plan.
+
+#### Delivery sequence and acceptance checklist
+
+| Stage | Status | Deliverable | Gate for Y |
+|---|---|---|---|
+| 9.0 — Select the pilot | **X** | One configurable local project, one requirement/feature, target environment, permitted operations and evidence destination | Project exists, conventions and source references are recorded; exclusions and success criteria are agreed; no target files changed during inspection |
+| 9.1 — Requirements and AI-assisted manual testing | **P** | Brief from local text/document first; optional explicitly requested Jira story. Draft scenarios, test data, test cases and ambiguity questions | Every expected result traces to a supplied requirement or explicit user decision; no invented business rules; positive/negative/boundary/risk coverage is reviewed; unknowns remain explicit |
+| 9.2 — Manual observations and defect drafting | **X** | User observations or scoped connected-tool evidence, linked to cases; reproducible defect draft | Expected and observed results are distinct; each actual claim has evidence, unexecuted cases say not run, and no defect is filed externally without explicit authorization |
+| 9.3 — First API automation workflow | **X** | One selected API journey using the target project's existing conventions and reviewed assertions | Positive and declared negative cases assert business outcomes as well as HTTP status; execution is selected/approved; actual command/report/results match the case IDs |
+| 9.4 — First web automation workflow | **X** | Inspect one allowed page/flow, draft project-aligned tests and locators, then review proposed changes | Assertions come from requirements; selectors come from inspected application evidence; reviewed changes and approved runs yield matching fresh reports and failure artifacts |
+| 9.5 — Mobile automation | **X** | Android pilot first if suitable, then separately scoped iOS; confirm Appium/device/host requirements at implementation time | A real device/emulator run verifies a selected native/hybrid flow with capabilities, permissions and evidence recorded. Browser mobile viewport checks do not close native-mobile acceptance |
+| 9.6 — Failure investigation and reviewed repair | **P** | Correlate assertion failures with logs, traces, screenshots and requirements; propose minimal changes | Distinguish application defect, test defect, test-data/environment failure and unknown; reviewed repair preserves intended assertions; bounded rerun produces actual evidence |
+| 9.7 — Integrated reporting and optional Jira traceability | **P** | Requirement -> case -> generated file -> run -> result -> artifact links, plus coverage/gaps | Every pass/fail/skipped/not-run claim matches evidence; partial runs remain partial; optional Jira updates have exact reviewed content and approval |
+| 9.8 — CI and WS9 release acceptance | **X** | Repeat the accepted API/web/mobile slices in their supported environments; publish the scoped acceptance matrix | Actual application-test CI evidence is reviewed separately from the agent repository's own CI. Required slices pass, limitations are agreed, and no duplicate external writes or hidden reruns occur |
+
+Stages 9.1-9.2 establish manual-testing assistance before automated application execution. API, web and mobile are separately accepted tracks. Start the next selected track after its prerequisite gate; do not require every optional platform before a narrower pilot can be reviewed. The existing project may justify web before API; choose once at stage 9.0 and record the reason.
+
+```mermaid
+flowchart TD
+    B["WS1-WS8: accepted core components
+Remaining P gates recorded"] --> P["WS9 plan — Y
+Pilot implementation scope — pending"]
+    P --> R["9.0 Select local project + requirement
+X"]
+    R --> Q["9.1 Clarify requirements + manual test pack
+P — reuse existing drafting"]
+    Q --> H["Human review of expected behavior"]
+    H --> M["9.2 Manual observations + defect draft
+X"]
+    H --> A["9.3 API slice
+X"]
+    H --> W["9.4 Web slice
+X"]
+    H --> D["9.5 Mobile slice
+X"]
+    A --> G["Review generated changes"]
+    W --> G
+    D --> G
+    G --> E["Approve selected execution
+Preserve exact action scope"]
+    E --> F["9.6 Investigate failure / propose repair
+P — integration pending"]
+    E --> T["9.7 Evidence + traceable report
+P — integration pending"]
+    M --> T
+    F --> G
+    T --> C["9.8 Scoped CI + acceptance
+X"]
+```
+
+The repair arrow means a reviewed, bounded next proposal, not an automatic loop. Retries, approval expiry, uncertain receipts, missing reports or provider limits must stop with an explicit partial/blocked result when the selected budget is exhausted.
+
+#### First implementation milestone: one requirement to a reviewed manual test pack
+
+Use one user-selected feature such as login only if its actual requirement is available. Accept a local requirement first, so Jira credentials, a mobile device, semantic ML loading and the blocked Windows launcher do not become prerequisites for the first milestone. Existing lexical/local source tools and the accepted Python-module/browser route can support a pilot within their recorded limitations. WS4's source/factual-quality gap still applies: draft tests require human review and requirement traceability; the model is not an independent correctness oracle.
+
+The output contract is:
+
+- Requirement identifier, source file/page or issue key, relevant source excerpt, and revision/reference where available.
+- Clarification questions with unresolved items distinguished from confirmed decisions; assumptions require explicit confirmation before becoming expected behavior.
+- Stable scenario/test-case IDs, prerequisites, steps, inputs, expected results, requirement references, risk/priority rationale and manual/automation candidacy.
+- Coverage matrix, explicit exclusions and execution state. All cases begin as **not run**; a generated test case is not a passed test.
+- Human review and corrections before any code generation or application execution. Creating/exporting a file continues through existing approved-action/download controls.
+
+The first milestone closes only after checking the generated pack against the selected requirement for omitted acceptance criteria, contradictory expected results, duplicate cases and invented rules. Where a requirement lacks a maximum length, timeout, role rule or error message, the agent must ask or record it as undecided instead of supplying a guessed value. Test the changed integration with finite cases containing one ambiguity, one contradiction and one instruction embedded in source data; do not treat source text as an action authorization.
+
+This milestone performs no test execution, automatic Jira login/creation, GitHub connection or unattended repair. Later stages add these capabilities only within their own selected scope.
+
+#### Technology and project-structure rules
+
+- Inspect the chosen build files and representative tests first. Earlier project facts mention Playwright, Gradle and REST Assured; verify the target's current implementation before choosing imports, a runner or commands. Reuse its actual JUnit/TestNG/Cucumber conventions rather than guessing from a dependency name.
+- Preserve Java/Gradle when that is the selected project's existing stack. The earlier chat's TypeScript learning example is not a migration requirement. Playwright has an official Java API; REST Assured supports Java API testing. Keep existing versions until a concrete compatibility reason requires a reviewed change. Sources: [Playwright Java](https://playwright.dev/java/docs/intro), [REST Assured](https://rest-assured.io/).
+- Appium is the planned mobile candidate; its integration is not implemented or installed by this plan. Check the chosen driver/client/platform prerequisites when the mobile slice starts. Source: [Appium documentation](https://appium.io/docs/en/latest/intro/).
+- New Python implementation belongs in the existing canonical package that owns the behavior: agent/runtime for orchestration, agent/tools for reusable local tools, agent/actions for approvals/receipts, agent/policies for validation, agent/interfaces for console/browser controls, integrations/jira for Jira-specific behavior, and evaluations/tests for acceptance/regressions. Add a focused integrations subpackage only when an API/web/mobile adapter actually needs a distinct owner. No new flat helpers under agent/ and no copied parallel provider/approval stack.
+- Generated automation code belongs in the selected target project's existing test/source packages. The Python agent remains the orchestrator; it does not absorb the user's Java automation project. Reversible proposed changes must be inspectable before application; preserve a backup or reviewed diff according to the selected change.
+- CoWork/project selection can later expose local project configuration. Creating a fresh automation project and connecting/cloning GitHub projects are later separately scoped requirements; do not add GitHub/OAuth dependency to the first local pilot.
+- Reuse configured hosted providers and current bounded error/fallback behavior. No promise of unlimited tokens, guaranteed 100-percent correctness or a free unlimited hosted API. Ollama remains explicitly user-parked and native semantic dependencies remain optional/blocked.
+- Reuse existing agent behavior and completed WS1-WS8 evidence. Run relevant changed-path regressions and the selected WS9 acceptance scenario; reopen old gates only for a new observed failure or a relevant changed dependency. Do not restart a general WS2 -> WS3 -> WS4 -> WS8 cycle.
+
+**Next concrete step:** stage 9.0, then the stage 9.1 local-requirement pilot. The required inputs are the selected automation-project root and one feature requirement/acceptance-criteria document. The target URL/API/device is needed only when its execution track is selected. This plan does not request credentials in chat or require the user to repeat previously completed core tests.
+
 
 ## Core-agent acceptance checklist
 
@@ -270,7 +402,7 @@ Release gates receive Y only when the complete acceptance scenario passes. A wor
 
 ## Immediate next milestone
 
-**Next milestone: Workstream 8 — Core-agent release preparation.** Workstream 4 has verified scoped citation, page, table, source-consistency, mixed-source and representative grounding checks; one broader hybrid/relevance quality item remains P—parked after bounded timeouts. Workstreams 2 and 3 also retain parked gaps. This sequencing does not claim these workstreams are fully complete. Automation-framework expansion remains deferred until core release acceptance.
+**WS9 planning is complete for the proposed scope; next is the selected local-requirement pilot (9.0 -> 9.1).** Confirm its project, requirement and permitted operations before implementation. WS8 full release and the WS2/WS3/WS4 blocked or parked gates retain P. Planning does not grant autonomous application execution or mark them complete. The approved local development-preview scope and all recorded Y checks remain accepted; no repeated general core-validation cycle is scheduled.
 
 ## Evidence labels
 

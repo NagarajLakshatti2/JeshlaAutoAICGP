@@ -1,5 +1,27 @@
 # JeshlaAutoAI session handoff - 17 October 2026
 
+## WS9 planning consolidation - 23 October 2026
+
+The user requested WS9 planning and reading the chat **Plan AI-assisted testing roadmap**. All seven turns were reviewed. The existing agentic-ai-roadmap.md now contains the consolidated manual/API/web/mobile/Jira MCP plan, a component inventory, stage-specific acceptance, a status diagram and package rules. No duplicate roadmap, new Python module, provider call, live Jira authentication, target-project write, test execution or GitHub connection was started.
+
+Planning deliverables are Y; WS9 implementation/execution remains P pending the pilot's scope. First milestone: one configured local project and one requirement -> clarification -> source-traceable reviewed manual test pack, all cases initially not run. Then select API, web and mobile slices with independent gates and approved execution/evidence. Preserve actual Java/Gradle/framework conventions; the old TypeScript learning example does not force migration. Jira read/drafting modules already exist; the separate commented local QA MCP server is not a completed Atlassian integration.
+
+WS1-WS8 statuses are unchanged: 7 P tracker rows and 1 X; Windows native runtime/signing blocks, user-parked Ollama and parked factual quality are recorded. The plan does not close full WS8 or authorize unattended automation. No repeat core-suite/provider testing is scheduled just for this planning step.
+
+## WS4 bounded negative-review routing check - 23 October 2026
+
+**Y - conservative review routing; P - broader factual/source quality PARKED after one changed-path live check.** A valid review marked supported while listing concrete issues is now treated as revise, with every issue preserved and no asserted supported source. The existing shared answer flow gets one revision and a new review; repeated concerns still withhold the answer. Invalid negative-review format corrections still cannot erase earlier concerns. No action permissions, provider settings or module layout changed.
+
+Three regressions reproduced the routing failure before the fix; all **287 affected offline tests pass** afterward. One isolated Gemini run finished in **30.08 seconds** (30.35 seconds including control/cleanup), eight model calls, and exercised concern-to-answer revision without a format-retry dead end. Manual review did **not** accept overall quality: the omitted-extends rule was overbroad and the retrieved section did not ground the example's method-dispatch/field-hiding claims. No Java was compiled or executed. No second live attempt is made. Hybrid remains policy-blocked; Ollama remains user-parked.
+
+Evidence: `outputs/acceptance/ws4-negative-review-routing-20261023-123215/summary.json`, `after.json`, `live/live.json` and `manual-audit.json`. WS1-WS8 remains **7 P checklist rows and 1 X**. This is focused compatibility coverage, not a new full-suite or full-release pass.
+
+## Current P blocker register - 23 October 2026
+
+WS2: **P - PARKED BY USER** for Ollama; no automatic resumption. WS3: **P - BLOCKED** by Windows Application Control for the SciPy native component; an approved compatible runtime is needed. WS4: **P - BLOCKED / PENDING FIX**: hybrid shares the runtime block, while factual/source-coverage quality still needs correction and independent acceptance. WS8: **P - BLOCKED BY DEPENDENCIES / AWAITING RELEASE DECISION**: remaining core gates, native launcher signing, optional ML acceptance and full release scope. Hosted quotas may delay tests but are not proof that quality work is complete.
+
+Total across WS1-WS8: **7 P checklist rows and 1 X completion row**; WS8 umbrella rows overlap earlier dependencies. Existing Y evidence and the accepted Python-module/browser local preview retain their scope. No runtime/configuration/security-policy change or smaller-release approval is implied. The current register in agentic-ai-roadmap.md supersedes historical pending CI/clone notes.
+
 ## Current verified state
 
 Project root: D:/JeshlaAutoAI. Building the core AI agent; new automation-framework development stays parked. OpenRouter is currently selected. Groq and Ollama are supported; Gemini is not yet implemented. 155 guarded offline tests passed. Live OpenRouter review listed the target project and read all 305 lines of build.gradle, then produced the summary with target edits and execution disabled.
@@ -847,3 +869,50 @@ A second fresh exact-commit rehearsal explicitly deferred that executable, did n
 No private working configuration, saved chats/memories or user indexes were copied; no hosted provider/model request or model download ran. Git clone was the only required network operation in the fresh-install test; dependency installation used cached public wheels and runtime probes blocked external calls. No commit/push, remote rerun, history rewrite or visibility change was performed by the assistant. This does not resolve historical public-data/privacy findings, optional/full-learning setup, semantic/hybrid/model-quality gates or full release-scope agreement. Current trusted local-user preview remains accepted; full WS8 and general release remain P.
 
 Evidence: outputs/acceptance/ws8-github-clone-ead9aa8-20261023/{result.json,launcher-policy-events.json} and ws8-github-module-route-ead9aa8-20261023/{summary.json,result.json,startup/console.json,startup/browser.json}. Older reports remain historical and do not override these new scoped results. Word synchronization is separate.
+
+
+## Memory role-clarification correction and quota checkpoint - 23 October 2026
+
+Reproduced one remaining answer-quality defect in a complete OpenRouter run: seven of eight synthetic cases passed; different_roles correctly named both roles but unnecessarily asked the user to reconfirm whether they were separate. The system guidance already respected explicit roles, while the review_memory description/result note still directed unconditional clarification. Updated only those conflicting tool instructions in agent/memory/long_term_memory.py and agent/runtime/conversation.py. Candidate detection, fact storage, retrieval, permissions, the evaluator and expected answers were unchanged; no case-specific answer was added.
+
+Y for the changed role case: one fresh OpenRouter check passed all nine expectations, returned status=separate and needs_clarification=false, retained exact source keys, excluded foreign scopes and left its temporary fact database unchanged. All 85 focused memory/conversation offline tests pass. This is finite sampled behavior, not universal contradiction accuracy or all-provider acceptance.
+
+P for full eight-case post-fix acceptance. A separate coherent OpenRouter run passed same_scope_conflict, different_projects and different_timeframes, then stopped at corrected_current on HTTP 429 QUOTA_EXHAUSTED. Its controller finished in 50.81s; no exhausted-provider retry followed. The earlier seven-pass run and separate role check are not combined into a post-fix 8/8 result. Provider quota is now the observed gate for this attempt. Expanded local semantic calibration remains separately blocked by the previously diagnosed Windows native-library policy; it was not retried.
+
+Existing credentials were used only for synthetic temporary facts. Process-only timeout/output controls applied; fallback was disabled to measure a single provider. Saved .env hashes matched before/after, all temporary runtime/fact directories were removed and owned children stopped. User memories, conversations, indexes, dependency installations and the running user server were untouched. No commit/push, security-policy change or Word synchronization occurred. Evidence: outputs/acceptance/ws3-review-followup-20261023-035750/{openrouter.json,role-after.json,all-after.json,all-after-controller.json,focused-tests.json}.
+
+Verification limit: the subsequent full offline run was stopped at its 240-second process deadline. Its progress log records 681 completed tests (681 passed), then interruption during test_use_case_audit.AuditUiTests.test_failed_download_revalidation_clears_previous_snapshot. No fresh complete-suite pass is claimed for this guidance edit. The independently completed 85 focused tests remain passing; the earlier 706-test full pass preceded this edit. See outputs/acceptance/ws3-review-followup-20261023-035750/full-offline.json and final-summary.json. Do not retry an unchanged slow broad run or exhausted provider merely to change a status.
+
+
+## WS3 hosted-review gate completed - 23 October 2026
+
+Y: Gemini independently passed all eight post-fix synthetic memory-review cases in one coherent 90.06s evaluator run, all nine checks per case. The OpenRouter/Groq/Gemini sequence finished in 99.76s; the first two stopped on quota, and their results were not pooled. No application/settings/user-memory changes or new offline-suite claim. See workstream-3-memory.md and outputs/acceptance/ws3-bounded-review-20261023-042338/summary.json. WS3 remains P only for expanded local semantic calibration blocked by Windows Application Control. Full WS8 release retains its other pending gates; earlier hosted-review P statements are historical.
+
+
+## WS4 Gemini diagnostic and execution-heading correction - 23 October 2026
+
+Y for the narrow bold execution-heading fix: 175 affected offline checks pass, including two new regressions and a local replay of the captured draft with zero provider calls. The original public Java 17 live check remains P: Gemini retrieved official Oracle text, then failed exact draft-claim anchor validation after one correction (ANSWER_REVIEW_FORMAT). No reviewed explanation or post-fix live quality pass is claimed; source validation stays strict. WS4 broader source-quality/hybrid gates remain P. See workstream-4-grounding.md and outputs/acceptance/ws4-gemini-public-20261023-043042/guard-after.json. No user settings/stores, dependency, commit/push or Word change.
+
+
+## Ollama resource preflight - 23 October 2026
+
+P remains for changed-path Ollama summary acceptance. Read-only /api/tags lists only qwen2.5-coder:7b (7.6B parameters, Q4_K_M, 4,683,087,561 bytes); /api/ps lists no loaded model. Windows reports 1,932,552 KiB available physical memory out of 16,454,352 KiB, with sampled CPU load 28 percent across 12 logical processors. Roughly 2 GB available RAM is below the model file size before context/runtime overhead, so memory pressure is a plausible performance limitation. This does not prove the historical timeout was caused by paging or guarantee that freeing RAM alone will pass the quality test.
+
+No inference, model pull, package install, process stop or settings change was performed. The unchanged slow summary was not retried. Next actionable prerequisite: close unneeded applications to free RAM, then recheck resources before one bounded test; alternatively select a smaller local model explicitly and record that separate model scope. Existing completed hosted/browser WS2 checks retain Y. Evidence: outputs/acceptance/ws2-ollama-preflight-20261023-044532/summary.json.
+
+
+## User parks Ollama-related work - 23 October 2026
+
+P — PARKED BY USER. The user explicitly requested that Ollama-related tasks be parked. Defer the outstanding summary attribution/context-fit acceptance, inference retries, local model/performance investigations and associated Ollama release verification until the user explicitly resumes them. Do not request RAM cleanup, download/replace models or spend time repeating the same local inference as an automatic next step. The preceding resource-preflight recommendation is no longer an active action item.
+
+Continue independent hosted-provider work with OpenRouter, Groq and Gemini. Preserve all existing completed Ollama foundation evidence; parking is not a new acceptance pass. This instruction changes the work queue only: no Ollama uninstall, adapter removal, model deletion, .env edit or fallback/configuration change was performed. Full release scope is not silently redefined. Existing P counts include this deliberately parked item; it is not an active development task. No model request, dependency change, process stop, commit/push or Word synchronization occurred.
+
+
+## WS4 review-feedback follow-up - 23 October 2026
+
+Y for explicit draft/source field descriptions and controlled indexed correction feedback in the existing runtime reviewer: 179 affected tests pass, including four new regressions; 302 before/after validation cases preserve acceptance decisions. Source evidence requirements and the one-correction limit remain strict. P for the original public Java 17 live acceptance: the one Gemini run stopped after 41.44s on ANSWER_REVIEW_FORMAT because its claims removed Markdown from draft spans, despite the changed feedback. No second live retry, approved explanation or new broad-suite claim. Next design candidate is stable span/passage selection IDs, with no relaxation of meaning/coverage requirements; not yet implemented. See workstream-4-grounding.md and outputs/acceptance/ws4-review-feedback-20261023-045648/summary.json. Ollama remains user-parked; no provider settings/user data, dependency, commit/push or Word change.
+
+
+## WS4 passage selection implemented; quality remains pending - 23 October 2026
+
+Y for exact passage-ID selection, legacy reply compatibility and the guard preventing format correction from erasing substantive concerns: all 285 affected review/provider tests pass. The one Gemini ID-format workflow completed in 31.11s before the final guard, but manual audit rejected source/factual quality; a captured offline replay now blocks that approval sequence. No new live acceptance is claimed after the guard. WS4 remains P for hybrid and actual factual/source coverage; all Ollama work remains user-parked. See workstream-4-grounding.md and outputs/acceptance/ws4-passage-selection-20261023-052742/summary.json. No user settings/stores, dependency, commit/push or Word change.

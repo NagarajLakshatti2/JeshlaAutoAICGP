@@ -1,6 +1,6 @@
 # Workstream 2 summary reliability
 
-Updated 17 October 2026. Workstream 2 remains I. The new summary path is implemented and verified for the stated synthetic/offline cases; full user-chat and live browser acceptance remain pending.
+Updated 23 October 2026. Overall P - PARKED BY USER solely for Ollama-specific acceptance. Completed hosted/core conversation, summary sampling and selected actual-chat browser restart/switch checks retain Y. Resume Ollama work only after an explicit user request; installation and runtime/provider configuration are unchanged.
 
 ## Change
 
@@ -200,3 +200,17 @@ Y for 15 focused offline tests in 1.25s, including three new fail-closed checks:
 Reusable acceptance code is in the existing evaluations package: evaluations/summary_snapshot_browser_acceptance.py; the existing summary_browser.cjs driver gained snapshot phases without replacing synthetic phases. Tests belong in tests/test_summary_snapshot_browser.py. No application implementation was edited. Evidence: outputs/acceptance/ws2-actual-browser-20261023/result.json and offline-tests.json. Run explicitly with python evaluations/summary_snapshot_browser_acceptance.py --second-chat CHAT_ID --output-dir outputs/acceptance/ws2-actual-browser-new (local private snapshots only).
 
 The actual-chat browser gate from the preceding checkpoint is now Y for these two selected chats on Chrome desktop. Overall WS2 remains P solely for the outstanding changed-path Ollama summary-attribution/context-fit acceptance, which remains parked after RESPONSE_TIMEOUT. Wider all-chat/all-browser/all-provider quality is not claimed by this finite scope. No repeated Ollama run, application patch, commit/push or Word synchronization occurred.
+
+
+## Ollama resource preflight - 23 October 2026
+
+P remains for changed-path Ollama summary acceptance. Read-only /api/tags lists only qwen2.5-coder:7b (7.6B parameters, Q4_K_M, 4,683,087,561 bytes); /api/ps lists no loaded model. Windows reports 1,932,552 KiB available physical memory out of 16,454,352 KiB, with sampled CPU load 28 percent across 12 logical processors. Roughly 2 GB available RAM is below the model file size before context/runtime overhead, so memory pressure is a plausible performance limitation. This does not prove the historical timeout was caused by paging or guarantee that freeing RAM alone will pass the quality test.
+
+No inference, model pull, package install, process stop or settings change was performed. The unchanged slow summary was not retried. Next actionable prerequisite: close unneeded applications to free RAM, then recheck resources before one bounded test; alternatively select a smaller local model explicitly and record that separate model scope. Existing completed hosted/browser WS2 checks retain Y. Evidence: outputs/acceptance/ws2-ollama-preflight-20261023-044532/summary.json.
+
+
+## User parks Ollama-related work - 23 October 2026
+
+P — PARKED BY USER. The user explicitly requested that Ollama-related tasks be parked. Defer the outstanding summary attribution/context-fit acceptance, inference retries, local model/performance investigations and associated Ollama release verification until the user explicitly resumes them. Do not request RAM cleanup, download/replace models or spend time repeating the same local inference as an automatic next step. The preceding resource-preflight recommendation is no longer an active action item.
+
+Continue independent hosted-provider work with OpenRouter, Groq and Gemini. Preserve all existing completed Ollama foundation evidence; parking is not a new acceptance pass. This instruction changes the work queue only: no Ollama uninstall, adapter removal, model deletion, .env edit or fallback/configuration change was performed. Full release scope is not silently redefined. Existing P counts include this deliberately parked item; it is not an active development task. No model request, dependency change, process stop, commit/push or Word synchronization occurred.

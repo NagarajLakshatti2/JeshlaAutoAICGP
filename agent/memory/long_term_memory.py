@@ -286,7 +286,7 @@ class LongTermMemory:
             for right in reviewed[i+1:]:
                 if left["value"]!=right["value"] and len(pairs)<10:
                     pairs.append({"keys":[left["key"],right["key"]],"status":"potential_conflict_requires_review"})
-        return {"facts":reviewed,"candidate_pairs":pairs,"mode":mode,"stale_days":stale_days,"truncated":truncated,"note":"Related differing facts are candidates, not proven contradictions; check source, project, timeframe and user intent before deciding. Storage age does not prove staleness. Ask for clarification; use explicit REMEMBER/FORGET only when instructed. No values or verification states changed. At most ten facts and ten pairs; this is not exhaustive conflict detection."}
+        return {"facts":reviewed,"candidate_pairs":pairs,"mode":mode,"stale_days":stale_days,"truncated":truncated,"note":"Related differing facts are candidates, not proven contradictions; compare source, subject, project, timeframe and role before deciding. Explicitly different scopes can coexist. Ask for clarification only when relevant scope or current validity remains unresolved; do not ask the user to reconfirm distinctions already explicit in the facts. Storage age does not prove staleness. Use explicit REMEMBER/FORGET only when instructed. No values or verification states changed. At most ten facts and ten pairs; this is not exhaustive conflict detection."}
 
     def propose(self,user_id,namespace,key,value,*,source_kind="assistant_report"):
         self._validate_identity(user_id,namespace,key)

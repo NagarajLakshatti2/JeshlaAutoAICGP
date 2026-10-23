@@ -72,7 +72,7 @@ REFERENCE_INSTRUCTION = (
 _ACTUAL_RESULT_HEADING = re.compile(
     r"(?mi)^[ \t]*(?:\#{1,6}[ \t]+)?(?:\*\*)?"
     r"(?:actual[ \t]+(?:execution|output|results)|execution[ \t]+results|observed[ \t]+output)"
-    r"(?:\*\*)?[ \t]*:?[ \t]*$")
+    r"[ \t]*:?[ \t]*(?:\*\*)?[ \t]*:?[ \t]*$")
 _NOT_EXECUTED = re.compile(
     r"\b(?:not|never)\s+(?:(?:been|actually|yet)\s+){0,2}(?:run|ran|executed|compiled|tested)\b"
     r"|\b(?:haven['’]t|hasn['’]t|didn['’]t|wasn['’]t)\s+(?:been\s+)?(?:run|executed|compiled|tested)\b"
