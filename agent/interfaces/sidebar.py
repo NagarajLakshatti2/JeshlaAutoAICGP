@@ -65,10 +65,27 @@ def change_chat_page(offset):
 
 
 def open_picker_chat(backend):
-    open_chat(backend,st.session_state.chat_picker)
+    selected=st.session_state.get("chat_picker")
+    # A stale widget value must never become the active conversation.
+    if isinstance(selected,str) and backend.get_chat(selected):
+        open_chat(backend,selected)
 
 
 def display_title(row):return "General chat" if row["session"]=="default" and row["title"]=="default" else row["title"]
+
+
+def chat_picker_labels(rows):
+    """Keep Streamlit's serialized option labels distinct for same-titled chats."""
+    keys=list(rows)
+    labels={}
+    for key in keys:
+        width=min(8,len(key))
+        while any(other!=key and other.endswith(key[-width:]) for other in keys) and width<len(key):
+            width+=1
+        # Include a stable reference even for unique titles: recency and title
+        # duplication must not change a widget option's identity on rerun.
+        labels[key]=f"{display_title(rows[key])} · {key[-width:]}"
+    return labels
 
 
 def render_sidebar(backend):
@@ -112,7 +129,8 @@ def render_sidebar(backend):
                 ids=list(page_by_id)
                 if ids:
                     if st.session_state.get("chat_picker") not in ids:st.session_state.chat_picker=active if active in ids else ids[0]
-                    selected=st.selectbox("Saved chats",ids,format_func=lambda key:display_title(page_by_id[key]),key="chat_picker",on_change=open_picker_chat,args=(backend,))
+                    labels=chat_picker_labels(page_by_id)
+                    selected=st.selectbox("Saved chats",ids,format_func=labels.__getitem__,key="chat_picker",on_change=open_picker_chat,args=(backend,))
                     if st.button("Open selected chat",key="open_selected_chat",width="stretch"):
                         open_chat(backend,selected);st.rerun()
                 else:st.caption("No chats on this page.")

@@ -134,3 +134,64 @@ class LandingChatTests(unittest.TestCase):
         self.assertTrue(any(button.label=="Hi" for button in self.app.button))
         self.assertEqual(self.app.session_state["chat_title_filter"],"")
         self.assertEqual(len(self.backend.turns("default")),1)
+
+    def test_cowork_keeps_welcome_draft_with_same_titled_saved_chats(self):
+        self.backend.create_chat("Repeated title")
+        self.backend.create_chat("Repeated title")
+        self.app.run()
+        draft=self.app.session_state["active_chat"]
+        count=len(self.backend.list_chats())
+        for mode in ("Cowork","Chat"):
+            self.app.segmented_control(key="work_mode").set_value(mode).run()
+            self.assertFalse(self.app.exception)
+            self.assertEqual(self.app.session_state["active_chat"],draft)
+            self.assertTrue(self.app.session_state["chat_draft"])
+            self.assertFalse(self.app.session_state["chat_opened"])
+            self.assertEqual(len(self.backend.list_chats()),count)
+        self.assertEqual(self.backend.calls,[])
+
+    def test_cowork_keeps_selected_history_with_same_titled_saved_chats(self):
+        first=self.backend.create_chat("Repeated title")
+        second=self.backend.create_chat("Repeated title")
+        self.backend.catalog.append(first,"First question","First answer")
+        self.backend.catalog.append(second,"Second question","Second answer")
+        self.app.run()
+        self.app.button(key="open_chat_"+second).click().run()
+        before={key:self.backend.turns(key) for key in ("default",first,second)}
+        self.app.session_state["attachment_collections"]={second:[{"name":"second.txt","id":"second","text":"Second chat evidence","truncated":False}]}
+        for mode in ("Cowork","Chat","Cowork","Chat"):
+            self.app.segmented_control(key="work_mode").set_value(mode).run()
+            self.assertFalse(self.app.exception)
+            self.assertEqual(self.app.session_state["active_chat"],second)
+            self.assertTrue(any(row.value=="Second answer" for row in self.app.markdown))
+            self.assertFalse(any(row.value=="First answer" for row in self.app.markdown))
+            self.assertEqual(self.app.session_state["attachment_collections"][second][0]["id"],"second")
+            self.assertEqual(self.app.chat_input[0].disabled,mode=="Cowork")
+        self.assertEqual(before,{key:self.backend.turns(key) for key in before})
+        self.assertEqual(self.backend.calls,[])
+
+    def test_same_title_picker_opens_only_the_selected_chat(self):
+        first=self.backend.create_chat("Repeated title")
+        second=self.backend.create_chat("Repeated title")
+        self.app.run()
+        for selected in (first,second,first):
+            self.app.selectbox(key="chat_picker").set_value(selected).run()
+            self.assertFalse(self.app.exception)
+            self.assertEqual(self.app.session_state["active_chat"],selected)
+        self.assertEqual(self.backend.calls,[])
+
+    def test_picker_references_remain_distinct_when_short_suffixes_collide(self):
+        from agent.interfaces.sidebar import chat_picker_labels
+        keys=("chat-first-12345678","chat-second-12345678")
+        rows={key:{"session":key,"title":"Repeated title"} for key in keys}
+        labels=chat_picker_labels(rows)
+        self.assertEqual(len(set(labels.values())),len(keys))
+        self.assertEqual(labels,chat_picker_labels(dict(reversed(list(rows.items())))))
+
+    def test_stale_picker_value_does_not_open_a_conversation(self):
+        from agent.interfaces.sidebar import open_picker_chat
+        state={"active_chat":"default","chat_picker":"Repeated title","chat_opened":True}
+        with patch("agent.interfaces.sidebar.st.session_state",state):
+            open_picker_chat(self.backend)
+        self.assertEqual(state["active_chat"],"default")
+        self.assertEqual(self.backend.calls,[])
