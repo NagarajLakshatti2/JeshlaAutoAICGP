@@ -9,7 +9,7 @@ from unittest.mock import Mock,patch
 
 from agent.providers.errors import ProviderError
 from agent.providers.fallback import fallback_scope
-from agent.providers.selection import current_provider,output_limit_passthrough,defer_output_limit
+from agent.providers.selection import current_provider,provider_selection,output_limit_passthrough,defer_output_limit
 from agent.runtime.long_answers import compose_long_answer,_clean_repetition
 from agent.runtime.conversation import answer_question
 
@@ -20,6 +20,10 @@ class LongAnswerTests(unittest.TestCase):
             "AI_LONG_ANSWERS_ENABLED":"true","AI_LONG_ANSWER_MAX_SECTIONS":"3","AI_LONG_ANSWER_MAX_CALLS":"8",
             "AI_LONG_ANSWER_MAX_CHARS":"60000","AI_CHAT_MAX_CONVERSATION_CHARS":"36000"})
         self.environment.start();self.addCleanup(self.environment.stop)
+        # These scripted cases exercise an OpenRouter-origin recovery. Select
+        # that origin explicitly rather than inheriting CI/developer defaults.
+        self.provider_scope=provider_selection("openrouter")
+        self.provider_scope.__enter__();self.addCleanup(self.provider_scope.__exit__,None,None,None)
         self.scope=fallback_scope();self.scope.__enter__();self.addCleanup(self.scope.__exit__,None,None,None)
         self.quiet=redirect_stdout(io.StringIO());self.quiet.__enter__();self.addCleanup(self.quiet.__exit__,None,None,None)
         self.plan={"mode":"answer","title":"Topic guide","scope":"A bounded explanation of the requested topic.","sections":[
@@ -55,6 +59,23 @@ class LongAnswerTests(unittest.TestCase):
             self.assertEqual(result["content"].count("Unique completed material for section-"+str(index)),1)
         self.assertLess(result["content"].index("## Foundations"),result["content"].index("## Rules"))
         self.assertIn("already_completed",self.calls[-1][2][-1]["content"])
+
+    def test_fixture_origin_ignores_imported_default_provider(self):
+        for default in ("groq","gemini","ollama"):
+            with self.subTest(default=default),patch("agent.runtime.long_answers.LLM_PROVIDER",default):
+                self.calls.clear()
+                self.compose()
+                sections=[provider for provider,name,_ in self.calls if name=="submit_answer_section"]
+                self.assertEqual(sections,["openrouter","groq","gemini"])
+
+    def test_explicit_manual_provider_starts_at_its_position_and_restores_origin(self):
+        for selected,expected in (("groq",["groq","gemini","gemini"]),("gemini",["gemini"]*3)):
+            with self.subTest(selected=selected),provider_selection(selected):
+                self.calls.clear()
+                self.compose()
+                sections=[provider for provider,name,_ in self.calls if name=="submit_answer_section"]
+                self.assertEqual(sections,expected)
+            self.assertEqual(current_provider("unused"),"openrouter")
 
     def test_integration_replaces_truncated_draft_with_one_answer_without_tools(self):
         tools=SimpleNamespace(root="fixture",list_files=Mock(),read_file=Mock(),search_text=Mock())
