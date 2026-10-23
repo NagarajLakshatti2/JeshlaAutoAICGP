@@ -1,0 +1,86 @@
+name: WS9 selected API and web pilots
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ws9-pilots-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  selected-pilot:
+    name: Native ${{ matrix.slice }} pilot
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        slice: [api, web]
+    env:
+      CI: "true"
+      RP_ENABLE: "false"
+      RP_ENABLED: "false"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+      - name: Prepare wrapper and verify exact source scope
+        run: |
+          chmod +x ./gradlew
+          ./gradlew --no-daemon --console=plain -I gradle/ws9-ci.init.gradle ws9CiVerifyConfiguration
+      - name: Install selected Chromium runtime
+        if: matrix.slice == 'web'
+        run: ./gradlew --no-daemon --console=plain -I gradle/ws9-ci.init.gradle ws9CiInstallChromium
+      - name: Resolve the selected public web origin
+        if: matrix.slice == 'web'
+        run: |
+          python3 - <<'PY'
+          import ipaddress, json, os, socket
+          from pathlib import Path
+          from urllib.parse import urlparse
+          profile=json.loads(Path('ci/ws9/pilots.json').read_text())
+          url=urlparse(profile['web']['url'])
+          if url.scheme!='https' or url.username or url.password or url.port not in (None,443):
+              raise SystemExit('Invalid reviewed public origin')
+          addresses=sorted({item[4][0] for item in socket.getaddrinfo(url.hostname,443,type=socket.SOCK_STREAM)})
+          if not addresses or any(not ipaddress.ip_address(address).is_global for address in addresses):
+              raise SystemExit('Public origin resolved to private/nonpublic addresses')
+          ipv4=next((address for address in addresses if ipaddress.ip_address(address).version==4),None)
+          if not ipv4:
+              raise SystemExit('This selected CI recipe requires a public IPv4 address')
+          with open(os.environ['GITHUB_ENV'],'a',encoding='utf-8') as handle:
+              handle.write('WS9_WEB_ADDRESS='+ipv4+'\n')
+          PY
+      - name: Run exactly the three selected API cases
+        if: matrix.slice == 'api'
+        run: ./gradlew --no-daemon --console=plain -I gradle/ws9-ci.init.gradle ws9CiApi
+      - name: Run exactly the selected web case
+        if: matrix.slice == 'web'
+        run: ./gradlew --no-daemon --console=plain -I gradle/ws9-ci.init.gradle ws9CiWeb
+      - name: Publish scoped summary
+        if: always()
+        env:
+          WS9_SLICE: ${{ matrix.slice }}
+        run: |
+          summary="test-output/ws9-ci/$WS9_SLICE/summary.md"
+          if [ -f "$summary" ]; then
+            cat "$summary" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "WS9 $WS9_SLICE did not produce acceptance evidence; no pass is claimed." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Upload native results and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ws9-${{ matrix.slice }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: test-output/ws9-ci/${{ matrix.slice }}/
+          if-no-files-found: warn
+          retention-days: 7

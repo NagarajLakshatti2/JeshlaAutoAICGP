@@ -9,6 +9,7 @@ from agent.tools.project_tools import ProjectTools
 ROOT=Path(__file__).resolve().parents[1]
 def arguments(action):
  return {
+  'inspect_browser_page':{'url':'https://example.test','evidence_folder':'test-output/agent-web','limit':20},
   'create_file':{'relative_path':'target.txt','content':'fixture'},
   'replace_text':{'relative_path':'target.txt','old_text':'old','new_text':'new'},
   'run_python_file':{'relative_path':'fixture.py','timeout':1},
@@ -22,7 +23,7 @@ def prepare(root):
 class PolicyMatrixTests(unittest.TestCase):
  def test_every_core_project_tool_is_classified_and_implemented(self):
   self.assertFalse(CONTROLLED_PROJECT_ACTIONS&READ_ONLY_PROJECT_ACTIONS)
-  self.assertEqual(len(PROJECT_ACTIONS),11)
+  self.assertEqual(len(PROJECT_ACTIONS),16)
   for name in PROJECT_ACTIONS:self.assertTrue(callable(getattr(ProjectTools,name)))
   from agent.conversation import TOOL_SPECS
   exposed={item['function']['name'] for item in TOOL_SPECS}

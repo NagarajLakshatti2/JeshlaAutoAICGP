@@ -20,6 +20,27 @@ class ProjectDecisionTests(unittest.TestCase):
         self.assertEqual(specs[0]["function"]["name"],"submit_project_action")
         self.assertEqual(specs[0]["function"]["parameters"]["properties"]["action"]["enum"],["ask","finish","read_file"])
 
+    def test_legacy_empty_action_list_exposes_only_ask_and_finish(self):
+        decision={"action":"finish","answer":"Inspected evidence."}
+        with patch("agent.project_decisions.call_tool_messages",return_value=reply(decision)) as model:
+            self.assertEqual(json.loads(call_project_decision([],[])),decision)
+        allowed=model.call_args.args[1][0]["function"]["parameters"]["properties"]["action"]["enum"]
+        self.assertEqual(allowed,["ask","finish"])
+
+    def test_generic_envelope_advertises_real_handler_arguments(self):
+        def read_file(relative_path: str, start_line: int = 1, max_lines: int = 40):pass
+        def inspect_browser_page(url: str, evidence_folder: str = "test-output/agent-web", limit: int = 20):pass
+        decision={"action":"read_file","arguments":{"relative_path":"requirements.md","start_line":15,"max_lines":15}}
+        with patch("agent.project_decisions.call_tool_messages",return_value=reply(decision)) as model:
+            result=json.loads(call_project_decision([{"role":"user","content":"Read the selected source"}],
+                {"read_file":read_file,"inspect_browser_page":inspect_browser_page}))
+        self.assertEqual(result,decision)
+        properties=model.call_args.args[1][0]["function"]["parameters"]["properties"]["arguments"]["properties"]
+        for name in ("files","relative_path","start_line","max_lines","url","evidence_folder","limit"):
+            self.assertIn(name,properties)
+        self.assertEqual(properties['relative_path']['type'],'string')
+        self.assertEqual(properties['start_line']['type'],'integer')
+
     def test_unknown_and_unavailable_actions_rejected(self):
         for decision in [{"action":"delete_file"},{"action":"create_file"},{"action":"read_file","result":"invented"},{"action":"read_file","arguments":[]}]:
             with patch("agent.project_decisions.call_tool_messages",return_value=reply(decision)):

@@ -35,6 +35,31 @@ class FallbackTests(unittest.TestCase):
     def quota(self, provider):
         return ProviderError(provider, "QUOTA_EXHAUSTED", "fixture", status=429)
 
+
+    def test_manual_plan_read_only_tools_recover_to_gemini_without_replaying_read(self):
+        import json
+        from agent.runtime.conversation import TOOL_SPECS
+        specs = [spec for spec in TOOL_SPECS if spec['function']['name'] in {'read_file', 'validate_test_plan'}]
+        history = [{'role': 'user', 'content': 'Check the draft from the already read requirement.'},
+                   {'role': 'assistant', 'tool_calls': [{'id': 'read-1', 'function': {'name': 'read_file', 'arguments': '{"relative_path":"requirements.md"}'}}]},
+                   {'role': 'tool', 'tool_call_id': 'read-1', 'name': 'read_file', 'content': '{"content":"Entered text can be cleared."}'}]
+        calls = []
+        def invoke(provider, messages, offered, **options):
+            calls.append((provider, messages, offered, options))
+            if provider == 'openrouter': raise self.quota(provider)
+            if provider == 'groq': raise ProviderError('groq', 'TOOL_OUTPUT', 'Rejected native or JSON fixture', status=400)
+            return {'role':'assistant','tool_calls':[{'id':'check','function':{'name':'validate_test_plan','arguments':json.dumps({'plan_json':'{"cases":[]}'})}}]}
+        with patch.dict(os.environ, {'LLM_FALLBACK_ORDER':'openrouter,groq,gemini'}), patch.object(tools,'LLM_PROVIDER','openrouter'), patch.object(tools,'_call_tool_provider',side_effect=invoke):
+            reply = tools.call_tool_messages(history,specs,max_tokens=2048)
+        self.assertEqual([row[0] for row in calls],['openrouter','groq','groq','gemini'])
+        self.assertTrue(calls[2][3]['json_mode'])
+        self.assertEqual(reply['tool_calls'][0]['function']['name'],'validate_test_plan')
+        self.assertEqual([m for m in calls[-1][1] if m.get('role')=='tool'],[history[-1]])
+        # Adapter returns data only: no handler executed and the original history is untouched.
+        self.assertEqual(history[-1]['content'],'{"content":"Entered text can be cleared."}')
+        self.assertFalse(tools._read_only_fallback_registry(specs+[{'type':'function','function':{'name':'create_file'}}]))
+        self.assertFalse(tools._read_only_fallback_registry(specs+[{'type':'function','function':{'name':'suggest_memory'}}]))
+
     def test_exact_order_and_single_successful_reply(self):
         calls = []
         def invoke(provider):

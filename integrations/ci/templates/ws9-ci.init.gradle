@@ -1,0 +1,189 @@
+// Isolated selected WS9 pilots. Does not replace build.gradle or normal test tasks.
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+import java.security.MessageDigest
+import java.time.Instant
+import java.time.Duration
+import java.net.InetAddress
+import java.net.Inet4Address
+import javax.xml.parsers.DocumentBuilderFactory
+
+def sha256 = { File file ->
+    MessageDigest.getInstance('SHA-256').digest(file.bytes).encodeHex().toString()
+}
+
+def textSha256 = { File file ->
+    def text=file.getText('UTF-8').replace('\r\n','\n').replace('\r','\n')
+    if(text.startsWith('\uFEFF')) text=text.substring(1)
+    MessageDigest.getInstance('SHA-256').digest(text.getBytes('UTF-8')).encodeHex().toString()
+}
+
+gradle.projectsEvaluated {
+    def p = gradle.rootProject
+    def profileFile = new File(p.projectDir, 'ci/ws9/pilots.json')
+    def cfg = new JsonSlurper().parse(profileFile)
+    if (cfg.version != 1 || cfg.source_text_sha256.size() != 4) throw new GradleException('Use the reviewed WS9 source-bound CI profile')
+    cfg.source_text_sha256.each { relative, digest ->
+        def file = new File(p.projectDir, relative).canonicalFile
+        if (!file.toPath().startsWith(p.projectDir.canonicalFile.toPath()) || !file.isFile() || textSha256(file) != digest)
+            throw new GradleException('WS9 source changed; review the CI profile: ' + relative)
+    }
+    def evidenceRoot = new File(p.projectDir, 'test-output/ws9-ci')
+    def configuration = [:]
+    def validateReport = { File reportFile, String className, List expected, Long started, Long finished ->
+        if (!reportFile.isFile() || reportFile.length() > 5000000L || reportFile.lastModified() < started-2000L || reportFile.lastModified() > finished+2000L)
+            throw new GradleException('Missing, stale, oversized or out-of-window WS9 native report')
+        def factory=DocumentBuilderFactory.newInstance()
+        factory.setFeature('http://apache.org/xml/features/disallow-doctype-decl',true)
+        factory.setFeature('http://xml.org/sax/features/external-general-entities',false)
+        factory.setFeature('http://xml.org/sax/features/external-parameter-entities',false)
+        factory.setXIncludeAware(false);factory.setExpandEntityReferences(false)
+        def doc=factory.newDocumentBuilder().parse(reportFile)
+        if (doc.documentElement.tagName != 'testsuite') throw new GradleException('Expected one native JUnit class report')
+        def cases=doc.getElementsByTagName('testcase')
+        def names=[]
+        int failed=0;int skipped=0
+        for (int i=0;i<cases.length;i++) {
+            def item=cases.item(i);names.add(item.getAttribute('name'))
+            if (item.getAttribute('classname') != className) throw new GradleException('Unexpected test class in WS9 report')
+            failed+=item.getElementsByTagName('failure').length+item.getElementsByTagName('error').length
+            skipped+=item.getElementsByTagName('skipped').length
+        }
+        if (names.size()!=expected.size() || names.toSet().size()!=names.size() || names.toSet()!=expected.toSet() || failed || skipped || doc.getElementsByTagName('failure').length || doc.getElementsByTagName('error').length)
+            throw new GradleException('WS9 report must pass exactly the selected unique methods, with no skips/configuration failures')
+        if (doc.documentElement.hasAttribute('tests') && doc.documentElement.getAttribute('tests').toInteger()!=expected.size())
+            throw new GradleException('WS9 report count metadata differs from its case inventory')
+        ['failures','errors','skipped'].each { key ->
+            if (doc.documentElement.hasAttribute(key) && doc.documentElement.getAttribute(key).toInteger()!=0)
+                throw new GradleException('WS9 native report has nonzero '+key)
+        }
+        [total:names.size(),passed:names.size(),failed:0,skipped:0,methods:names,report_sha256:sha256(reportFile)]
+    }
+    // Exposed for a clearly labelled local synthetic parser check, never a CI test bypass.
+    p.ext.ws9ValidateNativeReport = validateReport
+    ['api','web'].each { lane ->
+        def data=cfg[lane]
+        if (!(data.methods instanceof List) || !data.methods || data.methods.toSet().size()!=data.methods.size())
+            throw new GradleException('Expected unique selected methods')
+        def title=lane.capitalize()
+        def deps=p.configurations.create('ws9Ci'+title+'Deps')
+        def artifacts=lane=='api' ? ['io.rest-assured:rest-assured:'+p.ext.restassuredVersion] : ['com.microsoft.playwright:playwright:'+p.ext.playwrightVersion]
+        artifacts += ['org.testng:testng:'+p.ext.testngVersion,'com.fasterxml.jackson.core:jackson-databind:'+p.ext.jacksonVersion]
+        artifacts.each { p.dependencies.add(deps.name,it) }
+        def folder=new File(evidenceRoot,lane)
+        def classesFolder=new File(folder,'compiled')
+        def resourcesFolder=new File(folder,'resources')
+        def source=p.sourceSets.create('ws9Ci'+title) {
+            java.setSrcDirs([new File(p.projectDir,'src/test/java'),new File(p.projectDir,'src/main/java')])
+            java.include(data['class'].replace('.','/')+'.java')
+            if(lane=='api') java.include('config/ConfigReader.java')
+            resources.setSrcDirs([])
+            compileClasspath=deps;runtimeClasspath=output+deps
+        }
+        p.tasks.named(source.compileJavaTaskName) { options.release=17;destinationDirectory=classesFolder }
+        source.output.classesDirs.setFrom(p.files(classesFolder))
+        def prepare=p.tasks.register('ws9CiPrepare'+title) {
+            doLast {
+                resourcesFolder.mkdirs()
+                if(lane=='api') {
+                    def file=new File(resourcesFolder,'config/common.properties');file.parentFile.mkdirs();file.text='api.timeout.ms=15000\n'
+                }
+            }
+        }
+        if(lane=='web') {
+            p.tasks.register('ws9CiInstallChromium',JavaExec) {
+                classpath=deps;mainClass='com.microsoft.playwright.CLI'
+                args=['install','--with-deps','chromium']
+            }
+        }
+        def selected=p.tasks.register('ws9Ci'+title,Test) {
+            dependsOn p.tasks.named(source.classesTaskName),prepare
+            testClassesDirs=p.files(classesFolder);classpath=source.runtimeClasspath+p.files(resourcesFolder)
+            useTestNG();include(data['class'].replace('.','/')+'.class');workingDir=folder
+            timeout=Duration.ofMinutes(4);maxParallelForks=1
+            systemProperty 'rp.enable','false';systemProperty 'rp.enabled','false'
+            if(lane=='api') {
+                systemProperty 'api.base.url',data.url;systemProperty 'api.pilot.user.id',data.user_id.toString()
+                systemProperty 'ws9.evidence.dir',new File(folder,'responses').absolutePath
+            } else {
+                ['url','by','target','value','dismiss'].each {key->systemProperty 'web.pilot.'+key,data[key]}
+                systemProperty 'web.pilot.evidence',new File(folder,'browser').absolutePath
+                environment 'PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD','1'
+            }
+            reports.junitXml.outputLocation=new File(folder,'reports/xml')
+            reports.html.outputLocation=new File(folder,'reports/html')
+            binaryResultsDirectory=new File(folder,'reports/binary')
+            outputs.upToDateWhen {false}
+            outputs.cacheIf {false}
+            testLogging {events 'passed','failed','skipped'}
+            doFirst {
+                def marker=new File(folder,'run-start.json')
+                if(marker.exists() || new File(folder,'reports/xml').listFiles()?.any {it.name.startsWith('TEST-')})
+                    throw new GradleException('Existing CI evidence found; use a fresh checkout/workspace, never accept stale output')
+                if(lane=='web') {
+                    def address=System.getenv('WS9_WEB_ADDRESS')
+                    if(!address || !(address==~ /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/)) throw new GradleException('Missing reviewed public IPv4 address')
+                    def ip=InetAddress.getByName(address)
+                    def octets=ip.address.collect {it & 255}
+                    if(!(ip instanceof Inet4Address) || ip.isAnyLocalAddress() || ip.isLoopbackAddress() || ip.isSiteLocalAddress() || ip.isLinkLocalAddress() || ip.isMulticastAddress() || octets[0]==0 || octets[0]>=224 || (octets[0]==100 && octets[1]>=64 && octets[1]<=127) || (octets[0]==198 && octets[1] in [18,19]))
+                        throw new GradleException('Local/private/nonpublic browser pin rejected')
+                    systemProperty 'web.pilot.address',address
+                }
+                folder.mkdirs()
+                marker.text=JsonOutput.prettyPrint(JsonOutput.toJson([started_at:Instant.now().toString(),started_millis:System.currentTimeMillis(),source_text_sha256:cfg.source_text_sha256,profile_sha256:sha256(profileFile),lane:lane,expected:data.methods,commit:System.getenv('GITHUB_SHA') ?: 'local-unpublished']))
+            }
+        }
+        def verify=p.tasks.register('ws9CiVerify'+title) {
+            doLast {
+                def result=[status:'P',scope:'selected native CI slice only',lane:lane,application_execution:true]
+                try {
+                    def test=selected.get()
+                    if(!test.state.executed || test.state.failure || test.state.skipped || !test.didWork)
+                        throw new GradleException('Selected test task did not complete successfully')
+                    def marker=new File(folder,'run-start.json')
+                    if(!marker.isFile()) throw new GradleException('Missing actual selected execution marker')
+                    def started=new JsonSlurper().parse(marker)
+                    cfg.source_text_sha256.each {relative,digest->if(textSha256(new File(p.projectDir,relative))!=digest) throw new GradleException('Source changed during execution')}
+                    def reports=new File(folder,'reports/xml').listFiles()?.findAll{it.name.startsWith('TEST-') && it.name.endsWith('.xml')} ?: []
+                    if(reports.size()!=1) throw new GradleException('Require one exact nonoverlapping native class report')
+                    result.native_result=validateReport(reports[0],data['class'],data.methods,started.started_millis as long,System.currentTimeMillis())
+                    if(lane=='api') {
+                        def captures=new File(folder,'responses').listFiles()?.findAll{it.name.endsWith('.json')} ?: []
+                        if(captures.size()!=5) throw new GradleException('Selected API pilot requires its five response captures')
+                        def expectedIds=['API-TC-001':1,'API-TC-002':2,'API-TC-003':2]
+                        def actualIds=[:].withDefault{0}
+                        captures.each {file->def value=new JsonSlurper().parse(file);if(value.method!='GET' || value.status!=200 || !(value.case_id in expectedIds.keySet())) throw new GradleException('Invalid API capture');actualIds[value.case_id]++}
+                        if(actualIds!=expectedIds) throw new GradleException('Missing or duplicated API case capture')
+                    } else {
+                        def observed=new JsonSlurper().parse(new File(folder,'browser/observations.json'))
+                        if(observed.case_id!='TI-TC-001' || observed.status!='passed' || observed.initial_value!='' || observed.entered_value!=data.value || observed.cleared_value!='')
+                            throw new GradleException('Web observations do not match the selected contract')
+                        ['initial.png','entered.png','cleared.png','trace.zip'].each {name->def file=new File(folder,'browser/'+name);if(!file.isFile() || !file.length()) throw new GradleException('Missing web artifact: '+name)}
+                    }
+                    result.status='Y';result.started_at=started.started_at;result.finished_at=Instant.now().toString()
+                    result.commit=started.commit;result.source_text_sha256=started.source_text_sha256;result.profile_sha256=started.profile_sha256
+                } catch(Exception error) {
+                    result.error=error.toString()
+                }
+                folder.mkdirs()
+                new File(folder,'acceptance.json').text=JsonOutput.prettyPrint(JsonOutput.toJson(result))
+                new File(folder,'summary.md').text='## WS9 '+lane+' selected CI slice\n\nStatus: '+result.status+'\n\n'+(result.status=='Y' ? 'Passed exactly '+data.methods.size()+' selected native tests. Broader application coverage, mobile and release acceptance are separate.' : 'Incomplete/failed: '+result.error)+'\n'
+                if(result.status!='Y') throw new GradleException('WS9 '+lane+' acceptance incomplete; inspect its artifacts')
+            }
+        }
+        selected.configure {finalizedBy verify}
+        configuration[lane]=[source:source,task:selected,methods:data.methods]
+    }
+    p.tasks.register('ws9CiVerifyConfiguration') {
+        doLast {
+            configuration.each {lane,item->
+                def sourceFiles=item.source.allJava.files.collect {it.canonicalPath}.toSet()
+                def expected=[new File(p.projectDir,'src/test/java/'+cfg[lane]['class'].replace('.','/')+'.java').canonicalPath] as Set
+                if(lane=='api') expected.add(new File(p.projectDir,'src/main/java/config/ConfigReader.java').canonicalPath)
+                if(sourceFiles!=expected) throw new GradleException('CI source set includes unexpected/missing files: '+lane)
+                if(item.task.get().testClassesDirs.files.size()!=1) throw new GradleException('Unexpected CI test output scope')
+            }
+            println 'WS9 CI configuration verified: isolated '+cfg.api.methods.size()+'-case API and '+cfg.web.methods.size()+'-case web sources; no test executed'
+        }
+    }
+}

@@ -75,7 +75,7 @@ Evidence: `outputs/acceptance/ws4-negative-review-routing-20261023-123215/summar
 | **Y** — 6. Controlled actions | Classified local tools, exact console/browser approvals and durable receipts | Exact console/browser approval, decline, durable receipts and restart/replay protection verified for trusted local-user scope. OS sandboxing and public multi-user authentication are outside this scope. | Trusted local-user core; OS command containment and wider release hardening are not claimed |
 | **Y** — 7. Reliability and observability | Useful error types, timings, retries/backoff, budgets, concurrency, source/tool activity, regression coverage | Scoped crash/save recovery, simulated provider-failure presentation/recovery and configurable context budgets verified. Full offline regression: 343 tests passed on 18 October 2026. Live provider fault injection and exact token fit are not claimed. | Connection, quota, malformed output, interrupted process and concurrent-chat cases are handled; model-visible claims match real tool evidence |
 | **P - BLOCKED / AWAITING RELEASE DECISION** — 8. Core-agent release | Integrated acceptance, setup, dependency profiles and backup/recovery | Y for trusted local preview, GitHub 701-test CI/startup and exact-clone Python-module/browser setup. P for native launcher signing, optional/full-profile quality, historical privacy/history and full release scope. | Resolve or explicitly scope the remaining release gates; existing setup passes retain Y |
-| **P** — 9. AI-assisted testing and automation integration | Manual test design, Jira/MCP traceability, API/web/mobile adapters, project-aligned tests and evidence-based reporting | PLAN READY: named planning chat reviewed; stages and first local-requirement pilot defined below. Implementation/execution remains parked pending pilot scope. | Selected workflow acceptance and explicit scope decision; WS8 remains P |
+| **P** — 9. AI-assisted testing and automation integration | Manual test design, Jira/MCP traceability, API/web/mobile adapters, project-aligned tests and evidence-based reporting | Text Input 9.0/9.1 Y: 12-case revision-2 design accepted under user delegation; source checker and sampled Gemini read/correct/final flow verified. 9.2 Y for the TI-TC-001 observation pilot: actual Chromium entry/clear passed with values/screenshots; defect-draft failures tested offline. Other 11 Text Input cases not run. 9.3 native API pilot: 3 passed with fresh reports; broader agent-chat browser/API generation integration remains pending. | Selected workflow acceptance and explicit scope decision; WS8 remains P |
 
 ## Memory development details
 
@@ -278,7 +278,7 @@ Full core release, optional RAG setup/quality, summary quality, public deploymen
 
 ### Workstream 9 — AI-assisted testing and automation integration
 
-**Overall: P — PLAN READY; implementation/execution remains parked pending the selected pilot's scope and acceptance decision.** The user requested WS9 planning and review of the chat **Plan AI-assisted testing roadmap**. All seven turns were reviewed on 23 October 2026 (chat ID 01a1535b-7adc-7d00-93ed-8403e6629a2a). Its target covers AI-assisted manual testing, Jira/MCP requirements and traceability, API, web, mobile, controlled execution, and evidence-based reporting. This section is the consolidated implementation plan in the existing roadmap; it does not mark WS8 complete or start a new application/framework.
+**Overall: P — 9.0/9.1 selected design, 9.2 observation, 9.3 native API pilot and 9.4 agent-planned native web pilot are Y within their stated scopes. Next 9.6 while the 9.5 live gates are parked.** The user requested WS9 planning and review of the chat **Plan AI-assisted testing roadmap**. All seven turns were reviewed on 23 October 2026 (chat ID 01a1535b-7adc-7d00-93ed-8403e6629a2a). Its target covers AI-assisted manual testing, Jira/MCP requirements and traceability, API, web, mobile, controlled execution, and evidence-based reporting. This section is the consolidated implementation plan in the existing roadmap; it does not mark WS8 complete or start a new application/framework.
 
 Product naming in that chat used **JeshlaAutoAgent**. The current repository/application still uses **JeshlaAutoAI**. Naming is recorded without renaming paths, packages, entry points or repository metadata.
 
@@ -286,7 +286,21 @@ Product naming in that chat used **JeshlaAutoAgent**. The current repository/app
 
 - **Y** — Read the named planning chat and reconcile its manual/API/web/mobile/Jira scope with this roadmap.
 - **Y** — Define delivery order, reusable package boundaries, the first pilot and measurable stage gates below.
-- **P — PARKED** — WS9 implementation and application execution await a selected pilot scope. Full WS8 remains P; a narrower pilot decision must list accepted limitations rather than silently declaring the general release complete.
+- **Y** — Stage 9.0 read-only pilot selected: the user chose Text Input in D:/PlayWrightDemoGradle. Relevant project/build/source conventions and source hashes are recorded; all inspected files remain unchanged. This closes the read-only pilot setup, not application availability or test execution.
+- **Y** — Latest scoped live acceptance: isolated Gemini completed the source/check/correction/final flow. The evaluator false-negative for this test has not been run is fixed (four tests pass); preserved-response reassessment and source audit pass. This supersedes the earlier provider-blocked status for this pilot, while prior logs remain historical.
+- **Y** — Native structured plan input and evaluation-wrapper fix: legacy string input retained, exact-one input enforced, nested schema and strict quote checks preserved; captured malformed input reproduced offline. 222 affected tests passed, one permission skip; all 12 pilot cases agree across both forms. That earlier hosted recheck stopped at OpenRouter quota and a Groq connection failure. Its evidence remains historical; the later isolated Gemini run closes the sampled live pilot gate.
+- **Y** — Shared-conversation draft correction: precise validator feedback, one matching case/source correction, and conservative incomplete results for unresolved, unrelated or truncated drafts. 207 affected offline tests pass, one permission skip; real-source/mocked-model read -> reject -> correct -> final flow passes. The later isolated Gemini run also verified the matching read -> rejected quote -> corrected draft -> final flow live.
+- **Y** — Requirement-based revision 2 completed after the user requested changes across all input types: 12 cases / nine types / 35 step-result pairs, independent setup, precise source/decision provenance and explicit deferred coverage. Revision 2 is now accepted as the scoped design under the user's explicit choose-the-best delegation. Independent human review and execution approval are not claimed.
+- **Y** — Stage 9.1 selected Text Input design pilot: nine stories, 12 revision-2 cases, 35 step/result pairs and six recorded decisions; design accepted under user delegation. Gemini completed one real read -> rejected quote -> corrected draft -> final answer flow (30.55 seconds). The saved unexecuted disclaimer passed corrected evaluation and local source review. Independent human review and target execution are not claimed. See [workstream-9-text-input-pilot.md](workstream-9-text-input-pilot.md).
+- **Y** — Recorded pilot clarifications: all six questions resolved; TI-D03 through TI-D06 explicitly accepted by the user. The initial clarification update changed five cases; revision 2 subsequently reviewed all 12, which remain not run. The user authorized the selected excerpt and all three hosted destinations after the initial automatic-review rejection. Earlier fallback attempts did not complete a checked draft; the later isolated Gemini run passed the sampled live gate.
+- **Y** — Local assistant design review covers all 12 draft cases / nine stories against the selected source and six decisions; scoped design acceptance is recorded under user delegation, with no independent human review claimed. The earlier bounded diagnostic encountered OpenRouter quota, Groq tool-output rejection and Gemini HTTP 503. Those historical failures do not override the later successful Gemini pilot. See the current completion record in the pilot document.
+- **Y** — Read-only fallback registration fixed and regression-tested (93 passed, one permission skip); OpenRouter -> Groq -> Gemini observed live. An earlier four-call attempt ended without a validated plan; the later isolated Gemini run completed the sampled live draft/final flow. This does not certify availability or live planning on every provider.
+- **Y** — Reusable source-plan checker: registered in existing agent/tools, policies and runtime packages. All 12 pilot cases pass structure and exact-source checks in bounded batches; every case remains not run. Focused test evidence and the initial/recovered browser-test timeout are recorded in the pilot checkpoint.
+- **Y — 9.2 component** — Added read-only observation/evidence checking and defect drafting in agent/tools/test_observations.py, exposed through existing shared conversation/project registries. Exact case-pack/evidence hashes and quotes, step IDs, partial/not-run states and synthetic labels are enforced; no approval, application run or external filing. Local observation requests are kept out of implicit Jira routing. Focused offline regression: 180 run / 179 pass / one existing Windows symlink permission skip. Synthetic selected-pack acceptance passes; the 12 original cases are unchanged. **Y — scoped 9.2 acceptance** — the later isolated Chromium TI-TC-001 check passed with actual values/screenshots; other 11 cases remain not run. Reusable browser helper tests and saved-observation compatibility: 37 pass. No hosted LLM call was needed. Deployed agent-chat browser action integration remains future work. See the pilot document and outputs/acceptance/ws9-observations-20261023.
+- **Y — 9.3 selected native API pilot** — Added one tests.api.UserLookupPilotTest class in the target project; isolated REST Assured/TestNG execution passed three selected GET-only cases, with five raw response captures and exact fresh-report case matching. Reusable integrations/api adapter and existing approval/receipt/fresh-report infrastructure exercised; 36 offline regressions pass. Initial NO-SOURCE run was rejected, corrected task output binding verified by the actual three-test run. Original inspected target sources/configuration unchanged. See [workstream-9-api-pilot.md](workstream-9-api-pilot.md).
+- **Y — 9.4 selected web pilot** — Actual Groq read -> controlled browser inspection -> locator plan, followed by reviewed deterministic Java generation and isolated native Playwright/TestNG execution. TI-TC-001 passed with exact values, three screenshots, valid trace archive and fresh one-case report. 94 affected offline tests pass; inspected existing target files unchanged. New code lives in integrations/web and existing tools/runtime/policies packages. See [workstream-9-web-pilot.md](workstream-9-web-pilot.md).
+- **P — 9.5 mobile** — Android setup/native smoke Y retained. Scoped Java adapter now implemented: source/instance binding, isolated mobileTest source set, existing action receipts and strict fresh-report checks; 57 offline checks and final compile/isolation pass. Live Java is **P — BLOCKED** after Settings service startup failure and one corrected-environment timeout; uncertain receipt preserved, owned runtime stopped. iOS remains **P — BLOCKED** on host/device prerequisites. Existing inspected target source/config files unchanged. See [workstream-9-mobile-pilot.md](workstream-9-mobile-pilot.md).
+- **P — PARKED** — Wider application execution/release gates remain separate; the TI-TC-001 browser observation and selected native API pilot above are the explicitly executed slices. Full WS8 and its blocked/parked gates retain their status.
 
 #### Existing components to reuse
 
@@ -306,15 +320,15 @@ This is a read-only component inventory. No live Jira connection, automation-pro
 
 | Stage | Status | Deliverable | Gate for Y |
 |---|---|---|---|
-| 9.0 — Select the pilot | **X** | One configurable local project, one requirement/feature, target environment, permitted operations and evidence destination | Project exists, conventions and source references are recorded; exclusions and success criteria are agreed; no target files changed during inspection |
-| 9.1 — Requirements and AI-assisted manual testing | **P** | Brief from local text/document first; optional explicitly requested Jira story. Draft scenarios, test data, test cases and ambiguity questions | Every expected result traces to a supplied requirement or explicit user decision; no invented business rules; positive/negative/boundary/risk coverage is reviewed; unknowns remain explicit |
-| 9.2 — Manual observations and defect drafting | **X** | User observations or scoped connected-tool evidence, linked to cases; reproducible defect draft | Expected and observed results are distinct; each actual claim has evidence, unexecuted cases say not run, and no defect is filed externally without explicit authorization |
-| 9.3 — First API automation workflow | **X** | One selected API journey using the target project's existing conventions and reviewed assertions | Positive and declared negative cases assert business outcomes as well as HTTP status; execution is selected/approved; actual command/report/results match the case IDs |
-| 9.4 — First web automation workflow | **X** | Inspect one allowed page/flow, draft project-aligned tests and locators, then review proposed changes | Assertions come from requirements; selectors come from inspected application evidence; reviewed changes and approved runs yield matching fresh reports and failure artifacts |
-| 9.5 — Mobile automation | **X** | Android pilot first if suitable, then separately scoped iOS; confirm Appium/device/host requirements at implementation time | A real device/emulator run verifies a selected native/hybrid flow with capabilities, permissions and evidence recorded. Browser mobile viewport checks do not close native-mobile acceptance |
-| 9.6 — Failure investigation and reviewed repair | **P** | Correlate assertion failures with logs, traces, screenshots and requirements; propose minimal changes | Distinguish application defect, test defect, test-data/environment failure and unknown; reviewed repair preserves intended assertions; bounded rerun produces actual evidence |
-| 9.7 — Integrated reporting and optional Jira traceability | **P** | Requirement -> case -> generated file -> run -> result -> artifact links, plus coverage/gaps | Every pass/fail/skipped/not-run claim matches evidence; partial runs remain partial; optional Jira updates have exact reviewed content and approval |
-| 9.8 — CI and WS9 release acceptance | **X** | Repeat the accepted API/web/mobile slices in their supported environments; publish the scoped acceptance matrix | Actual application-test CI evidence is reviewed separately from the agent repository's own CI. Required slices pass, limitations are agreed, and no duplicate external writes or hidden reruns occur |
+| 9.0 — Select the read-only pilot | **Y** | One configurable local project, one requirement/feature, target environment, permitted operations and evidence destination | Read-only setup passes for the user-selected Text Input module: actual root, relevant conventions, source references/hashes and pilot review criteria recorded; no target edits. Application execution readiness is separate |
+| 9.1 — Requirements and AI-assisted manual testing | **Y — selected Text Input pilot** | Revision 2: nine source stories, 12 cases, 35 step/result pairs, six decisions; design acceptance under user delegation and one Gemini live read/correct/final flow verified. The design baseline is preserved; current execution is recorded separately in 9.2 | Source/decision traceability and scoped design review accepted under explicit user delegation; unknowns/deferred coverage remain explicit. Independent human review, all-provider live certification, target execution and general release acceptance are outside this Y |
+| 9.2 — Manual observations and defect drafting | **Y — TI-TC-001 observation pilot** | Actual isolated Chromium check verified empty -> Hello World -> empty, with placeholder state, timestamps and screenshots after normal cookie dismissal/click. Failure-draft handling tested offline; no actual failure or issue filed. Other 11 cases not run | Selected-case actual evidence linked to its case-pack revision; missing results stay not run. This does not certify autonomous agent-chat browser integration or all controls/websites |
+| 9.3 — First API automation workflow | **Y — three-case native API pilot** | One new tests.api class: direct user lookup, matching filter, dynamically absent-ID filter. Actual REST Assured/TestNG run: 3 passed, five GET captures and one fresh exact-case report; 36 offline adapter/approval regressions passed | Scoped native workflow accepted via existing receipts/fresh-report tools; original inspected target files unchanged. Full target suite, other API/auth/write contracts and deployed agent-chat generation are not certified |
+| 9.4 — First web automation workflow | **Y — selected TI-TC-001 native web pilot** | Groq read the selected requirement and inspected public controls, then chose the exact Text Input label. Reviewed configurable Java template ran through existing receipts: one native Playwright/TestNG test passed, with screenshots, trace and fresh exact-case report; 94 offline checks passed | Actual empty -> Hello World -> empty values verified; source/inspection hashes bound, original inspected files preserved. Broader controls/sites and live console/Streamlit approval-click acceptance are outside this Y |
+| 9.5 — Mobile automation | **P — Android setup/smoke Y; Java implementation/compile Y; live Java + iOS blocked** | integrations/mobile validates APK/source/baseline hashes and prepares one isolated Java/TestNG task. Final test is under src/mobileTest/java/tests/mobile; Gradle confirms exclusion from normal test sources. 57 offline checks and clean compile/isolation pass | Live Java P — BLOCKED: Appium Settings startup failure, then bounded UiAutomator2/session timeout; uncertain receipt retained, no replay. iOS P — BLOCKED: no compatible Mac/simulator or prepared real iPhone/WDA. Prior native smoke Y remains valid; see [mobile pilot](workstream-9-mobile-pilot.md) |
+| 9.6 — Failure investigation and reviewed repair | **P — read-only investigation Y; verified repair/live rerun P** | Registered project tool inspects one failed native case with hashed report/error citations and bounded log/source/requirement spans. 107 focused checks pass; both saved Appium failures investigated locally | Root cause remains unconfirmed; timeout/unknown outcome blocks automatic replay. No patch or live rerun is claimed. Hosted-model UI acceptance remains P. See [failure investigation](workstream-9-failure-investigation.md) |
+| 9.7 — Integrated reporting and optional Jira traceability | **Y — selected local reporting pilot; interface/Jira P** | integrations/reporting plus read-only build_test_report links 16 selected cases and 27 artifacts. Actual saved evidence: 4 passed, 11 not run, 1 incomplete Android command with a failed native report. 179 focused regressions pass | Separate native/command outcomes; hashes, source spans, metadata association and duplicate checks. No new application run, export or Jira operation. Live hosted UI/export and optional Jira remain P. See [reporting scope and evidence](workstream-9-reporting.md) |
+| 9.8 — CI and WS9 release acceptance | **P — local preparation Y; remote execution/release P** | New manual-only target CI selects 3 API/1 web cases with pinned source text, isolated Gradle tasks, strict fresh-report/artifact checks. Local configuration, 10 synthetic native verifier checks, 133 focused regressions and final wheel checks pass | No commit/push/dispatch or new app run. Publish reviewed target files, obtain both actual same-commit GitHub job artifacts, then review release scope. Mobile/repair/interface and earlier core limits are retained. See [CI handoff and gates](workstream-9-ci-release.md) |
 
 Stages 9.1-9.2 establish manual-testing assistance before automated application execution. API, web and mobile are separately accepted tracks. Start the next selected track after its prerequisite gate; do not require every optional platform before a narrower pilot can be reviewed. The existing project may justify web before API; choose once at stage 9.0 and record the reason.
 
@@ -322,33 +336,34 @@ Stages 9.1-9.2 establish manual-testing assistance before automated application 
 flowchart TD
     B["WS1-WS8: accepted core components
 Remaining P gates recorded"] --> P["WS9 plan — Y
-Pilot implementation scope — pending"]
+Text Input 9.0/9.1/9.2 + API 9.3 + Web 9.4 — Y scoped; later stages pending"]
     P --> R["9.0 Select local project + requirement
-X"]
+Y — selected Text Input sources"]
     R --> Q["9.1 Clarify requirements + manual test pack
-P — reuse existing drafting"]
-    Q --> H["Human review of expected behavior"]
+Y — scoped design + sampled live flow"]
+    Q --> H["Scoped design review — Y
+Accepted under user delegation; execution separate"]
     H --> M["9.2 Manual observations + defect draft
-X"]
+Y — TI-TC-001 live; other 11 not run"]
     H --> A["9.3 API slice
-X"]
+Y — 3 native cases passed"]
     H --> W["9.4 Web slice
-X"]
+Y — agent-planned + 1 native case passed"]
     H --> D["9.5 Mobile slice
-X"]
+P — Android code/compile Y; live Java + iOS blocked"]
     A --> G["Review generated changes"]
     W --> G
     D --> G
     G --> E["Approve selected execution
 Preserve exact action scope"]
     E --> F["9.6 Investigate failure / propose repair
-P — integration pending"]
+P — investigation Y; repair/rerun P"]
     E --> T["9.7 Evidence + traceable report
-P — integration pending"]
+Y — selected local pilot; interface/Jira P"]
     M --> T
     F --> G
     T --> C["9.8 Scoped CI + acceptance
-X"]
+P — prepared Y; actual CI/release pending"]
 ```
 
 The repair arrow means a reviewed, bounded next proposal, not an automatic loop. Retries, approval expiry, uncertain receipts, missing reports or provider limits must stop with an explicit partial/blocked result when the selected budget is exhausted.
@@ -380,8 +395,20 @@ This milestone performs no test execution, automatic Jira login/creation, GitHub
 - Reuse configured hosted providers and current bounded error/fallback behavior. No promise of unlimited tokens, guaranteed 100-percent correctness or a free unlimited hosted API. Ollama remains explicitly user-parked and native semantic dependencies remain optional/blocked.
 - Reuse existing agent behavior and completed WS1-WS8 evidence. Run relevant changed-path regressions and the selected WS9 acceptance scenario; reopen old gates only for a new observed failure or a relevant changed dependency. Do not restart a general WS2 -> WS3 -> WS4 -> WS8 cycle.
 
-**Next concrete step:** stage 9.0, then the stage 9.1 local-requirement pilot. The required inputs are the selected automation-project root and one feature requirement/acceptance-criteria document. The target URL/API/device is needed only when its execution track is selected. This plan does not request credentials in chat or require the user to repeat previously completed core tests.
+**Next concrete step — 9.8 remote acceptance:** local CI preparation is Y, with isolated target configuration, 10 synthetic native-report checks, 133 focused regressions and final wheel verification passing. Publish only the reviewed target CI files plus the selected web class, then run the manual target workflow once and review both jobs/artifacts from the same commit. No CI pass or full release is claimed yet. Existing mobile/iOS, repair and live interface/core gates remain P as recorded; optional Jira stays parked. See [exact target repository/files and handoff](workstream-9-ci-release.md).
 
+The dated checkpoints below are historical. Their earlier pending questions and P statuses are superseded by the current stage table and completion record above.
+
+
+#### Historical — initial email pilot decisions, 23 October 2026
+
+The user explicitly required an email-specific error or invalid-state indicator for invalid email and delegated the validation trigger. The selected pilot requirement is validation on field blur; valid email retains its value without an associated error/invalid state. These are recorded decisions, not observed application behavior. TI-Q01 and TI-Q02 are resolved; seven of 12 cases are now ready for human review, five depend on four remaining questions. All cases remain not run. The source conflict is resolved for this pilot; the Java assertion gaps remain unchanged. See TI-D01/TI-D02 in the pilot pack. Stage 9.1 and WS1-WS8 retain their prior acceptance scope.
+
+#### Historical — initial Text Input pilot checkpoint, 23 October 2026
+
+The selected source is qapracticehub-test-cases.md module lines 12-144. The feature file declares two scenarios; current Java assertions are implementation evidence, not business requirements. Static review found nonempty-only text verification, a commented-out invalid-email validation assertion, broadly scoped validation-error selectors and conditional-versus-mandatory email wording. These are recorded findings/risks without runtime reproduction or source edits.
+
+Source files, line references and hashes, 12 structured cases, nine-story coverage and six questions are retained in outputs/acceptance/ws9-text-input-pilot-20261023/test-pack.json and sources.json. Data checks verify unique IDs, complete story mapping, all cases not run and unchanged inspected source hashes. No Gradle/application/provider/Jira/Ollama request was made. Stage 9.1 is not Y: producing the pack does not itself implement an agent tool or obtain human acceptance. The Word diagram remains the earlier snapshot; this follow-up updates the Markdown tracker only.
 
 ## Core-agent acceptance checklist
 
@@ -402,7 +429,7 @@ Release gates receive Y only when the complete acceptance scenario passes. A wor
 
 ## Immediate next milestone
 
-**WS9 planning is complete for the proposed scope; next is the selected local-requirement pilot (9.0 -> 9.1).** Confirm its project, requirement and permitted operations before implementation. WS8 full release and the WS2/WS3/WS4 blocked or parked gates retain P. Planning does not grant autonomous application execution or mark them complete. The approved local development-preview scope and all recorded Y checks remain accepted; no repeated general core-validation cycle is scheduled.
+**WS9 9.0 through 9.4 are Y within their selected pilot scopes.** 9.5 Android setup/native smoke and Java implementation/compile are Y; live Java and iOS execution remain P — BLOCKED with evidence. 9.6 read-only investigation is Y; causal repair/live rerun remain P. 9.7 selected local reporting is Y, with live interface/export and optional Jira P. 9.8 local CI preparation is Y; actual target GitHub execution/artifact review and release scope remain P while those live gates are parked. The other 11 web Text Input cases remain not run. WS8 and earlier blocked/parked gates retain their recorded status; accepted API/web checks need no repeat cycle.
 
 ## Evidence labels
 

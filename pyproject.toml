@@ -30,3 +30,6 @@ namespaces = true
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements-core.txt"]}
+
+[tool.setuptools.package-data]
+"integrations.ci" = ["templates/*.gradle", "templates/*.yml"]

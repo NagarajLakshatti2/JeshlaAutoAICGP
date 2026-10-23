@@ -7,6 +7,10 @@ from agent.providers.fallback import last_provider
 
 
 def call_project_decision(messages, actions):
+    # Historical callers used [] when offering no project actions. Preserve that
+    # case without registering handlers or broadening the allowed action set.
+    if isinstance(actions, (list, tuple)) and not actions:
+        actions = {}
     allowed = sorted(set(actions) | {"ask", "finish"})
     spec = {"type":"function","function":{
         "name":"submit_project_action",
@@ -23,10 +27,20 @@ def call_project_decision(messages, actions):
                 "additionalProperties":True},
             "question":{"type":"string"},"answer":{"type":"string"}},
             "required":["action"],"additionalProperties":False}}}
+    # Advertise real argument names as well as the historical read_files schema.
+    # Otherwise a model can put files=[...] into read_file because it is the only
+    # named property in the generic envelope. Execution still binds the handler.
+    from agent.runtime.project_native_specs import native_project_specs
+    argument_properties=spec["function"]["parameters"]["properties"]["arguments"]["properties"]
+    for action_spec in native_project_specs(actions):
+        function=action_spec["function"]
+        if function["name"] not in actions:continue
+        for name,rule in function["parameters"]["properties"].items():
+            argument_properties.setdefault(name,rule)
     instruction={"role":"system","content":
         "Use only the registered submit_project_action function to propose one action. "
         "Names such as read_file and list_files in the instructions are action values, "
-        "not independently callable functions. Do not execute actions yourself."}
+        "not independently callable functions. Use the chosen handler's argument names; files is for read_files, while read_file uses relative_path/start_line/max_lines. Do not execute actions yourself."}
     if messages and messages[0].get("role")=="system":
         request=[{**messages[0],"content":messages[0]["content"]+"\n\n"+instruction["content"]},*messages[1:]]
     else:

@@ -10,7 +10,7 @@ from agent.providers.errors import request_model, ProviderError, read_model_json
 
 
 _READ_ONLY_FALLBACK_FUNCTIONS = frozenset({
-    "web_search", "fetch_web_page", "submit_answer_review",
+    "web_search", "fetch_web_page", "read_file", "validate_test_plan", "draft_test_observations", "submit_answer_review",
     "submit_documentation_plan", "submit_grounded_sections", "submit_grounding_findings"})
 
 

@@ -507,10 +507,35 @@ class ProjectTools:
             value = value.decode("utf-8", errors="replace")
         return (value or "")[-12000:]
 
+    def inspect_browser_page(self, url: str, evidence_folder: str = "test-output/agent-web", limit: int = 20) -> dict:
+        """Inspect a public page in an isolated browser; approval controls navigation/artifact creation."""
+        from integrations.web.inspection import inspect_browser_page
+        return inspect_browser_page(self, url, evidence_folder, limit)
+
+    def validate_test_plan(self, plan_json: str = None, plan: dict = None) -> dict:
+        """Check one native plan object or legacy JSON string; cases remain not run."""
+        from agent.tools.test_plans import validate_test_plan
+        return validate_test_plan(self, plan_json, plan=plan)
+
+    def draft_test_observations(self, case_file: str, observations_file: str, case_id: str) -> dict:
+        """Read saved case/observation files and return review-only defect drafts."""
+        from agent.tools.test_observations import draft_test_observations
+        return draft_test_observations(self, case_file, observations_file, case_id)
+
     def parse_test_results(self, relative_path: str, limit: int = 100) -> dict:
         """Read a results report, including reports in build/target output folders."""
         from agent.tools.test_results import parse_test_results
         return parse_test_results(self.root, relative_path, limit)
+
+    def build_test_report(self, manifest_file: str, evidence_folder: str = "") -> dict:
+        """Build review-only case/run/evidence Markdown; exporting needs a separate action."""
+        from integrations.reporting.traceability import report_for_agent
+        return report_for_agent(self.root, manifest_file, evidence_folder)
+
+    def investigate_test_failure(self, relative_path: str, case_name: str, case_class: str = "", evidence_spans: list[dict] = None, run_file: str = "") -> dict:
+        """Read one failed report case with bounded evidence; no repair or rerun executes."""
+        from agent.tools.test_failures import investigate_test_failure
+        return investigate_test_failure(self.root, relative_path, case_name, case_class, evidence_spans, run_file)
 
     def run_tests_and_parse(
         self,
