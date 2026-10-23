@@ -1,6 +1,6 @@
 # JeshlaAutoAI — Agentic AI roadmap
 
-Updated: 23 October 2026
+Updated: 24 October 2026
 
 ## Your actual development position
 
@@ -278,7 +278,7 @@ Full core release, optional RAG setup/quality, summary quality, public deploymen
 
 ### Workstream 9 — AI-assisted testing and automation integration
 
-**Overall: P — 9.0/9.1 selected design, 9.2 observation, 9.3 native API pilot and 9.4 agent-planned native web pilot are Y within their stated scopes. Next 9.6 while the 9.5 live gates are parked.** The user requested WS9 planning and review of the chat **Plan AI-assisted testing roadmap**. All seven turns were reviewed on 23 October 2026 (chat ID 01a1535b-7adc-7d00-93ed-8403e6629a2a). Its target covers AI-assisted manual testing, Jira/MCP requirements and traceability, API, web, mobile, controlled execution, and evidence-based reporting. This section is the consolidated implementation plan in the existing roadmap; it does not mark WS8 complete or start a new application/framework.
+**Overall: P — 9.0/9.1 selected design, 9.2 observation, 9.3 native API pilot and 9.4 agent-planned native web pilot are Y within their stated scopes. Selected local reporting (9.7) and actual API/web CI (9.8) are also Y; full release remains P for the recorded mobile/repair/interface and earlier core gates.** The user requested WS9 planning and review of the chat **Plan AI-assisted testing roadmap**. All seven turns were reviewed on 23 October 2026 (chat ID 01a1535b-7adc-7d00-93ed-8403e6629a2a). Its target covers AI-assisted manual testing, Jira/MCP requirements and traceability, API, web, mobile, controlled execution, and evidence-based reporting. This section is the consolidated implementation plan in the existing roadmap; it does not mark WS8 complete or start a new application/framework.
 
 Product naming in that chat used **JeshlaAutoAgent**. The current repository/application still uses **JeshlaAutoAI**. Naming is recorded without renaming paths, packages, entry points or repository metadata.
 
@@ -328,7 +328,7 @@ This is a read-only component inventory. No live Jira connection, automation-pro
 | 9.5 — Mobile automation | **P — Android setup/smoke Y; Java implementation/compile Y; live Java + iOS blocked** | integrations/mobile validates APK/source/baseline hashes and prepares one isolated Java/TestNG task. Final test is under src/mobileTest/java/tests/mobile; Gradle confirms exclusion from normal test sources. 57 offline checks and clean compile/isolation pass | Live Java P — BLOCKED: Appium Settings startup failure, then bounded UiAutomator2/session timeout; uncertain receipt retained, no replay. iOS P — BLOCKED: no compatible Mac/simulator or prepared real iPhone/WDA. Prior native smoke Y remains valid; see [mobile pilot](workstream-9-mobile-pilot.md) |
 | 9.6 — Failure investigation and reviewed repair | **P — read-only investigation Y; verified repair/live rerun P** | Registered project tool inspects one failed native case with hashed report/error citations and bounded log/source/requirement spans. 107 focused checks pass; both saved Appium failures investigated locally | Root cause remains unconfirmed; timeout/unknown outcome blocks automatic replay. No patch or live rerun is claimed. Hosted-model UI acceptance remains P. See [failure investigation](workstream-9-failure-investigation.md) |
 | 9.7 — Integrated reporting and optional Jira traceability | **Y — selected local reporting pilot; interface/Jira P** | integrations/reporting plus read-only build_test_report links 16 selected cases and 27 artifacts. Actual saved evidence: 4 passed, 11 not run, 1 incomplete Android command with a failed native report. 179 focused regressions pass | Separate native/command outcomes; hashes, source spans, metadata association and duplicate checks. No new application run, export or Jira operation. Live hosted UI/export and optional Jira remain P. See [reporting scope and evidence](workstream-9-reporting.md) |
-| 9.8 — CI and WS9 release acceptance | **P — local preparation Y; remote execution/release P** | New manual-only target CI selects 3 API/1 web cases with pinned source text, isolated Gradle tasks, strict fresh-report/artifact checks. Local configuration, 10 synthetic native verifier checks, 133 focused regressions and final wheel checks pass | No commit/push/dispatch or new app run. Publish reviewed target files, obtain both actual same-commit GitHub job artifacts, then review release scope. Mobile/repair/interface and earlier core limits are retained. See [CI handoff and gates](workstream-9-ci-release.md) |
+| 9.8 — CI and WS9 release acceptance | **P — selected actual API/web CI Y; full release P** | Published five authorized files to master, commit 0cb2d5e. Manual run 40018437976 passed exactly 3 API/1 web tests, zero failures/errors/skips. Downloaded native XML, five response captures, browser observations/screenshots/trace and source/profile/archive digests reviewed | Selected CI gate Y. Full release retains mobile/iOS, 9.6 repair/live rerun, unverified interface/export and earlier core gates. No duplicate dispatch or test-assertion relaxation. See [actual CI evidence and remaining gates](workstream-9-ci-release.md) |
 
 Stages 9.1-9.2 establish manual-testing assistance before automated application execution. API, web and mobile are separately accepted tracks. Start the next selected track after its prerequisite gate; do not require every optional platform before a narrower pilot can be reviewed. The existing project may justify web before API; choose once at stage 9.0 and record the reason.
 
@@ -363,7 +363,7 @@ Y — selected local pilot; interface/Jira P"]
     M --> T
     F --> G
     T --> C["9.8 Scoped CI + acceptance
-P — prepared Y; actual CI/release pending"]
+Y — actual 3 API + 1 web CI; full release P"]
 ```
 
 The repair arrow means a reviewed, bounded next proposal, not an automatic loop. Retries, approval expiry, uncertain receipts, missing reports or provider limits must stop with an explicit partial/blocked result when the selected budget is exhausted.
@@ -395,7 +395,7 @@ This milestone performs no test execution, automatic Jira login/creation, GitHub
 - Reuse configured hosted providers and current bounded error/fallback behavior. No promise of unlimited tokens, guaranteed 100-percent correctness or a free unlimited hosted API. Ollama remains explicitly user-parked and native semantic dependencies remain optional/blocked.
 - Reuse existing agent behavior and completed WS1-WS8 evidence. Run relevant changed-path regressions and the selected WS9 acceptance scenario; reopen old gates only for a new observed failure or a relevant changed dependency. Do not restart a general WS2 -> WS3 -> WS4 -> WS8 cycle.
 
-**Next concrete step — 9.8 remote acceptance:** local CI preparation is Y, with isolated target configuration, 10 synthetic native-report checks, 133 focused regressions and final wheel verification passing. Publish only the reviewed target CI files plus the selected web class, then run the manual target workflow once and review both jobs/artifacts from the same commit. No CI pass or full release is claimed yet. Existing mobile/iOS, repair and live interface/core gates remain P as recorded; optional Jira stays parked. See [exact target repository/files and handoff](workstream-9-ci-release.md).
+**Current 9.8 result:** [actual target CI run 40018437976](https://github.com/NagarajLakshatti2/PlayWrightDemoGradle/actions/runs/40018437976) passed both selected jobs on commit 0cb2d5e. Exactly 3 API and 1 web tests passed; native reports, five GET captures, three screenshots/observations, trace integrity and hashes were reviewed. **Selected CI Y; full release P.** Next resolve a changed mobile/repair/interface prerequisite or explicitly agree a narrower release scope; do not repeat the accepted CI unchanged. Optional Jira and earlier core gates remain recorded. See [current evidence and scope](workstream-9-ci-release.md).
 
 The dated checkpoints below are historical. Their earlier pending questions and P statuses are superseded by the current stage table and completion record above.
 
@@ -429,7 +429,7 @@ Release gates receive Y only when the complete acceptance scenario passes. A wor
 
 ## Immediate next milestone
 
-**WS9 9.0 through 9.4 are Y within their selected pilot scopes.** 9.5 Android setup/native smoke and Java implementation/compile are Y; live Java and iOS execution remain P — BLOCKED with evidence. 9.6 read-only investigation is Y; causal repair/live rerun remain P. 9.7 selected local reporting is Y, with live interface/export and optional Jira P. 9.8 local CI preparation is Y; actual target GitHub execution/artifact review and release scope remain P while those live gates are parked. The other 11 web Text Input cases remain not run. WS8 and earlier blocked/parked gates retain their recorded status; accepted API/web checks need no repeat cycle.
+**WS9 9.0 through 9.4 are Y within their selected pilot scopes.** 9.5 Android setup/native smoke and Java implementation/compile are Y; live Java and iOS execution remain P — BLOCKED with evidence. 9.6 read-only investigation is Y; causal repair/live rerun remain P. 9.7 selected local reporting is Y, with live interface/export and optional Jira P. 9.8 actual target API/web CI and downloaded-artifact review are Y (run 40018437976, 3 API + 1 web passed); full release remains P for mobile/repair/interface and earlier core gates. The other 11 web Text Input cases remain not run. WS8 and earlier blocked/parked gates retain their recorded status; accepted API/web checks need no repeat cycle.
 
 ## Evidence labels
 
