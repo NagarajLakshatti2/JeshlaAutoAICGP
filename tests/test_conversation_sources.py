@@ -264,3 +264,39 @@ class FollowupSourceScopeTests(unittest.TestCase):
         state={"route":"direct", "history":"explanation "*1500,
             "previous_exchange":{"question":"Explain the indexed documents", "answer":"explanation "*1500}}
         self.assertFalse(knowledge_only(state,"List the topics from that explanation"))
+
+
+class SavedResultConversationTests(unittest.TestCase):
+    def test_complete_approved_result_is_available_without_tools(self):
+        from unittest.mock import Mock
+        question="Using the inspection you just completed, identify the field and recommend one Java locator. Use the saved inspection only. Do not reopen the website, modify files, run commands or connect to Jira."
+        answer="Stored action returned. Receipt: sample\n\n"+json.dumps({
+            "fields":[{"label":"Text Input","id":"text-input","disabled":False,"read_only":False}],
+            "other":"x"*7000,"inspection_file":"test-output/agent-web/sample/inspection.json"})
+        def model(messages,tools):
+            self.assertEqual(tools,[])
+            payload=json.loads(messages[1]["content"])
+            self.assertEqual(payload["previous_exchange"]["answer"],answer)
+            self.assertIn('Text Input',payload["previous_exchange"]["answer"])
+            return {"content":"Text Input is enabled and editable. Use page.getByLabel with an exact match."}
+        web=Mock(side_effect=AssertionError('No web request'))
+        tools=Mock();tools.root='local-project'
+        result=answer_question({'question':question,'route':'direct',
+            'previous_exchange':{'question':'Approved exact local action sample','answer':answer},
+            'history':answer[-1300:]},model=model,project_root='.',tools=tools,web=web,document_search=Mock(side_effect=AssertionError('No document search')))
+        self.assertIn('enabled and editable',result['answer'])
+        web.assert_not_called();tools.read_file.assert_not_called();tools.list_files.assert_not_called()
+
+    def test_unoffered_tool_cannot_reopen_a_saved_result(self):
+        from unittest.mock import Mock
+        web=Mock(side_effect=AssertionError('No web request'))
+        count=0
+        def model(messages,tools):
+            nonlocal count
+            self.assertEqual(tools,[]);count+=1
+            if count==1:return {'tool_calls':[{'id':'bad','function':{'name':'web_search','arguments':json.dumps({'query':'private inspection'})}}]}
+            return {'content':'I can discuss only the saved result.'}
+        result=answer_question({'question':'Explain the saved inspection only. Do not reopen the website.',
+            'route':'direct','previous_exchange':{'question':'Inspection','answer':'Saved metadata'}},
+            model=model,project_root='.',tools=Mock(root='local-project'),web=web,document_search=Mock(side_effect=AssertionError('No document search')))
+        web.assert_not_called();self.assertIn('saved result',result['answer'])

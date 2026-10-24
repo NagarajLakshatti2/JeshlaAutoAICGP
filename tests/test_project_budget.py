@@ -67,6 +67,35 @@ class BudgetTests(unittest.TestCase):
         self.assertIn("Inspection target folder:",context)
         self.assertEqual(state["memory_context"],"project_name: AgentProjectPrivate")
 
+    def test_latest_exchange_preserves_inspection_head_and_tail(self):
+        exchange={"question":"Approved exact local action sample-receipt",
+                  "answer":"Stored action returned. Receipt: sample-receipt\n\n"+json.dumps({
+                      "fields":[{"label":"Text Input","id":"text-input","disabled":False,"read_only":False},
+                                {"label":"Other metadata","placeholder":"x"*7000}],
+                      "inspection_file":"test-output/agent-web/sample/inspection.json"})}
+        state={"question":"Use the saved inspection only; identify the editable field.",
+               "history":"older context"*1000+"\nUser: "+exchange["question"]+"\nAssistant: "+exchange["answer"],
+               "previous_exchange":exchange}
+        context=project_user_context(state,"root",32000)
+        self.assertIn("Text Input",context)
+        self.assertIn("text-input",context)
+        self.assertIn("test-output/agent-web/sample/inspection.json",context)
+        self.assertIn(json.dumps(exchange,ensure_ascii=False),context)
+        self.assertEqual(context.count("sample-receipt"),2)
+        self.assertTrue(context.endswith(state["question"]))
+
+    def test_prior_exchange_does_not_replace_a_new_requested_source_read(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            (root/"build.gradle").write_text("current source",encoding="utf-8")
+            state={"question":"Read build.gradle and explain its current contents.","project_root":str(root),
+                   "previous_exchange":{"question":"Earlier read","answer":"Old source result"}}
+            with patch.dict(os.environ,{},clear=True),patch("agent.project_decisions.call_project_decision",
+                    return_value=json.dumps({"action":"finish","answer":"Old source result"})),redirect_stdout(io.StringIO()):
+                result=self.project_function(root)(state)
+            self.assertEqual(result["task_status"],"incomplete")
+            self.assertIn("Inspect requested files",result["answer"])
+
     def test_agent_repository_keeps_its_context(self):
         from agent import project_budget
         root=project_budget.APPLICATION_ROOT
@@ -74,3 +103,17 @@ class BudgetTests(unittest.TestCase):
         context=project_user_context(state,root,32000)
         self.assertIn("LocalAgent",context)
         self.assertIn("AgentSummary",context)
+
+    def test_browser_approval_is_waiting_not_an_incomplete_execution(self):
+        from agent.actions.receipts import ActionPending
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            decision={'action':'create_file','arguments':{'relative_path':'note.txt','content':'draft'}}
+            with patch.dict(os.environ,{},clear=True),patch('agent.project_decisions.call_project_decision',return_value=json.dumps(decision)),patch('agent.local_action_receipts.LocalActionReceipts.run',side_effect=ActionPending('Action is waiting for your browser approval. Review the exact action.')),redirect_stdout(io.StringIO()):
+                project=self.project_function(root)
+                project.__globals__['approve_local_action']=lambda *args: False
+                result=project({'question':'Create note.txt after approval','project_root':str(root)})
+            self.assertEqual(result['task_status'],'awaiting_input')
+            self.assertNotIn('Task status: incomplete.',result['answer'])
+            self.assertIn('awaiting approval',result['answer'])
+            self.assertFalse((root/'note.txt').exists())

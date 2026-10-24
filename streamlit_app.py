@@ -9,6 +9,7 @@ from agent.interfaces.attachments import chat_attachments,attachment_question,re
 from agent.interfaces.chat_toolbar import provider_options,render_provider_picker
 from agent.interfaces.header_actions import render_header_actions
 from agent.interfaces.request_status import status_label,remember_status,render_status
+from agent.interfaces.action_approval import approval_answer_for_display,render_pending_actions
 
 st.set_page_config(page_title="JeshlaAutoAI",page_icon=":material/smart_toy:",layout="wide")
 
@@ -20,8 +21,15 @@ except Exception as error:
     log_browser_event("error",error=error);st.error(user_error_message(error));st.stop()
 
 initialize_chat()
+project_manager=backend
+from agent.interfaces.projects import selected_backend
+try:backend=selected_backend(project_manager)
+except Exception as error:
+    from agent.interfaces.projects import render_projects
+    render_projects(project_manager)
+    st.error(user_error_message(error));st.stop()
 provider_options(backend)
-render_sidebar(backend)
+render_sidebar(backend,project_manager=project_manager)
 session=st.session_state.active_chat
 log_browser_event("page_render",session=session,provider=st.session_state.browser_provider)
 render_header_actions(backend,session)
@@ -42,7 +50,7 @@ with st.container(horizontal=True,horizontal_alignment="center"):
                 if len(turns)>100:st.caption("Showing the latest 100 turns. The conversation download includes the full archive.")
                 for turn in turns[-100:]:
                     with st.chat_message("user"):st.markdown(turn["question"].split("\n\nUploaded document evidence (",1)[0])
-                    with st.chat_message("assistant"):st.markdown(turn["answer"])
+                    with st.chat_message("assistant"):st.markdown(approval_answer_for_display(turn["answer"]))
                 unsaved=st.session_state.get("unsaved_response",{}).get(session)
                 if unsaved:
                     with st.chat_message("user"):st.markdown(unsaved["question"].split("\n\nUploaded document evidence (",1)[0])
@@ -53,26 +61,35 @@ with st.container(horizontal=True,horizontal_alignment="center"):
                             log_browser_event("download_clicked",session=session,turns=len(turns))
                     latest=st.session_state.get("answer_downloads",{}).get(session)
                     if latest:st.download_button("Download latest answer",latest,file_name="answer.md",mime="text/markdown",key="download_answer_"+session)
+                    from agent.interfaces.generated_files import render_generated_files
+                    render_generated_files(backend,session,key_prefix="conversation_")
 
             for notice in st.session_state.get("chat_notices",[]):st.warning(notice)
             if opened:render_status(st.session_state.get("request_status_by_chat",{}).get(session))
-            from agent.interfaces.action_approval import render_pending_actions
-            render_pending_actions(backend,session)
+            render_pending_actions(backend,session,turns=turns)
 
         with st.container(border=True,key="message_composer"):
-            prompt=st.chat_input("Message JeshlaAutoAI…",key="message",height=100,submit_mode="disable",disabled=st.session_state.get("work_mode","Chat")=="Cowork")
+            project=getattr(backend,"project",None)
+            if project:
+                st.caption("Project: "+project["name"],help=project["root"])
+            prompt=st.chat_input("Message JeshlaAutoAI…",key="message",height=100,submit_mode="disable",disabled=False)
             with st.container(horizontal=True,horizontal_alignment="distribute",vertical_alignment="center"):
                 with st.container(horizontal=True,width="content",vertical_alignment="center"):
                     render_upload_menu(session)
-                    mode=st.segmented_control("Work mode",["Chat","Cowork"],default="Chat",required=True,format_func=lambda value:"Cowork · Soon" if value=="Cowork" else value,key="work_mode",label_visibility="collapsed")
+                    st.caption("Chat")
+                    from agent.interfaces.projects import render_projects
+                    render_projects(project_manager)
                 render_provider_picker(backend)
-        if mode=="Cowork":st.info("Cowork will be the place to configure a project for your agent. Project connection is planned; use Chat for the current agent. GitHub remains parked.")
+
 
         if prompt and prompt.strip():
             selected=st.session_state.browser_provider
             start=time.perf_counter()
             try:
                 session=ensure_message_chat(backend,prompt)
+                last_decision=st.session_state.get("last_action_result",{})
+                if last_decision.get("session")==session and (last_decision.get("decision")=="declined" or last_decision.get("answer")=="Action declined. No local action executed."):
+                    st.session_state.pop("last_action_result",None)
                 log_browser_event("message_started",session=session,provider=selected)
                 with st.spinner("Working on your request…"):
                     question=attachment_question(prompt,chat_attachments(session))
@@ -91,3 +108,7 @@ with st.container(horizontal=True,horizontal_alignment="center"):
                 log_browser_event("error",session=session,provider=selected,duration=time.perf_counter()-start,error=error)
                 remember_status(session,"Failed",time.perf_counter()-start)
                 st.error(user_error_message(error))
+
+# Dialogs are dispatched outside the composer; only one dialog is open at a time.
+from agent.interfaces.project_dialogs import render_project_dialogs
+render_project_dialogs(project_manager)

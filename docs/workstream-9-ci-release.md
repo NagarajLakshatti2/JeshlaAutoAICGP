@@ -6,6 +6,10 @@ Published the five authorized files to target `master` in [commit 0cb2d5e](https
 
 This is the last numbered WS9 stage (9.0–9.8). Preparing a workflow is not a successful CI run. Existing agent CI and target-application CI are different evidence scopes.
 
+## Current browser execution acceptance — 24 October 2026
+
+**Browser-approved native API execution — Y, 24 October:** receipt 78549e9f completed exactly once, command exit0, one fresh exact-method XML with **3 passed / 0 failed / 0 skipped**; native verifier/hash, four source revisions and five GET captures checked. Duplicate UI output came from transcript plus a second notice; fixed with 83 passing offline checks, actual refreshed UI recheck P. Historical approval-stage incomplete text is relabeled; saved transcripts preserved. Export/download, other interface/mobile/repair and full release gates remain P. Evidence outputs/acceptance/ws9-chat-api-execution-20261024 and ws9-action-display-20261024. Do not rerun the accepted cases.
+
 ## Completion checklist
 
 | Status | Work and evidence |
@@ -64,6 +68,30 @@ The user authorized publication to public master, then explicitly authorized the
 Artifacts expire on 30 October 2026 on GitHub; verified ZIPs and extracted evidence are retained locally under outputs/acceptance/ws9-ci-publication-20261024/. No duplicate dispatch, unchanged rerun or application assertion relaxation was needed.
 
 Publication also triggered existing independent workflows. Qodana passed; the broader Playwright Java Tests push run 40018268317 was still in progress at this review. Its outcome is separate from the selected 3+1 CI acceptance. The Jira/Confluence workflow was not invoked.
+
+## Browser inspection interface — Y, 24 October 2026
+
+User-approved receipt f84168fd returned the actual saved Text Input inspection. Original file hash and screenshot verified. This closes only browser inspection approval/result delivery; natural-language follow-up, console approval and chat-driven native test execution/export remain separate. See [browser acceptance details](workstream-9-web-pilot.md). Selected 3+1 native CI stays Y; full release remains P.
+
+## Saved-result follow-up correction — 24 October 2026
+
+**Local fix Y / live answer acceptance P:** the first follow-up lost the returned inspection context. Corrected structured approval checkpoints, latest-exchange preservation and conservative saved-result routing; 140 affected offline tests pass. Restart/recover the already-failed chat from its existing JSON before a live recheck. No target test or CI was repeated. See [browser correction details](workstream-9-web-pilot.md). Earlier approval/inspection and selected API/web CI Y retain their scope.
+
+## Saved-file proposal compatibility — 24 October 2026
+
+The next browser source-read stopped on malformed project function output. A bounded cross-provider native-registry correction now passes 143 affected offline checks and an actual OpenRouter synthetic/public-data planning check. This is not an actual project read or browser acceptance pass; restarting and reusing the same saved-file prompt remains P. No target website/test or CI was rerun. See [current browser handoff](workstream-9-web-pilot.md).
+
+## Actual saved-file recovery — Y, 24 October 2026
+
+User browser response successfully read/cited the existing inspection JSON lines 1–30 and correctly interpreted the Text Input field. This closes the actual saved-file read/recovery gate. Context-only follow-up without another read remains P; chat-driven native execution/export and remaining release gates are unchanged. See [saved-read acceptance](workstream-9-web-pilot.md). No target website/test or CI rerun occurred.
+
+## Current sampled browser flow — Y, 24 October 2026
+
+The actual saved-JSON read/answer and subsequent context-only follow-up passed: correct enabled/editable meanings and exactly one observed-ID locator, with latest route direct. This supersedes the earlier pending browser read/context statements for this sample. It follows explicit saved-file recovery, not a new uninterrupted post-fix approval run. Console/native-execution/export/mobile/repair and full-release gates stay P. No new application case, test or CI run was added. See [completed browser sample](workstream-9-web-pilot.md).
+
+## Actual console saved-source/context sample — Y, 24 October 2026
+
+The user console trace confirms one saved-file read on the project route and a correct direct-route context-only answer with no further tool step. This closes only the console saved-source/interpretation/follow-up sample, alongside the browser Y. Controlled native execution/export and remaining investigation/mobile/full-release gates stay P. See [console evidence and limits](workstream-9-web-pilot.md). Native case counts and selected CI remain unchanged.
 
 ## Next step — remaining scope, without repeating accepted CI
 

@@ -46,11 +46,12 @@ def call_project_decision(messages, actions):
     else:
         request=[instruction,*messages]
     correction_provider = None
+    native_correction = False
     for attempt in range(2):
         options={"max_tokens":env_int("AI_PROJECT_MAX_TOKENS",4096,64,16384)}
         if (correction_provider or last_provider(LLM_PROVIDER))=="groq":options["forced_function"]="submit_project_action"
         selected_specs=[spec]
-        native=(correction_provider or last_provider(LLM_PROVIDER))=="groq" and attempt==1
+        native=attempt==1 and (native_correction or (correction_provider or last_provider(LLM_PROVIDER))=="groq")
         if native:
             from agent.runtime.project_native_specs import native_project_specs
             selected_specs=native_project_specs(actions)
@@ -82,6 +83,12 @@ def call_project_decision(messages, actions):
         except ValueError as error:
             if attempt:
                 raise RuntimeError("Invalid project-action proposal after one format correction: " + str(error) + " No action was executed from these proposals.") from None
+            # A wrong function name or parallel proposals show that the wrapper
+            # encoding was not followed. Change the next request's registry for
+            # every provider; never reinterpret the rejected response as a call.
+            calls=reply.get("tool_calls") or []
+            native_correction=bool(calls) and (len(calls)!=1 or
+                calls[0].get("function",{}).get("name")!="submit_project_action")
             request=[*request,{"role":"user","content":
                 "Your previous proposal was rejected before execution: " + str(error) +
                 " Return one corrected proposal using the supplied schema. Omit unused optional fields; "
@@ -105,7 +112,9 @@ def decode_project_reply(reply, allowed):
         # native call. Validate it below; never display an action as a final answer.
         calls=[{"function":{"name":"submit_project_action","arguments":text}}]
     if len(calls)!=1 or calls[0].get("function",{}).get("name")!="submit_project_action":
-        raise ValueError("Use exactly one registered submit_project_action function.")
+        wrapper_count=sum(call.get("function",{}).get("name")=="submit_project_action" for call in calls)
+        raise ValueError("Use exactly one registered submit_project_action function. "
+                         f"Received {len(calls)} calls; {wrapper_count} targeted that function.")
     try:
         decision=json.loads(calls[0]["function"]["arguments"])
     except (ValueError,TypeError,KeyError):

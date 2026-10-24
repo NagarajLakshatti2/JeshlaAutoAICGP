@@ -22,3 +22,34 @@ def is_local_observation_request(question):
         return True
     analysis = re.match(r"^(?:please\s+)?(?:read|review|inspect|compare|analy[sz]e|summari[sz]e|draft|prepare|report|explain)\b", question.strip(), re.I)
     return bool(analysis and re.search(r"\bobservations?\b|\b(?:actual|observed) results?\b|\bdefect drafts?\b", question, re.I))
+
+
+def explicit_project_actions(question):
+    """Recognize named project-only tools in the user's active request.
+
+    Uploaded text is removed by the router first. A prohibition is not a request
+    to execute the mentioned tool; the action still needs its normal approval.
+    """
+    from agent.policies.tool_registry import PROJECT_ACTIONS,CONVERSATION_ACTIONS
+    active=re.sub(r"\b(?:do not|don't|never|without)\b[^.!?\n]*(?:[.!?\n]|$)"," ",question.casefold())
+    return {name for name in PROJECT_ACTIONS-CONVERSATION_ACTIONS
+            if re.search(r"(?<!\w)"+re.escape(name)+r"(?!\w)",active)}
+
+
+def is_saved_result_followup(question):
+    """Discuss an existing result without mistaking prohibitions for new work.
+
+    Positive requests to read, browse, edit or execute retain their normal
+    routes. This only selects conversation; historical data grants no action.
+    """
+    if explicit_project_actions(question):return False
+    text=question.casefold()
+    active=re.sub(r"\b(?:do not|don't|never|without)\b[^.!?\n]*(?:[.!?\n]|$)"," ",text)
+    if re.search(r"\b(?:online|internet|news|documentation|official|verify|validate|download)\b",active):
+        return False
+    if re.search(r"\b(?:run|execute|rerun|inspect|reinspect|reopen|open|visit|browse|search|fetch|read|create|write|edit|modify|replace|delete|connect|authenticate|install|upload|submit|approve|decline|fix|debug|repair)\b",active):
+        return False
+    return bool(re.search(
+        r"\b(?:saved|previous|earlier|last|returned|completed|existing)\s+(?:(?:tool|browser|action|test)\s+)?(?:inspection|results?|reports?|output|observations?)\b"
+        r"|\b(?:inspection|results?|reports?|output|observations?)\s+(?:you|we)\s+(?:just\s+)?(?:completed|returned|collected|produced)\b",
+        active))

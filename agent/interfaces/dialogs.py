@@ -9,7 +9,8 @@ def dismiss_dialog():st.session_state.ui_dialog=None
 
 @st.dialog("Memory",on_dismiss=dismiss_dialog,width="medium",icon=":material/memory:")
 def memory_dialog(backend):
-    st.caption("Saved facts are shared across your chats in the selected memory space.")
+    project=getattr(backend,"project",None)
+    st.caption("Saved facts are shared only across chats in "+project["name"]+"." if project else "Saved facts are shared across chats without a selected project in this memory space.")
     if st.button("Show saved facts",key="show_facts"):
         try:
             st.session_state.saved_facts=backend.memory_records() if hasattr(backend,"memory_records") else backend.memory()
@@ -26,4 +27,8 @@ def memory_dialog(backend):
 @st.dialog("Settings",on_dismiss=dismiss_dialog,width="medium",icon=":material/settings:")
 def settings_dialog(backend):
     from agent.interfaces.provider_panel import render_provider_panel
-    render_provider_panel(backend,inline=True)
+    provider_tab,connections_tab=st.tabs(["Providers","Connections"])
+    with provider_tab:render_provider_panel(backend,inline=True)
+    with connections_tab:
+        from agent.interfaces.connection_panel import render_connections
+        render_connections(backend)

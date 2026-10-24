@@ -25,8 +25,10 @@ TEXT_EXTENSIONS = {
 
 
 class ProjectTools:
-    def __init__(self, project_root: str):
+    def __init__(self, project_root: str, *, project_id=None, evidence_root=None):
         self.root = Path(project_root).expanduser().resolve()
+        self.project_id=project_id
+        self.evidence_root=Path(evidence_root).resolve() if evidence_root is not None else None
 
         if not self.root.is_dir():
             raise ValueError(f"Project folder does not exist: {self.root}")
@@ -530,6 +532,11 @@ class ProjectTools:
     def build_test_report(self, manifest_file: str, evidence_folder: str = "") -> dict:
         """Build review-only case/run/evidence Markdown; exporting needs a separate action."""
         from integrations.reporting.traceability import report_for_agent
+        if self.project_id and evidence_folder:
+            from agent.storage.projects import ProjectConfigurationError
+            folder=Path(evidence_folder).resolve()
+            if self.evidence_root is None or not folder.is_relative_to(self.evidence_root):
+                raise ProjectConfigurationError("Choose saved evidence belonging to this project or a manifest in its local folder.")
         return report_for_agent(self.root, manifest_file, evidence_folder)
 
     def investigate_test_failure(self, relative_path: str, case_name: str, case_class: str = "", evidence_spans: list[dict] = None, run_file: str = "") -> dict:

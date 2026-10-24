@@ -53,6 +53,11 @@ class AgentState(TypedDict):
     answer_available: bool
     memory_context: str
     project_root: str
+    project_id: str
+    bound_project_root: str
+    memory_user_id: str
+    memory_namespace: str
+    project_connection_notice: str
     conversation_session: str
     summary: str
     summary_retry_at: float
@@ -64,10 +69,10 @@ def load_long_term_memory_node(state: AgentState):
     from agent.runtime.project_context import resolve_project_root
     selected_root = resolve_project_root(state, PROJECT_ROOT)
 
-    user = os.getenv("AI_MEMORY_USER_ID", "local-user")
-    namespace = os.getenv("AI_MEMORY_NAMESPACE", "project")
+    from agent.runtime.project_scope import memory_identity
+    user,namespace = memory_identity(state)
     seed = PROJECT_ROOT / "agent" / "memory" / "long_term_memory.json"
-    records = json.loads(seed.read_text(encoding="utf-8")) if seed.exists() else []
+    records = json.loads(seed.read_text(encoding="utf-8")) if seed.exists() and not state.get("project_id") else []
     if not isinstance(records, list) or any(
         not isinstance(row, dict) or not isinstance(row.get("text"), str)
         or not row["text"].strip() for row in records
@@ -75,7 +80,7 @@ def load_long_term_memory_node(state: AgentState):
         raise ValueError("Memory seed must contain nonempty text records.")
     with LongTermMemory(PROJECT_ROOT / "outputs" / "memory" / "long_term_memory.sqlite3") as memory:
         # Import seeds once; FORGET must survive future questions and restarts.
-        if not memory.get(user, "__seed_import__", namespace, False):
+        if not state.get("project_id") and not memory.get(user, "__seed_import__", namespace, False):
             for index, row in enumerate(records, 1):
                 key = f"seed_{index}"
                 if memory.get(user, namespace, key) is None:
@@ -105,8 +110,8 @@ def memory_command_node(state: AgentState):
         return {"answer": "Use REMEMBER key = fact, FORGET key, SHOW MEMORY, or MEMORY HISTORY key. Suggestions: SUGGEST MEMORY key = fact, SHOW SUGGESTIONS, ACCEPT MEMORY id, REJECT MEMORY id."}
     if remember and len(remember.group(2).strip()) > 2000:
         return {"answer": "Please keep each memory fact within 2000 characters."}
-    user = os.getenv("AI_MEMORY_USER_ID", "local-user")
-    namespace = os.getenv("AI_MEMORY_NAMESPACE", "project")
+    from agent.runtime.project_scope import memory_identity
+    user,namespace = memory_identity(state)
     with LongTermMemory(PROJECT_ROOT / "outputs" / "memory" / "long_term_memory.sqlite3") as memory:
         if suggest or decision or show_suggestions:
             try:
@@ -205,6 +210,8 @@ def fast_request_route(question):
 
 
 def clarify_node(state: AgentState):
+    if state.get("project_connection_notice"):
+        return {"answer":state["project_connection_notice"],"task_status":"awaiting_input"}
     return {"answer": (
         "To scope the new application, please provide:\n"
         "1. Is it web, mobile, API, or a combination?\n"
@@ -254,9 +261,11 @@ def router_node(state: AgentState):
 
     from agent.runtime.input_evidence import split_uploaded_input,explicit_jira_request
     question,documents,has_upload=split_uploaded_input(state["question"])
+    from agent.policies.routing import explicit_project_actions
+    requested_project_actions=explicit_project_actions(question)
     if has_upload and not explicit_jira_request(question):
         project_write=re.search(r"^\s*(?:please\s+)?(?:create|write|edit|replace|modify|run|execute|debug|fix)\b[^\n]*\b(?:file|script|code|project|command)s?\b",question,re.I|re.M)
-        return {"route":"project" if project_write else "direct"}
+        return {"route":"project" if requested_project_actions or project_write else "direct"}
 
     if re.match(r"^(REMEMBER|FORGET|MEMORY HISTORY|SUGGEST MEMORY|SHOW SUGGESTIONS|ACCEPT MEMORY|REJECT MEMORY)(?:\s|$)", question.strip(), re.I):
         return {"route": "memory_command"}
@@ -264,7 +273,13 @@ def router_node(state: AgentState):
     if question.strip().upper() == "SHOW MEMORY":
         return {"route": "memory"}
 
-    from agent.policies.routing import is_local_observation_request
+    from agent.policies.routing import is_local_observation_request,is_saved_result_followup
+    if requested_project_actions:
+        return {"route":"project"}
+    if state.get("project_id") and (explicit_jira_request(question) or workflow_intent(question)):
+        return {"route":"clarify","project_connection_notice":"Jira is not configured for this selected project. No connection or Jira action was started."}
+    if is_saved_result_followup(question):
+        return {"route":"direct"}
     if is_local_observation_request(question):
         return {"route": "direct"}
 
@@ -348,8 +363,8 @@ def conversational_answer_node(state: AgentState):
     from agent.tool_llm import call_tool_messages
     from agent.tools.project_tools import ProjectTools
     from agent.memory.long_term_memory import LongTermMemory
-    user = os.getenv("AI_MEMORY_USER_ID", "local-user")
-    namespace = os.getenv("AI_MEMORY_NAMESPACE", "project")
+    from agent.runtime.project_scope import memory_identity
+    user,namespace = memory_identity(state)
     from agent.chat_catalog import ChatCatalog
     catalog=ChatCatalog(PROJECT_ROOT / "outputs" / "memory" / "chats.sqlite3",user,namespace)
     def search_archived(query,scope="current",session=None,limit=10):
@@ -364,10 +379,14 @@ def conversational_answer_node(state: AgentState):
             if mode!="lexical":raise ValueError("Unsupported memory search mode")
             return {"facts": memory.search(user, namespace, query, limit),
                     "note": "Scoped lexical matches; these are saved user assertions, not verified facts."}
+        document_search=search_documents
+        if state.get("project_id"):
+            document_search=lambda query,mode="hybrid": {"error":"No indexed-document collection is configured for this project. Attach a document to this chat or read a file in the selected folder."}
+        from agent.runtime.project_scope import tools_for_state
         return answer_question(state, model=call_tool_messages,
-                               project_root=PROJECT_ROOT, document_search=search_documents,
+                               project_root=PROJECT_ROOT, document_search=document_search,
                                memory_search=search_saved, chat_search=search_archived, memory_propose=lambda key,value: memory.propose(user,namespace,key,value), memory_review=lambda **kwargs: memory.review(user,namespace,**kwargs),
-                               tools=ProjectTools(state.get("project_root") or os.getenv("AI_PROJECT_ROOT", str(PROJECT_ROOT))))
+                               tools=tools_for_state(state,PROJECT_ROOT))
 
 
 def llm_node(state: AgentState):
@@ -564,7 +583,8 @@ def project_node(state: AgentState):
     from agent.llm_client import call_llm_messages
     from agent.tools.project_tools import ProjectTools
 
-    tools = ProjectTools(state.get("project_root") or os.getenv("AI_PROJECT_ROOT", str(PROJECT_ROOT)))
+    from agent.runtime.project_scope import tools_for_state
+    tools = tools_for_state(state,PROJECT_ROOT)
     print("\nPROJECT ASSISTANT\nProject:", tools.root)
     from agent.tool_policy import PROJECT_ACTIONS, CONTROLLED_PROJECT_ACTIONS
     handlers = {name: getattr(tools, name) for name in sorted(PROJECT_ACTIONS)}
@@ -628,6 +648,9 @@ Do not claim tests passed merely because compilation succeeded.
 Finish promptly when the requested work is complete, or explain unresolved blockers.
 """
     required = extract_requested_paths(state["question"])
+    from agent.policies.routing import explicit_project_actions
+    report_requested = "build_test_report" in explicit_project_actions(state["question"])
+    exact_report_export = report_requested and bool(re.search(r"\bexact\s+(?:returned\s+)?markdown\b",state["question"],re.I))
     requested_commands = []
     # Recognize explicitly supplied JSON command arrays following "execute".
     # Natural-language tasks still rely on the model; this is not a full task parser.
@@ -784,6 +807,8 @@ Finish promptly when the requested work is complete, or explain unresolved block
                     raise ValueError("ask requires a nonempty question.")
                 return report(question.strip())
             if action == "finish":
+                if report_requested and not any(o["action"]=="build_test_report" and isinstance(o["result"].get("markdown"),str) for o in observations):
+                    raise ValueError("Call the requested build_test_report tool before finishing; memory or a proposed action in text is not a report result.")
                 unread = required - set(reads) - set(missing) - {canonical(r["file"]) for r in parsed_reports}
                 if unread:
                     raise ValueError("Inspect requested files or establish they are missing: " + ", ".join(sorted(unread)))
@@ -845,6 +870,12 @@ Finish promptly when the requested work is complete, or explain unresolved block
                         raise ValueError("Generated reports are outside this source review. Use inspected source evidence and finish.")
             bound = inspect.signature(handlers[action]).bind(**arguments)
             bound.apply_defaults()
+            if action == "create_file" and report_requested:
+                built=[o["result"] for o in observations if o["action"]=="build_test_report" and isinstance(o["result"].get("markdown"),str)]
+                if not built:
+                    raise ValueError("Build the requested saved-evidence report before proposing its export.")
+                if exact_report_export and bound.arguments.get("content")!=built[-1]["markdown"]:
+                    raise ValueError("Export the exact Markdown returned by build_test_report; do not substitute remembered facts or change the report.")
             signature = json.dumps([epoch, action, bound.arguments], sort_keys=True)
             if signature in completed and source_review:
                 return review_summary("Model repeated a completed source-review call.")
@@ -859,7 +890,7 @@ Finish promptly when the requested work is complete, or explain unresolved block
                         try:
                             result=receipts.run(tools.root,action,dict(bound.arguments),handlers[action],approve_local_action)
                         except ActionPending as error:
-                            waiting=report(str(error),True)
+                            waiting=report(str(error)+"\n\nAction status: awaiting approval.")
                             waiting["task_status"]="awaiting_input"
                             return waiting
                         except ActionDeclined:

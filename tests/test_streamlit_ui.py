@@ -36,6 +36,31 @@ class BrowserTests(unittest.TestCase):
         self.patch=patch("agent.browser_backend.make_browser_backend",return_value=self.backend)
         self.patch.start();self.addCleanup(self.patch.stop);self.addCleanup(st.cache_resource.clear)
         self.app=AppTest.from_file(str(Path(__file__).resolve().parents[1]/"streamlit_app.py"),default_timeout=10)
+    def test_sidebar_has_one_list_and_separate_footer(self):
+        self.app.run();self.assertFalse(self.app.exception)
+        self.assertFalse(any(element.proto.popover.label=="View all" for element in self.app.get("popover")))
+        self.assertFalse(any(item.key=="chat_picker" for item in self.app.selectbox))
+        self.assertEqual({b.key for b in self.app.container(key="sidebar_footer").button},{"open_memory","open_settings"})
+        self.assertFalse(any(b.key in {"open_memory","open_settings"} for b in self.app.container(key="sidebar_chats").button))
+        self.assertEqual(self.backend.calls,[])
+
+    def test_common_list_loads_older_chats_without_switching(self):
+        old=self.backend.create_chat("Oldest saved conversation")
+        self.backend.catalog.append(old,"Old question","Old answer")
+        for index in range(64):self.backend.create_chat("Recent "+str(index))
+        self.app.run();active=self.app.session_state["active_chat"]
+        self.assertEqual(len([b for b in self.app.container(key="sidebar_chats").button if b.key.startswith("open_chat_")]),30)
+        for _ in range(2):
+            self.app.button(key="load_older_chats").click().run()
+            self.assertFalse(self.app.exception)
+            self.assertEqual(self.app.session_state["active_chat"],active)
+        self.assertFalse(any(b.key=="load_older_chats" for b in self.app.button))
+        self.assertEqual(len({b.key for b in self.app.container(key="sidebar_chats").button}),66)
+        self.app.button(key="open_chat_"+old).click().run()
+        self.assertEqual(self.app.session_state["active_chat"],old)
+        self.assertTrue(any(row.value=="Old answer" for row in self.app.markdown))
+        self.assertEqual(self.backend.calls,[])
+
     def test_initial_render_without_model_call(self):
         self.app.run()
         self.assertFalse(self.app.exception)
@@ -188,9 +213,9 @@ class BrowserTests(unittest.TestCase):
         self.app.run()
         self.assertTrue(any("Last request: Incomplete" in row.value for row in self.app.warning))
         other=self.backend.create_chat("No request yet")
-        self.app.run();self.app.selectbox(key="chat_picker").set_value(other).run()
+        self.app.run();self.app.button(key="open_chat_"+other).click().run()
         self.assertFalse(any("Last request:" in row.value for row in self.app.warning))
-        self.app.selectbox(key="chat_picker").set_value("default").run()
+        self.app.button(key="open_chat_default").click().run()
         self.assertTrue(any("Last request: Incomplete" in row.value for row in self.app.warning))
 
     def test_attachment_is_scoped_and_answer_can_be_downloaded(self):
@@ -206,7 +231,7 @@ class BrowserTests(unittest.TestCase):
         self.assertIn("Unique document evidence",self.backend.calls[-1][1])
         self.assertEqual(self.app.session_state["answer_downloads"]["default"],"Test answer")
         other=self.backend.create_chat("Separate")
-        self.app.run();self.app.selectbox(key="chat_picker").set_value(other).run()
+        self.app.run();self.app.button(key="open_chat_"+other).click().run()
         self.app.chat_input[0].set_value("hello").run()
         self.assertFalse(self.app.exception)
         self.assertEqual(self.backend.calls[-1],(other,"hello"))
@@ -249,16 +274,13 @@ class BrowserTests(unittest.TestCase):
         self.assertTrue(any(row.value=="Old answer" for row in self.app.markdown))
         self.assertFalse(self.app.title)
 
-    def test_cowork_is_explicit_placeholder_and_provider_has_no_model_label(self):
+    def test_chat_stays_enabled_and_cowork_placeholder_is_removed(self):
         self.app.run()
         self.assertEqual(self.app.selectbox(key="browser_provider").value,"test-provider")
-        self.app.segmented_control(key="work_mode").set_value("Cowork").run()
-        self.assertFalse(self.app.exception)
-        self.assertTrue(any("Project connection is planned" in row.value for row in self.app.info))
-        self.app.run()
-        self.assertTrue(self.app.chat_input[0].disabled)
-        self.app.segmented_control(key="work_mode").set_value("Chat").run()
-        self.app.run();self.assertFalse(self.app.chat_input[0].disabled)
+        self.assertFalse(self.app.segmented_control)
+        self.assertFalse(self.app.chat_input[0].disabled)
+        self.assertTrue(any(item.value=="Chat" for item in self.app.caption))
+        self.assertEqual(self.backend.calls,[])
 
     def test_provider_configuration_error_is_actionable(self):
         from agent.provider_errors import ProviderError
@@ -300,5 +322,25 @@ class BrowserTests(unittest.TestCase):
         self.assertFalse(self.app.exception)
         self.assertTrue(self.app.error)
         self.assertFalse(any("secret-private-token" in row.value for row in self.app.error))
+
+
+    def test_header_has_a_named_files_control(self):
+        self.app.run();self.assertFalse(self.app.exception)
+        self.assertTrue(any(element.proto.popover.label=='Files' for element in self.app.get('popover')))
+
+    def test_conversation_download_preparation_has_distinct_keys_and_no_agent_call(self):
+        self.app.session_state['active_chat']='default'
+        self.app.session_state['chat_opened']=True
+        self.app.session_state['chat_draft']=False
+        with patch.object(self.backend,'generated_files',create=True,return_value=[{'id':'report-fixture','path':'report.md'}]),patch.object(self.backend,'generated_file',create=True,return_value={'name':'report.md','data':b'approved report','mime':'text/markdown'}) as prepare:
+            self.app.run();self.assertFalse(self.app.exception)
+            self.app.button(key='conversation_prepare_generated_report-fixture').click().run()
+            self.assertFalse(self.app.exception)
+            prepare.assert_called_once_with('default','report-fixture')
+            self.app.run();self.assertFalse(self.app.exception)
+            self.assertEqual(prepare.call_count,1)
+            self.assertEqual(self.backend.calls,[])
+            self.assertEqual(len([item for item in self.app.get('download_button') if 'report.md' in item.proto.label]),2)
+
 
 if __name__=="__main__":unittest.main()

@@ -4,6 +4,10 @@
 
 Implemented on 24 October 2026 in the new `integrations/reporting` package, exposed through the existing `ProjectTools` class and read-only project-agent registry. Existing API, web and mobile packages remain in place. No provider settings or test execution flow changed.
 
+## Browser export checkpoint — 24 October 2026
+
+**Report export recovery — Y local fix; actual export/download P, 24 October:** the first live export request incorrectly routed to conversation and returned memory-based Markdown without executing the reporting tool or creating a durable proposal. Fixed explicit report/action routing, mandatory actual report build and exact Markdown export checks. Named Files control plus Conversation download fallback verified with actual synthetic downloads at desktop/mobile widths; 139 offline checks pass. Real saved three-pass evidence also passes scripted project dispatch to mocked approval, not hosted-model acceptance. Restart and retry only the export prompt; no API rerun. Evidence outputs/acceptance/ws9-report-export-recovery-20261024.
+
 ## Completion checklist
 
 | Status | Work and evidence |

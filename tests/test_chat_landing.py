@@ -175,7 +175,7 @@ class LandingChatTests(unittest.TestCase):
         second=self.backend.create_chat("Repeated title")
         self.app.run()
         for selected in (first,second,first):
-            self.app.selectbox(key="chat_picker").set_value(selected).run()
+            self.app.button(key="open_chat_"+selected).click().run()
             self.assertFalse(self.app.exception)
             self.assertEqual(self.app.session_state["active_chat"],selected)
         self.assertEqual(self.backend.calls,[])

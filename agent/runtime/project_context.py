@@ -24,6 +24,14 @@ def resolve_project_root(state, default_root):
             raise ValueError("Project root must be an absolute folder path.")
     else:
         path=Path(state.get("project_root") or os.getenv("AI_PROJECT_ROOT") or default_root).expanduser()
+    if state.get("project_id"):
+        from agent.storage.projects import ProjectConfigurationError,validate_local_folder
+        bound=validate_local_folder(state.get("bound_project_root",""))
+        if bound!=state.get("bound_project_root"):
+            raise ProjectConfigurationError("The selected project folder changed. Review its registration.")
+        if declarations and str(path.resolve())!=bound:
+            raise ProjectConfigurationError("This chat belongs to the selected project. Switch Projects to use a different folder.")
+        path=Path(bound)
     path=path.resolve()
     if not path.is_dir():
         raise ValueError("Project root must be an existing directory accessible to the agent.")

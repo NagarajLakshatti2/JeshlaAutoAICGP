@@ -1,5 +1,38 @@
 # JeshlaAutoAI UI implementation
 
+## Smart Projects implementation — 24 October 2026
+
+This checkpoint supersedes the older sidebar/General selector design. The user approved one Projects menu beside Chat, removed Recent projects/General/View all, and subsequently required free-only operation. New MCP functionality is explicitly parked.
+
+| Status | Scope |
+| --- | --- |
+| **Y** | One composer Projects picker with All/Local/Git filters, clickable saved names, active project context/path, separate Add project setup, and a full-width mobile sheet. No Recent projects section or General selector. |
+| **Y** | New chat and Search chats share one sidebar row; the common chat list scrolls independently of fixed Memory/Settings. First load and project switching show an empty conversation; old chats open only by explicit selection. |
+| **Y** | Local folder browser navigates folders/drives on the server computer; selecting a folder preserves setup fields. Existing local folders are registered without copying or modifying source. |
+| **Y — scoped** | GitHub.com/GitLab.com HTTPS clone or attach-existing-checkout setup. Git account choice is separate from project selection. Anonymous public sample clone passed without any account, registry insertion or push. |
+| **Y — scoped** | Explicit sync is fast-forward only and refuses local changes or changed repository identity. A real temporary local bare-repository test verifies clone, update and dirty-worktree protection. No automatic sync/push on selection. |
+| **Y — scoped** | Git account configuration supports environment credentials and Windows user-bound encrypted access tokens; explicit account test/disconnect and per-repository account replacement. Tests verify encryption, ownership and absence of tokens from process arguments/public metadata. |
+| **P** | Actual private GitHub/GitLab authentication and the user's own browser/project acceptance need their credentials/environment. No real account was connected by the agent. |
+| **P — PARKED** | Jira MCP, GitHub MCP, custom MCP servers and MCP project assignments are disabled design controls under Settings → Connections. Free access is unconfirmed. New MCP service entry points reject calls; no MCP test or paid service was activated. Existing console/Jira integration and model-provider configuration were left unchanged. |
+
+Verification: **44 focused offline tests passed**, plus actual desktop/mobile Chromium layout and click checks. Tests cover chats, attachments, memory, settings, scoped approvals/downloads, project isolation, empty-start/switch behavior, folder browsing, additive migration, credentials and Git. Syntax and whitespace checks passed. This is scoped UI/workspace acceptance, not full WS8/WS9 or all-provider/browser-engine acceptance.
+
+Evidence/backups: `outputs/acceptance/projects-smart-ui-20261024/`. Initial fixture assertion/Windows cleanup failures and intermediate logs are retained. Final Git operations disable background monitoring/maintenance; fixture SQLite handles are explicitly closed. No user project was registered, no user account authenticated, no model-provider request made, and no remote push performed.
+
+To use: restart Streamlit once with the existing base path, then Projects → Add project → Local or Git repositories. Private repositories use Settings → Connections → Add Git account first. Local folders belong to the machine running the server. MCP stays parked.
+
+
+## Compact sidebar navigation — 24 October 2026
+
+- **Y** — One chat list replaces the recent-list/View all picker pair. Older chats extend this same list in batches of 30; no saved chat is deleted or silently made unreachable. Duplicate titles keep separate ID-based buttons.
+- **Y** — Only the chat list scrolls. Memory and Settings remain in a separate bottom row, outside the list. JeshlaAutoAI shares the top area with the native collapse control; excess top/bottom spacing is removed.
+- **Y** — Existing project selection, title filtering, archived-message search, chat switching, attachments and approval behavior are preserved. The GitHub planning note is inside Add local project.
+- **Y** — 22 focused offline checks passed. An isolated Chromium fixture at 1440×900 and 390×844 verifies a scrollable list, visible bottom controls and a stable title/footer during scrolling. Syntax and whitespace checks passed.
+- **P** — User visual acceptance after refresh; other browser engines were not exercised. This sidebar change does not close the broader Projects or WS9 acceptance work.
+
+Evidence and source backups: `outputs/acceptance/sidebar-layout-20261024/`. No AI provider calls or target-project test runs were made.
+
+
 Status Y for the agreed chat UI redesign, implemented and verified 19 October 2026. Cowork/project configuration and GitHub remain P (parked). Native Streamlit controls follow the approved mockup; this is not a pixel-identical replacement of another product. Earlier sections below record the implementation history; the latest scope is in the final redesign section.
 
 ## Implemented first slice

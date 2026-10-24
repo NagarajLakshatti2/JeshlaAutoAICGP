@@ -227,4 +227,33 @@ class TraceReportingTests(unittest.TestCase):
             self.manifest=saved
 
 
+
+    def test_exact_report_export_requires_build_and_preserves_returned_markdown(self):
+        from agent.actions.receipts import ActionPending
+        markdown=render_markdown(self.build())
+        decisions=[{'action':'create_file','arguments':{'relative_path':'export.md','content':'invented memory report'}},
+                   {'action':'build_test_report','arguments':{'manifest_file':'manifest.json'}},
+                   {'action':'create_file','arguments':{'relative_path':'export.md','content':'changed report'}},
+                   {'action':'create_file','arguments':{'relative_path':'export.md','content':markdown}}]
+        project=test_project_budget.BudgetTests().project_function(self.root)
+        project.__globals__['approve_local_action']=lambda *args:False
+        with patch.dict(os.environ,{},clear=True),patch('agent.project_decisions.call_project_decision',side_effect=[json.dumps(d) for d in decisions]),patch('agent.local_action_receipts.LocalActionReceipts.run',side_effect=ActionPending('Action is waiting for your browser approval.')) as controlled,redirect_stdout(io.StringIO()):
+            result=project({'question':'Use build_test_report and create_file with the exact returned Markdown. Use saved results only.','project_root':str(self.root)})
+        self.assertEqual(result['task_status'],'awaiting_input')
+        controlled.assert_called_once()
+        self.assertEqual(controlled.call_args.args[2]['content'],markdown)
+        self.assertFalse((self.root/'export.md').exists())
+
+    def test_finish_cannot_substitute_a_memory_summary_for_requested_report(self):
+        decisions=[{'action':'list_files','arguments':{'limit':5}},
+                   {'action':'finish','answer':'Here are saved project memories.'},
+                   {'action':'build_test_report','arguments':{'manifest_file':'manifest.json'}},
+                   {'action':'finish','answer':'The saved report has one effective pass.'}]
+        with patch.dict(os.environ,{},clear=True),patch('agent.project_decisions.call_project_decision',side_effect=[json.dumps(d) for d in decisions]) as model,redirect_stdout(io.StringIO()):
+            result=test_project_budget.BudgetTests().project_function(self.root)({'question':'Use build_test_report on the saved manifest.','project_root':str(self.root)})
+        self.assertEqual(result['task_status'],'completed')
+        self.assertEqual(model.call_count,4)
+        self.assertIn('effective pass',result['answer'])
+
+
 if __name__=="__main__":unittest.main()

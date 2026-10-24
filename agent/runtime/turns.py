@@ -55,7 +55,7 @@ def session_turn_lock(root,config):
         handle.close()
 
 
-def run_turn(graph,config,catalog,session,question,root,*,continuation_model=None):
+def run_turn(graph,config,catalog,session,question,root,*,continuation_model=None,request_scope=None):
     from agent.runtime.summaries import compact_context,summary_failure_reason,summary_due
     from agent.runtime.summary_model import call_summary_messages
     notices=[]
@@ -69,6 +69,9 @@ def run_turn(graph,config,catalog,session,question,root,*,continuation_model=Non
                "previous_response_status":{"task_status":saved.get("task_status",""),"execution_outcome":saved.get("execution_outcome",""),**({"answer_available":saved["answer_available"]} if "answer_available" in saved else {})},
                "summary_retry_at":saved.get("summary_retry_at",0),
                "summary_turns":saved.get("summary_turns",0)}
+        from agent.runtime.project_scope import validate_request_scope
+        state.update(validate_request_scope(request_scope))
+        state["project_connection_notice"]=""
         from agent.storage.answer_continuations import AnswerContinuations
         from agent.runtime.continuations import command,explicit_command,progress_scope,validate_ledger,full_result,resume_result
         import hashlib

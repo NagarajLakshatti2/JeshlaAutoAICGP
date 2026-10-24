@@ -5,7 +5,9 @@ from agent.storage.chats import ChatCatalog,validate_chat_command
 
 from agent.config.paths import DATA_ROOT as ROOT
 
-class BrowserBackend:
+from agent.runtime.workspace import WorkspaceSupport
+
+class BrowserBackend(WorkspaceSupport):
     def __init__(self):
         from agent.langgraph.langgraph_agent import graph,session_config,LLM_PROVIDER
         self.graph,self.session_config,self.provider=graph,session_config,LLM_PROVIDER
@@ -13,6 +15,42 @@ class BrowserBackend:
         self.space=os.getenv("AI_MEMORY_NAMESPACE","project")
         self.catalog=ChatCatalog(ROOT/"outputs/memory/chats.sqlite3",self.user,self.space)
         self.catalog.register("default")
+
+    def project_store(self):
+        from agent.storage.projects import ProjectCatalog
+        return ProjectCatalog(ROOT/"outputs/memory/projects.sqlite3",self.user,getattr(self,"base_space",self.space))
+
+    def add_project(self,name,folder):return self.project_store().add_local(name,folder)
+
+    def for_project(self,project_id):
+        import copy
+        if not project_id:
+            if not getattr(self,"project_id",None):return self
+            backend=copy.copy(self);backend.space=self.base_space
+            backend.project=None;backend.project_id=None
+            backend.catalog=ChatCatalog(ROOT/"outputs/memory/chats.sqlite3",self.user,backend.space)
+            return backend
+        from agent.storage.projects import ProjectConfigurationError,project_namespace
+        project=self.project_store().get(project_id)
+        if project is None:raise ProjectConfigurationError("Project not found in your workspace.")
+        backend=copy.copy(self)
+        backend.base_space=getattr(self,"base_space",self.space)
+        backend.project=project;backend.project_id=project["id"]
+        backend.space=project_namespace(backend.base_space,project["id"])
+        backend.catalog=ChatCatalog(ROOT/"outputs/memory/chats.sqlite3",self.user,backend.space)
+        return backend
+
+    def request_scope(self):
+        if not getattr(self,"project_id",None):return None
+        from agent.storage.projects import ProjectConfigurationError
+        from agent.runtime.project_scope import validate_request_scope
+        current=self.project_store().get(self.project_id)
+        if current is None or current["root"]!=self.project["root"]:
+            raise ProjectConfigurationError("Project configuration changed. Select it again before continuing.")
+        scope={"memory_user_id":self.user,"memory_namespace":self.space,
+               "project_id":self.project_id,"bound_project_root":current["root"]}
+        validate_request_scope(scope)
+        return scope
 
     def list_chats(self):return self.catalog.list()
     def list_chat_page(self,offset=0):return self.catalog.list(limit=31,offset=offset)
@@ -63,7 +101,7 @@ class BrowserBackend:
 
     def memory(self):
         from agent.langgraph.langgraph_agent import load_long_term_memory_node
-        return load_long_term_memory_node({})["memory_context"]
+        return load_long_term_memory_node(self.request_scope() or {})["memory_context"]
 
     def memory_records(self):
         """Read structured facts in this backend scope without model calls."""
@@ -90,14 +128,18 @@ class BrowserBackend:
         from agent.runtime.turns import run_turn
         from agent.runtime.context import local_action_handler
         queued=[]
+        scope=self.request_scope()
         def browser_approval(action,arguments):
             from agent.actions.receipts import ActionPending
+            if scope and str(Path(arguments["project_root"]).resolve())!=scope["bound_project_root"]:
+                from agent.actions.receipts import ActionBlocked
+                raise ActionBlocked("The proposed action does not belong to this selected project.")
             token=self.actions().propose(self.user,self.space,session,action,arguments)
             queued.append(token)
             raise ActionPending("Action is waiting for your browser approval. Review its exact project root and arguments below; no local action has executed.")
         config=self.session_config(session,self.user,self.space)
         with local_action_handler(browser_approval):
-            result=run_turn(self.graph,config,self.catalog,session,question,ROOT)
+            result=run_turn(self.graph,config,self.catalog,session,question,ROOT,**({"request_scope":scope} if scope else {}))
         if queued:
             result["notices"].append("Review the pending action below. Approving executes only that stored action; send another message to continue any remaining work.")
         return result
@@ -119,16 +161,29 @@ class BrowserBackend:
             if not approve:
                 actions.decline(self.user,self.space,session,token)
                 return {"answer":"Action declined. No local action executed.","notices":[]}
+            if getattr(self,"project_id",None):
+                from agent.actions.receipts import ActionBlocked
+                row=actions._row(self.user,self.space,session,token)
+                import json
+                proposal=json.loads(row["proposal"])
+                scope=self.request_scope()
+                if str(Path(proposal["project_root"]).resolve())!=scope["bound_project_root"]:
+                    raise ActionBlocked("This approval belongs to a different project folder.")
             result,replayed=actions.execute(self.user,self.space,session,token)
             import json
-            answer="Stored action returned. Receipt: "+token+"\n\n"+json.dumps(result,ensure_ascii=False,indent=2)
+            answer="Stored action returned. Receipt: "+token+"\n\n"+json.dumps(result,ensure_ascii=False,indent=2,sort_keys=True)
             notices=[]
             if not replayed:
                 try:
-                    self.catalog.append(session,"Approved exact local action "+token,answer)
+                    question="Approved exact local action "+token
+                    self.catalog.append(session,question,answer)
                     saved=self.graph.get_state(config).values or {}
-                    history=saved.get("history","")+"\nUser: Approved exact local action "+token+"\nAssistant: "+answer
-                    self.graph.update_state(config,{"history":history[-16000:],"task_status":"completed"})
+                    history=saved.get("history","")+"\nUser: "+question+"\nAssistant: "+answer
+                    # Approval publishes a new exchange, not merely a history tail.
+                    # run_turn uses these structured fields for the next prompt.
+                    self.graph.update_state(config,{"history":history[-16000:],
+                        "question":question,"answer":answer,"task_status":"completed",
+                        "execution_outcome":"completed","answer_available":True})
                 except Exception:
                     notices.append("The action receipt is saved, but conversation recording failed. Do not repeat the action to repair the transcript.")
             if replayed:notices.append("Showing the saved receipt; the action did not execute again.")

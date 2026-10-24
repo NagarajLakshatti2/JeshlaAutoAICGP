@@ -35,7 +35,7 @@ class BrowserActionUITests(unittest.TestCase):
   self.app.run();self.app.run();self.assertFalse(self.app.exception)
   self.assertFalse((self.backend.root/'note.txt').exists());self.assertEqual(self.backend.decisions,[])
   self.assertTrue(any(json.loads(block.value)['project_root']==str(self.backend.root) and json.loads(block.value)['arguments']['content']=='draft' for block in self.app.code))
-  other=self.backend.create_chat('Other');self.app.run();self.app.selectbox(key="chat_picker").set_value(other).run()
+  other=self.backend.create_chat('Other');self.app.run();self.app.button(key="open_chat_"+other).click().run()
   self.assertFalse(any(button.label=='Approve exact action' for button in self.app.button))
  def test_explicit_approval_and_rerender_execute_once(self):
   self.app.run();self.app.button(key='approve_'+self.token).click().run();self.assertFalse(self.app.exception)
@@ -56,4 +56,58 @@ class BrowserActionUITests(unittest.TestCase):
    self.assertFalse(self.app.exception)
    self.assertTrue(any(button.label=='Approve exact action' for button in self.app.button))
    self.app.run();self.assertEqual(submit.call_count,1)
+  self.assertFalse((self.backend.root/'note.txt').exists())
+
+ def test_recorded_receipt_is_displayed_once_after_refresh_and_reopen(self):
+  self.app.run();self.app.button(key='approve_'+self.token).click().run()
+  for _ in range(2):
+   self.app.run();self.assertFalse(self.app.exception)
+   rendered=[item.value for item in self.app.markdown]+[item.value for item in self.app.info]
+   self.assertEqual(rendered.count('Action returned.'),1)
+  self.assertEqual(self.backend.decisions,[True])
+  self.assertEqual(len(self.backend.turns('default')),1)
+  # Simulate a fresh browser state: receipt remains in the durable transcript.
+  del self.app.session_state['last_action_result'];self.app.run()
+  rendered=[item.value for item in self.app.markdown]+[item.value for item in self.app.info]
+  self.assertEqual(rendered.count('Action returned.'),1)
+  self.assertEqual(self.backend.decisions,[True])
+
+ def test_receipt_without_transcript_is_still_visible_once(self):
+  self.app.run()
+  with patch.object(self.backend.catalog,'append',side_effect=OSError('archive unavailable')):
+   # The fake adapter models the production receipt fallback after an archive failure.
+   def approve_without_archive(session,token,approve):
+    self.backend.decisions.append(approve)
+    self.backend.store.execute('u','p',session,token)
+    return {'answer':'Action returned.','notices':['Conversation recording failed.']}
+   with patch.object(self.backend,'decide_action',side_effect=approve_without_archive):
+    self.app.button(key='approve_'+self.token).click().run()
+  self.app.run();self.assertFalse(self.app.exception)
+  self.assertEqual(self.backend.turns('default'),[])
+  self.assertEqual([item.value for item in self.app.info].count('Action returned.'),1)
+  self.assertEqual(self.backend.decisions,[True])
+
+ def test_legacy_pending_message_is_not_presented_as_current_incomplete(self):
+  answer='Action is waiting for your browser approval. Review its exact project root and arguments below; no local action has executed.\n\nTask status: incomplete.'
+  self.backend.catalog.append('default','Create note.txt',answer)
+  self.app.run();self.assertFalse(self.app.exception)
+  messages=[item.value for item in self.app.markdown]
+  self.assertFalse(any('Task status: incomplete.' in value for value in messages))
+  self.assertTrue(any('Approval requested' in value for value in messages))
+  self.assertEqual(self.backend.turns('default')[0]['answer'],answer)
+  self.assertFalse((self.backend.root/'note.txt').exists())
+
+ def test_other_incomplete_answers_remain_visible(self):
+  answer='Source review failed.\n\nTask status: incomplete.'
+  self.backend.catalog.append('default','Review source',answer)
+  self.app.run();self.assertFalse(self.app.exception)
+  self.assertIn(answer,[item.value for item in self.app.markdown])
+
+ def test_new_request_clears_the_previous_decline_notice(self):
+  self.app.run();self.app.button(key='decline_'+self.token).click().run()
+  self.assertTrue(any(item.value=='Action declined.' for item in self.app.info))
+  self.app.chat_input[0].set_value('Explain the saved result').run()
+  self.assertFalse(self.app.exception)
+  self.assertFalse(any(item.value=='Action declined.' for item in self.app.info))
+  self.assertEqual(self.backend.decisions,[False])
   self.assertFalse((self.backend.root/'note.txt').exists())

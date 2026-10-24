@@ -165,7 +165,7 @@ def render_upload_menu(session):
 def render_attachment_list(backend,session):
     import streamlit as st
     items=chat_attachments(session)
-    with st.popover(":material/attach_file:"+(" "+str(len(items)) if items else ""),help="Chat attachments",key="chat_attachments",type="tertiary"):
+    with st.popover("Files"+(" "+str(len(items)) if items else ""),icon=":material/attach_file:",help="Chat attachments and approved file downloads",key="chat_attachments",type="tertiary"):
         st.markdown("**Chat attachments**")
         if not items:st.caption("No documents attached to this chat.")
         for index,item in enumerate(items):

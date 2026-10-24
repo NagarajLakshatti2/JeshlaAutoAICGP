@@ -135,3 +135,37 @@ class ProjectDecisionTests(unittest.TestCase):
             tools=ProjectTools(folder)
             for args in [{"relative_path":"note.txt"},{"relative_path":"note.txt","content":"x","shell":"bad"}]:
                 with self.assertRaises(ValueError):decode_native_project_reply(reply(args,name="create_file"),{"create_file":tools.create_file})
+
+
+class CrossProviderProposalCorrectionTests(unittest.TestCase):
+    def test_wrong_wrapper_function_gets_registered_native_correction(self):
+        from unittest.mock import Mock
+        def read_file(relative_path: str, start_line: int = 1, max_lines: int = 40):
+            raise AssertionError("Proposal decoding must not execute a handler")
+        native=reply({"relative_path":"inspection.json","start_line":1,"max_lines":30},name="read_file")
+        for provider in ["openrouter","gemini"]:
+            with self.subTest(provider=provider),patch("agent.project_decisions.LLM_PROVIDER",provider),patch("agent.project_decisions.last_provider",return_value=provider),patch("agent.project_decisions.call_tool_messages",side_effect=[reply({},name="unregistered"),native]) as model:
+                result=json.loads(call_project_decision([{"role":"user","content":"Read the saved inspection file"}],{"read_file":read_file}))
+                self.assertEqual(result,{"action":"read_file","arguments":{"relative_path":"inspection.json","start_line":1,"max_lines":30}})
+                self.assertEqual(model.call_count,2)
+                names={item['function']['name'] for item in model.call_args.args[1]}
+                self.assertEqual(names,{"read_file","ask","finish"})
+                self.assertNotIn("submit_project_action",names)
+
+    def test_multiple_first_calls_are_discarded_before_one_native_correction(self):
+        def read_file(relative_path: str):raise AssertionError("No execution")
+        first=reply({},name="unregistered");first['tool_calls']*=2
+        final=reply({"relative_path":"inspection.json"},name="read_file")
+        with patch("agent.project_decisions.LLM_PROVIDER","openrouter"),patch("agent.project_decisions.last_provider",return_value="openrouter"),patch("agent.project_decisions.call_tool_messages",side_effect=[first,final]) as model:
+            result=json.loads(call_project_decision([{"role":"user","content":"Read inspection.json"}],{"read_file":read_file}))
+        self.assertEqual(result['action'],'read_file');self.assertEqual(model.call_count,2)
+
+    def test_invalid_native_correction_stops_without_selecting_one_call(self):
+        def read_file(relative_path: str):raise AssertionError("No execution")
+        for second in [reply({'relative_path':'inspection.json'},name='unregistered'),
+                       {'tool_calls':reply({'relative_path':'inspection.json'},name='read_file')['tool_calls']*2},
+                       reply({'relative_path':'inspection.json','unexpected':'data'},name='read_file')]:
+            with self.subTest(second=second),patch("agent.project_decisions.LLM_PROVIDER","openrouter"),patch("agent.project_decisions.last_provider",return_value="openrouter"),patch("agent.project_decisions.call_tool_messages",side_effect=[reply({},name='unregistered'),second]) as model:
+                with self.assertRaisesRegex(RuntimeError,'format correction'):
+                    call_project_decision([{'role':'user','content':'Read saved file'}],{'read_file':read_file})
+                self.assertEqual(model.call_count,2)

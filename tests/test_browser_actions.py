@@ -75,3 +75,67 @@ class BackendActionTests(unittest.TestCase):
     backend.decide_action('default',token,True);backend.decide_action('default',token,True)
     self.assertEqual(model.call_count,1);self.assertEqual(len(backend.catalog.transcript('default')),1)
     self.assertEqual((root/'note.txt').read_text(),'draft')
+
+
+class ApprovedResultContextTests(unittest.TestCase):
+ def backend(self,root,state):
+  from agent.interfaces.browser import BrowserBackend
+  from agent.storage.chats import ChatCatalog
+  backend=BrowserBackend.__new__(BrowserBackend);backend.user='u';backend.space='p';backend.provider='test'
+  backend.catalog=ChatCatalog(root/'chats.sqlite3','u','p');backend.catalog.register('default')
+  backend.session_config=lambda session,*args:{'configurable':{'thread_id':'approved-result-'+session}}
+  backend.graph=SimpleNamespace(get_state=lambda config:SimpleNamespace(values=dict(state)),update_state=lambda config,values:state.update(values))
+  return backend
+
+ def test_approval_updates_latest_published_exchange_and_next_turn(self):
+  from agent.interfaces import browser
+  from agent.runtime.turns import run_turn
+  from agent.runtime.summaries import recent_conversation_context
+  from agent.runtime.project_budget import project_user_context
+  with tempfile.TemporaryDirectory() as folder:
+   root=Path(folder);state={'question':'Inspect the selected page','answer':'Waiting for approval.',
+       'history':'older '*3000,'route':'project','task_status':'incomplete','execution_outcome':'blocked','answer_available':False}
+   backend=self.backend(root,state)
+   proposal={'project_root':str(root),'action':'inspect_browser_page','arguments':{'url':'https://example.com'}}
+   captured={'status':'inspected','fields':[{'label':'Text Input','id':'text-input','disabled':False,'read_only':False}],
+             'other':'x'*7000,'inspection_file':'test-output/agent-web/sample/inspection.json'}
+   with patch.object(browser,'ROOT',root):
+    token=backend.actions().propose('u','p','default','inspect_browser_page',proposal)
+    with patch.object(ProjectTools,'inspect_browser_page',return_value=captured) as inspect:
+     approved=backend.decide_action('default',token,True)
+    self.assertEqual(inspect.call_count,1)
+    self.assertEqual(state['question'],'Approved exact local action '+token)
+    self.assertEqual(state['answer'],approved['answer'])
+    self.assertEqual(state['execution_outcome'],'completed');self.assertTrue(state['answer_available'])
+    config=backend.session_config('default');contexts=[]
+    def invoke(current,config):
+     context=recent_conversation_context(current['history'],current['previous_exchange'])
+     contexts.append(context)
+     self.assertEqual(context['previous_exchange']['answer'],approved['answer'])
+     self.assertIn('Text Input',project_user_context(current,root,32000))
+     return {'route':'direct','answer':'Text Input is enabled and editable.','task_status':'completed'}
+    backend.graph.invoke=invoke
+    with patch('agent.runtime.summaries.summary_due',return_value=False):
+     result=run_turn(backend.graph,config,backend.catalog,'default','Use the saved inspection only.',root)
+    self.assertIn('enabled and editable',result['answer']);self.assertEqual(len(contexts),1)
+    state.update(question='New follow-up',answer=result['answer'])
+    after_followup=dict(state)
+    backend.decide_action('default',token,True)
+    self.assertEqual(inspect.call_count,1)
+    self.assertEqual(state,after_followup)
+    self.assertEqual(len(backend.catalog.transcript('default')),2)
+
+ def test_decline_and_failed_action_do_not_publish_a_successful_exchange(self):
+  from agent.interfaces import browser
+  with tempfile.TemporaryDirectory() as folder:
+   root=Path(folder);state={'question':'Original task','answer':'Pending approval','task_status':'incomplete'}
+   backend=self.backend(root,state);before=dict(state)
+   with patch.object(browser,'ROOT',root):
+    proposal={'project_root':str(root),'action':'create_file','arguments':{'relative_path':'declined.txt','content':'draft'}}
+    token=backend.actions().propose('u','p','default','create_file',proposal)
+    backend.decide_action('default',token,False);self.assertEqual(state,before)
+    proposal['arguments']['relative_path']='failed.txt'
+    token=backend.actions().propose('u','p','default','create_file',proposal)
+    with patch.object(ProjectTools,'create_file',side_effect=RuntimeError('fixture failed')):
+     with self.assertRaises(RuntimeError):backend.decide_action('default',token,True)
+    self.assertEqual(state,before);self.assertEqual(backend.catalog.transcript('default'),[])

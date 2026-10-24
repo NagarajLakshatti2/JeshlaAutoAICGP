@@ -3,6 +3,8 @@ from agent.providers.errors import ProviderError
 
 
 def user_error_message(error):
+    from agent.storage.projects import ProjectConfigurationError
+    if isinstance(error,ProjectConfigurationError):return str(error)
     if isinstance(error,ProviderError):
         return str(error)
     if isinstance(error,RuntimeError) and str(error).startswith("This chat is busy"):
