@@ -172,7 +172,7 @@ def answer_question(state, *, model, project_root, document_search, web=web_sear
         messages[1]={"role":"user","content":json.dumps(payload,ensure_ascii=False)}
         messages.append({"role":"system","content":"Use only the published previous_exchange.answer for this transformation. Do not reconstruct it from the previous question or invent content from older history. If it contains a failure notice, explain that no completed explanation was published."})
     knowledge_request=previous_response or knowledge_only(state,user_question,has_upload=has_upload)
-    from agent.policies.answer_quality import needs_reference_review,syntax_issue,execution_claim_issue,REFERENCE_INSTRUCTION
+    from agent.policies.answer_quality import needs_reference_review,syntax_issue,execution_claim_issue,REFERENCE_INSTRUCTION,PUBLIC_LEARNING_SYSTEM
     standalone_learning=not has_upload and route in {"direct","web"} and public_learning_request(user_question)
     quality_eligible=not previous_response and (knowledge_request or standalone_learning)
     quality_started=quality_eligible and needs_reference_review(user_question)
@@ -196,6 +196,7 @@ def answer_question(state, *, model, project_root, document_search, web=web_sear
         if standalone_learning:
             # A fresh general tutorial does not need private project history in
             # public-search planning. Stored context is never modified.
+            messages[0]={"role":"system","content":PUBLIC_LEARNING_SYSTEM}
             public_payload={**payload,"project_root":"","saved_facts":"","conversation_summary":"",
                             "recent_conversation":"","previous_exchange":{}}
             messages[1]={"role":"user","content":json.dumps(public_payload,ensure_ascii=False)}

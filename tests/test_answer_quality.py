@@ -29,6 +29,33 @@ class AnswerQualityTests(unittest.TestCase):
             document_search=lambda **k:{},web=lambda **k:{"results":[{"url":self.url,"snippet":"An official documentation result."}]},
             page_fetch=page or (lambda url:{"url":url,"text":"The rule requires an explicit implementation.","truncated":False}))
 
+    def test_public_verification_reduces_prompt_without_changing_private_or_normal_scope(self):
+        question="Explain Java inheritance using Java 17, with examples and pitfalls. Verify important rules against official documentation."
+        public=[];ordinary=[]
+        replies=iter([self.call("web_search",{"query":"official language documentation"},"search"),
+                      self.call("fetch_web_page",{"url":self.url},"read"),{"content":self.good}])
+        def public_model(messages,specs):
+            public.append(json.loads(json.dumps(messages)))
+            return next(replies)
+        result=answer_question({"question":question,"route":"direct","memory_context":"PRIVATE_CANARY",
+            "summary":"PRIVATE_CANARY","history":"PRIVATE_CANARY",
+            "previous_exchange":{"question":"My project","answer":"PRIVATE_CANARY"}},
+            model=public_model,tools=self.tools,project_root="PRIVATE_CANARY",document_search=lambda **k:{},
+            web=lambda **k:{"results":[{"url":self.url}]},
+            page_fetch=lambda url:{"url":url,"text":"The rule requires an explicit implementation.","truncated":False})
+        self.assertEqual(result["execution_outcome"],"completed")
+        self.assertEqual(json.loads(public[0][1]["content"])["question"],question)
+        self.assertNotIn("PRIVATE_CANARY",json.dumps(public))
+        def ordinary_model(messages,specs):
+            ordinary.append(json.loads(json.dumps(messages)))
+            return {"content":"Hello"}
+        normal=answer_question({"question":"Hello","route":"direct","memory_context":"PRIVATE_CANARY"},
+            model=ordinary_model,tools=self.tools,project_root=".",document_search=lambda **k:{})
+        self.assertEqual(normal["answer"],"Hello")
+        self.assertEqual(json.loads(ordinary[0][1]["content"])["saved_facts"],"PRIVATE_CANARY")
+        self.assertLess(len(public[0][0]["content"]),len(ordinary[0][0]["content"])//2)
+        for method in (self.tools.list_files,self.tools.read_file,self.tools.search_text):method.assert_not_called()
+
     def test_detail_requests_verify_but_topic_only_followups_do_not(self):
         self.assertTrue(needs_reference_review("Explain advanced programming concepts with examples."))
         self.assertFalse(needs_reference_review("List the topic names from your previous answer."))

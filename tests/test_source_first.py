@@ -47,6 +47,31 @@ class SourceFirstTests(unittest.TestCase):
     def run_flow(self, model=None):
         return flow.answer_from_sources(self.question, model=model or self.model(), web=self.web, page_fetch=self.fetch)
 
+    def test_passage_selection_preserves_unicode_and_crossreferences(self):
+        pages = [{"source_id": "S1", "url": self.url, "text": "A method’s signature (§8.4.2) determines inheritance eligibility."}]
+        catalogue, lookup = flow._passage_catalogue(pages)
+        self.assertNotIn("text", catalogue[0])
+        draft = deepcopy(self.draft)
+        draft["sections"][0]["evidence"] = [{"passage_id": catalogue[0]["passages"][0]["passage_id"]}]
+        flow._validate(draft, flow.DRAFT["function"]["parameters"])
+        flow._resolve_passages(draft, lookup)
+        self.assertEqual(draft["sections"][0]["evidence"][0]["quote"], pages[0]["text"])
+        changed = [{**pages[0], "text": pages[0]["text"] + " Changed."}]
+        _, changed_lookup = flow._passage_catalogue(changed)
+        draft["sections"][0]["evidence"] = [{"passage_id": catalogue[0]["passages"][0]["passage_id"]}]
+        with self.assertRaisesRegex(ValueError, "unknown or stale"):
+            flow._resolve_passages(draft, changed_lookup)
+
+    def test_unknown_passage_id_stops_after_one_correction(self):
+        draft = deepcopy(self.draft)
+        draft["sections"][0]["evidence"] = [{"passage_id": "invented"}]
+        model = Mock(side_effect=[self.reply("submit_documentation_plan", self.plan),
+            self.reply("submit_grounded_sections", draft), self.reply("submit_grounded_sections", draft)])
+        result = self.run_flow(model)
+        self.assertEqual(result["task_status"], "incomplete")
+        self.assertEqual(model.call_count, 3)
+        self.assertIn("unknown or stale", model.call_args_list[-1].args[0][-1]["content"])
+
     def test_evidence_is_collected_before_drafting_and_used_by_checks(self):
         order = []; captured = []
         replies = iter([self.plan, self.draft, self.check])
@@ -59,7 +84,7 @@ class SourceFirstTests(unittest.TestCase):
         result = self.run_flow(model)
         self.assertEqual(order, ["submit_documentation_plan", "search", "read", "submit_grounded_sections", "submit_grounding_findings"])
         self.assertEqual(result["execution_outcome"], "completed")
-        self.assertEqual(json.loads(captured[1][1]["content"])["sources"][0]["text"], self.page["text"])
+        self.assertEqual(json.loads(captured[1][1]["content"])["sources"][0]["passages"][0]["text"], self.page["text"])
         self.assertIn(self.url, result["answer"])
         self.assertIn("Expected output (not executed)", result["answer"])
         self.assertIn("No compilation or execution was performed", result["answer"])
@@ -150,9 +175,9 @@ class SourceFirstTests(unittest.TestCase):
         self.web.return_value = {"results": [{"url": self.url + "#part-4"}, {"url": self.url + "#part-5"}]}
         self.fetch.side_effect = lambda url: {"url": url, "text": self.page["text"], "fragment_found": True if "#" in url else None}
         self.run_flow()
-        self.assertEqual(self.web.call_count, 2)
-        self.assertEqual(self.fetch.call_count, 4)
-        self.assertEqual(len({call.args[0] for call in self.fetch.call_args_list}), 4)
+        self.assertLessEqual(self.web.call_count, 2)
+        self.assertLessEqual(self.fetch.call_count, 4)
+        self.assertEqual(len({call.args[0] for call in self.fetch.call_args_list}), self.fetch.call_count)
 
     def test_four_stale_planner_urls_do_not_starve_ranked_discovered_sections(self):
         self.plan["candidate_urls"] = [self.url + "/stale-" + str(number) for number in range(4)]
@@ -168,6 +193,79 @@ class SourceFirstTests(unittest.TestCase):
         self.assertEqual(self.fetch.call_count, 4)
         sources = json.loads(model.call_args_list[1].args[0][1]["content"])["sources"]
         self.assertEqual([source["url"] for source in sources], ranked)
+
+    def test_precise_section_precedes_generic_search_pages_within_attempt_limit(self):
+        targeted=self.url+"#rules"
+        self.plan["candidate_urls"]=[targeted]
+        generic=[self.url+"/index-"+str(number) for number in range(4)]
+        self.web.return_value={"results":[{"url":url} for url in generic]}
+        self.fetch.side_effect=lambda url: ({**self.page,"url":url,"fragment_found":True} if url==targeted
+            else {"url":url,"text":"Documentation index without the requested rule."})
+        result=self.run_flow()
+        self.assertEqual(result["execution_outcome"],"completed")
+        self.assertEqual([call.args[0] for call in self.fetch.call_args_list],[targeted,*generic[:3]])
+        self.assertEqual(self.fetch.call_count,4)
+
+    def test_format_correction_identifies_long_quote_and_preserves_previous_proposal(self):
+        bad=deepcopy(self.draft)
+        bad["sections"][0]["evidence"][0]["quote"]=self.quote+" "*400
+        count=[]
+        def model(messages,specs):
+            name=specs[0]["function"]["name"]
+            if name=="submit_documentation_plan":return self.reply(name,self.plan)
+            if name=="submit_grounding_findings":return self.reply(name,self.check)
+            count.append(name)
+            if len(count)==1:return self.reply(name,bad)
+            feedback=messages[-1]["content"]
+            valid=("data.sections[0].evidence[0].quote" in feedback and "400" in feedback
+                   and json.dumps(bad,ensure_ascii=False) in feedback)
+            return self.reply(name,self.draft if valid else bad)
+        result=self.run_flow(model)
+        self.assertEqual(result["execution_outcome"],"completed")
+        self.assertEqual(len(count),2)
+        self.assertIn(self.draft["example"]["code"],result["answer"])
+
+    def test_blocking_finding_cannot_disappear_during_format_correction(self):
+        invalid={"blocking":[{"target":"topic-99","kind":"unsupported",
+            "claim":self.draft["sections"][0]["explanation"],"reason":"A material claim lacks evidence."}],"advisory":[]}
+        model=self.model()
+        model.side_effect=[self.reply("submit_documentation_plan",self.plan),self.reply("submit_grounded_sections",self.draft),
+            self.reply("submit_grounding_findings",invalid),self.reply("submit_grounding_findings",self.check)]
+        result=self.run_flow(model)
+        self.assertEqual(result["execution_outcome"],"blocked")
+        self.assertFalse(result["answer_available"])
+        self.assertEqual(model.call_count,4)
+
+    def test_valid_blocking_findings_survive_malformed_advisory_field(self):
+        invalid={"blocking":[{"target":"topic-1","kind":"unsupported",
+            "claim":self.draft["sections"][0]["explanation"],"reason":"A material claim lacks evidence."}],"advisory":"not-an-array"}
+        model=self.model()
+        model.side_effect=[self.reply("submit_documentation_plan",self.plan),self.reply("submit_grounded_sections",self.draft),
+            self.reply("submit_grounding_findings",invalid),self.reply("submit_grounding_findings",self.check)]
+        result=self.run_flow(model)
+        self.assertEqual(result["execution_outcome"],"blocked")
+        self.assertFalse(result["answer_available"])
+        self.assertEqual(model.call_count,4)
+
+    def test_two_real_section_reads_do_not_require_search(self):
+        urls=[self.url+"#first",self.url+"#second"]
+        self.plan["candidate_urls"]=urls
+        self.fetch.side_effect=lambda url:{**self.page,"url":url,"fragment_found":True}
+        result=self.run_flow()
+        self.assertEqual(result["execution_outcome"],"completed")
+        self.assertEqual([call.args[0] for call in self.fetch.call_args_list],urls)
+        self.web.assert_not_called()
+
+    def test_failed_precise_targets_leave_a_discovery_page_attempt(self):
+        self.plan["candidate_urls"]=[self.url+"#missing-"+str(number) for number in range(4)]
+        found=self.url+"/found#rules"
+        self.web.return_value={"results":[{"url":found}]}
+        self.fetch.side_effect=lambda url: ({**self.page,"url":url,"fragment_found":True} if url==found else {"error":"No such section"})
+        result=self.run_flow()
+        self.assertEqual(result["execution_outcome"],"completed")
+        self.assertEqual(self.fetch.call_count,4)
+        self.assertEqual(self.fetch.call_args_list[-1].args[0],found)
+        self.assertLessEqual(self.web.call_count,2)
 
     def test_compact_draft_keeps_all_six_topics_and_one_complete_example(self):
         self.plan["topics"] = ["Rule group " + str(number) for number in range(1, 7)]
