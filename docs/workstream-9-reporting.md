@@ -1,5 +1,15 @@
 # WS9 9.7 — Traceable reporting and optional Jira links
 
+## T23 Y — selected live report approval/export/download accepted, 30 October 2026
+
+**T23 is closed Y for the selected historical Markdown report workflow.** The user completed the actual browser approval and explicitly confirmed Step 10 executed (generated-report download). The owned create_file proposal and durable receipt ab79792815c7449abc471e571943d6a6 are both completed and their integrity/fingerprint checks match. Exactly one matching report creation completed. The current report and the guarded approved-file download reader return exactly the approved 4,316 UTF-8 bytes, SHA256 d2e58aa136d593681b52651b0d13ae2e89a0ce1ebcc3a0264f748ec1200449fe. Path: D:/PlayWrightDemoGradle/test-output/agent-reports/ws9-api-snapshot-review-20261030.md. Download completion is the user's explicit confirmation; no generic conversation-download event or uninspected Downloads folder is presented as proof of file delivery.
+
+The accepted chain is bounded live OpenRouter report preparation → actual user-owned expired-review refresh → exact browser approval → one saved receipt/file → prepared unchanged download → user-confirmed generated-report download. Earlier 116 report/export and 73 affected expiry/UI checks retain their separate scopes; they were not repeated or summed into a new suite count. The expired-file notice/Refresh file review fix retains Y. No provider request, test run, source regeneration or approval replay occurred while recording completion.
+
+Do not reopen T23 unless a newly reported regression or separately agreed scope requires it; document that reason first. This accepts this selected Markdown workflow, not new API execution, arbitrary report sizes/models, binary formats (T20), Jira traceability or full WS8/WS9 release. TI-TC-004 password remains Y. T21 remains P with eight input checks (TI-TC-005–012). Other completed Y scopes and parked Git/MCP/Ollama/mobile work remain unchanged. Word is unchanged.
+
+Evidence: outputs/acceptance/t23-report-export-20261030/final-user-acceptance.json, live-request.json, live-verification.json and exact completed receipt; expiry/UI evidence is under outputs/acceptance/t23-expired-review-ui-20261030/.
+
 **Y — selected local reporting pilot. P — live model/interface export acceptance and optional Jira integration.**
 
 Implemented on 24 October 2026 in the new `integrations/reporting` package, exposed through the existing `ProjectTools` class and read-only project-agent registry. Existing API, web and mobile packages remain in place. No provider settings or test execution flow changed.

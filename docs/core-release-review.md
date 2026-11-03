@@ -1,5 +1,9 @@
 # Core agent release review
 
+## Accepted T36 scope — 3 November 2026
+
+**Y — the user-approved limited local browser/Python release.** The user explicitly chose option B and requested T36 closure. The accepted trusted local milestone is complete. Existing P/X tasks keep their statuses; no public/native-installer/general production or multi-agent release is certified. Earlier pending/full-release/scope-choice text below is dated history and is superseded for T36 by this explicit limited-scope decision. Do not rerun already accepted checks or add gates to this closed milestone. Completion evidence: outputs/acceptance/t36-local-release-completion-20261103/completion.md/json. Counts: **Y 11 | P 20 | X 6 — total 37.**
+
 ## WS4 bounded negative-review routing check - 23 October 2026
 
 **Y - conservative review routing; P - broader factual/source quality PARKED after one changed-path live check.** A valid review marked supported while listing concrete issues is now treated as revise, with every issue preserved and no asserted supported source. The existing shared answer flow gets one revision and a new review; repeated concerns still withhold the answer. Invalid negative-review format corrections still cannot erase earlier concerns. No action permissions, provider settings or module layout changed.

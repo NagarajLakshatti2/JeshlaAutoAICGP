@@ -2,5 +2,8 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/outputs/acceptance/git-approved-writes-20261025/fixture-data/sources/JeshlaAutoAICGP" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/outputs/acceptance/git-push-status-account-20261025/fixture-data/sources/JeshlaAutoAICGP" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/outputs/acceptance/projects-smart-ui-20261024/public-clone-5f54fc6c" vcs="Git" />
   </component>
 </project>

@@ -16,7 +16,9 @@ TEXT_SUFFIXES = {".xml", ".json", ".log", ".txt", ".md", ".java", ".py", ".featu
 ROLES = {"log", "source", "requirement"}
 
 
-def _load(root, relative_path, expected_sha256=None):
+def _load(root, relative_path, expected_sha256=None, *, max_bytes=MAX_BYTES):
+    if type(max_bytes) is not int or not 1 <= max_bytes <= MAX_BYTES:
+        raise ValueError("Evidence read limit must be between one byte and 5 MB.")
     if not isinstance(relative_path, str) or not relative_path.strip():
         raise ValueError("Evidence path must be a nonempty relative path.")
     requested = Path(relative_path.replace("\\", "/"))
@@ -37,12 +39,12 @@ def _load(root, relative_path, expected_sha256=None):
     if path.suffix.lower() not in TEXT_SUFFIXES:
         raise ValueError("Use supported text evidence; screenshots/traces need a separate visual review.")
     before = path.stat()
-    if before.st_size > MAX_BYTES:
-        raise ValueError("Evidence exceeds the 5 MB investigation limit.")
+    if before.st_size > max_bytes:
+        raise ValueError("Evidence exceeds the 5 MB investigation limit." if max_bytes == MAX_BYTES else "Evidence exceeds the configured investigation size limit.")
     with path.open("rb") as handle:
-        raw = handle.read(MAX_BYTES + 1)
+        raw = handle.read(max_bytes + 1)
     after = path.stat()
-    if len(raw) > MAX_BYTES or (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):
+    if len(raw) > max_bytes or (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):
         raise ValueError("Evidence changed during reading or exceeded its size limit.")
     digest = hashlib.sha256(raw).hexdigest()
     if expected_sha256 is not None and (not isinstance(expected_sha256, str) or digest != expected_sha256):

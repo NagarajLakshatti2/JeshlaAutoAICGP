@@ -279,7 +279,7 @@ class BrowserTests(unittest.TestCase):
         self.assertEqual(self.app.selectbox(key="browser_provider").value,"test-provider")
         self.assertFalse(self.app.segmented_control)
         self.assertFalse(self.app.chat_input[0].disabled)
-        self.assertTrue(any(item.value=="Chat" for item in self.app.caption))
+        self.assertEqual(self.app.button(key="chat_mode").label,"Chat")
         self.assertEqual(self.backend.calls,[])
 
     def test_provider_configuration_error_is_actionable(self):

@@ -24,7 +24,27 @@ def render_pending_actions(backend,session,turns=()):
         # The transcript is the primary display. Keep a fallback when saving
         # the action exchange failed; never execute or hide a missing receipt.
         if not any(turn.get("answer")==last["answer"] for turn in turns):
-            st.info(last["answer"])
+            from agent.interfaces.execution_results import render_execution_result
+            if not last.get("token") or not render_execution_result(backend,session,token=last["token"]):
+                st.info(last["answer"])
+    if hasattr(backend,"expired_file_reviews") and hasattr(backend,"refresh_file_review"):
+        try:expired=backend.expired_file_reviews(session)
+        except Exception as error:st.error(user_error_message(error));return
+        if expired:
+            st.subheader("Expired file reviews")
+            st.warning("File approval expired. Refresh the review to show its exact approval form again. Nothing has executed from an expired review.")
+            st.caption("Refreshing uses the saved content without a model request. Download is available only after you approve file creation.")
+            for item in expired:
+                st.text(item["path"])
+                if st.button("Refresh file review",key="refresh_file_review_"+item["id"]):
+                    try:
+                        backend.refresh_file_review(session,item["id"])
+                        last=st.session_state.get("last_action_result",{})
+                        if last.get("session")==session and last.get("token")==item["id"]:
+                            st.session_state.pop("last_action_result",None)
+                        st.rerun()
+                    except ActionBlocked as error:st.warning(str(error))
+                    except Exception as error:st.error(user_error_message(error))
     if not pending:return
     st.subheader("Actions waiting for your approval")
     st.caption("Review the exact project and arguments. Approval runs only this action. Proposals expire after ten minutes; changed file targets require a fresh proposal.")
@@ -40,7 +60,7 @@ def render_pending_actions(backend,session,turns=()):
             try:
                 with st.spinner("Applying your decision…"):
                     result=backend.decide_action(session,token,bool(approve))
-                st.session_state.last_action_result={"session":session,"answer":result["answer"],"decision":"approved" if approve else "declined"}
+                st.session_state.last_action_result={"session":session,"answer":result["answer"],"decision":"approved" if approve else "declined","token":token}
                 from agent.interfaces.request_status import remember_status
                 remember_status(session,"Action returned" if approve else "Action declined")
                 st.session_state.chat_notices=result.get("notices",[])
@@ -48,7 +68,7 @@ def render_pending_actions(backend,session,turns=()):
             except ActionBlocked as error:
                 from agent.interfaces.request_status import remember_status
                 remember_status(session,"Incomplete")
-                st.session_state.last_action_result={"session":session,"answer":str(error)}
+                st.session_state.last_action_result={"session":session,"answer":str(error),"token":token}
             except Exception as error:
                 st.error(user_error_message(error));return
             st.rerun()

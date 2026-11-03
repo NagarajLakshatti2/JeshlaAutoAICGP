@@ -179,6 +179,8 @@ def review_technical_answer(question,answer,messages,read_urls,model):
             if not isinstance(value,dict) or set(value)!={"status","issues","source_urls","evidence"}:raise ValueError()
             if value["status"] not in {"supported","revise","insufficient_evidence"}:raise ValueError()
             if not isinstance(value["issues"],list) or len(value["issues"])>6 or any(not isinstance(item,str) or not item.strip() or len(item)>500 for item in value["issues"]):raise ValueError()
+            # Retain validated concerns even when a later source-field check fails.
+            if value["issues"]:review_has_concerns=True
             if not isinstance(value["source_urls"],list) or len(value["source_urls"])>10 or any(not isinstance(url,str) or url not in supplied_urls for url in value["source_urls"]):raise ValueError()
             if value["status"]=="supported" and value["issues"]:
                 # Concrete concerns are a negative review, never approval. Route
@@ -187,7 +189,6 @@ def review_technical_answer(question,answer,messages,read_urls,model):
                 return {"status":"revise","issues":list(value["issues"]),"source_urls":[]}
             if value["status"]=="supported" and review_has_concerns:
                 raise _ReviewFormatError("A format-only correction cannot erase previously reported concerns and approve the same draft. Return a negative verdict with concrete issues.")
-            if value["issues"]:review_has_concerns=True
             if value["status"]=="supported" and not value["source_urls"]:raise ValueError()
             if value["status"]!="supported" and not value["issues"]:raise ValueError()
             value=_resolve_review_selections(value,draft_by_id,source_by_id)

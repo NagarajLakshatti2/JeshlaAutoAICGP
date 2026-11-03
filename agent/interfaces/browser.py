@@ -52,6 +52,14 @@ class BrowserBackend(WorkspaceSupport):
         validate_request_scope(scope)
         return scope
 
+    def project_documents(self):
+        from rag.project_retrieval import collection_for_state
+        return collection_for_state(self.request_scope() or {}, ROOT)
+
+    def search_project_documents(self, query):
+        from rag.project_retrieval import search_project_documents
+        return search_project_documents(query, state=self.request_scope() or {}, application_root=ROOT)
+
     def list_chats(self):return self.catalog.list()
     def list_chat_page(self,offset=0):return self.catalog.list(limit=31,offset=offset)
     def create_chat(self,title):return self.catalog.create(title)
@@ -92,12 +100,16 @@ class BrowserBackend(WorkspaceSupport):
         return save_model_settings(ROOT/".env",provider,model)
 
     def generated_files(self,session):
-        from agent.actions.downloads import list_created_files
-        return list_created_files(self.actions(),self.user,self.space,session)
+        from agent.actions.downloads import list_downloadable_files
+        return list_downloadable_files(self.actions(),self.user,self.space,session)
 
     def generated_file(self,session,token):
-        from agent.actions.downloads import read_created_file
-        return read_created_file(self.actions(),self.user,self.space,session,token)
+        from agent.actions.downloads import read_downloadable_file
+        return read_downloadable_file(self.actions(),self.user,self.space,session,token)
+
+    def generated_zip_file(self,session,token):
+        from agent.actions.downloads import zip_snapshot
+        return zip_snapshot(self.generated_file(session,token))
 
     def memory(self):
         from agent.langgraph.langgraph_agent import load_long_term_memory_node
@@ -111,6 +123,8 @@ class BrowserBackend(WorkspaceSupport):
 
     def submit_selected(self,session,question,provider):
         """Apply this browser choice only for the lifetime of one request."""
+        from agent.runtime.chat_shortcuts import is_shortcut
+        if is_shortcut(question):return self.submit(session,question)
         from agent.providers.selection import provider_selection
         from agent.providers.errors import ProviderError
         info=self.provider_info(provider)
@@ -125,6 +139,21 @@ class BrowserBackend(WorkspaceSupport):
         if error:return {"answer":error,"notices":[]}
         if normalized.upper().startswith(("NEW CHAT","NEW SESSION","OPEN CHAT","SESSION ")) or normalized.upper()=="LIST CHATS":
             return {"answer":"Use the sidebar to create or open a chat. Your current chat has not changed.","notices":[]}
+        from agent.runtime.git_workspace import git_status_reply
+        from agent.runtime.chat_shortcuts import is_shortcut
+        shortcut=is_shortcut(question)
+        git_status=None if shortcut else git_status_reply(self,session,question)
+        if git_status is not None:
+            self.catalog.append(session,question,git_status["answer"])
+            return git_status
+        from agent.policies.routing import git_write_mode
+        git_mode=None if shortcut else git_write_mode(question)
+        if git_mode:
+            if not getattr(self,"project_id",None) or getattr(self,"project",{}).get("source")!="git":
+                return {"answer":"Select a saved Git project, then review its changes before committing or pushing.","notices":[]}
+            answer="Git commit/push requires a review of selected files or pending commits, followed by a separate exact-action approval. Use the Git review panel. No commit or push has executed."
+            self.catalog.append(session,question,answer)
+            return {"answer":answer,"notices":[],"task_status":"awaiting_input","execution_outcome":"awaiting_input","open_git_review":self.project_id,"git_review_action":git_mode}
         from agent.runtime.turns import run_turn
         from agent.runtime.context import local_action_handler
         queued=[]
@@ -146,10 +175,55 @@ class BrowserBackend(WorkspaceSupport):
 
     def actions(self):
         from agent.actions.browser import BrowserActions
-        return BrowserActions(ROOT/"outputs/local_actions.sqlite3")
+        from agent.runtime.git_workspace import WorkspaceActionTools
+        return BrowserActions(ROOT/"outputs/local_actions.sqlite3",tools_factory=lambda root:WorkspaceActionTools(self,root))
 
     def pending_actions(self,session):
         return self.actions().pending(self.user,self.space,session)
+
+    def expired_file_reviews(self,session):
+        if not self.catalog.get(session):return []
+        rows=self.actions().expired_file_reviews(self.user,self.space,session)
+        if getattr(self,"project_id",None):
+            root=self.request_scope()["bound_project_root"]
+            rows=[item for item in rows if str(Path(item["project_root"]).resolve())==root]
+        return rows
+
+    def refresh_file_review(self,session,token):
+        from agent.actions.receipts import ActionBlocked
+        if not self.catalog.get(session):raise ActionBlocked("Chat not found.")
+        actions=self.actions();row=actions._row(self.user,self.space,session,token)
+        if getattr(self,"project_id",None):
+            import json
+            if str(Path(json.loads(row["proposal"])["project_root"]).resolve())!=self.request_scope()["bound_project_root"]:
+                raise ActionBlocked("This review belongs to a different project folder.")
+        return actions.refresh_file_review(self.user,self.space,session,token)
+
+    def execution_result(self,session,token):
+        """Read an owned supported action receipt without executing or reopening artifacts."""
+        import json,re
+        from agent.actions.receipts import ActionBlocked
+        from agent.interfaces.execution_results import RESULT_ACTIONS
+        if not isinstance(token,str) or not re.fullmatch(r"[0-9a-f]{32}",token) or not self.catalog.get(session):return None
+        actions=self.actions()
+        try:row=actions._row(self.user,self.space,session,token)
+        except ActionBlocked:return None
+        proposal=json.loads(row["proposal"])
+        if proposal["action"] not in RESULT_ACTIONS:return None
+        if getattr(self,"project_id",None):
+            scope=self.request_scope()
+            if Path(proposal["project_root"]).resolve()!=Path(scope["bound_project_root"]):return None
+        receipt=actions.receipts.get(token)
+        if not receipt or receipt["status"] not in {"completed","uncertain","running"} or not receipt["result"]:return None
+        from agent.actions.receipts import canonical
+        import hashlib
+        fingerprint=hashlib.sha256(canonical(proposal).encode()).hexdigest()
+        if receipt["fingerprint"]!=fingerprint:return None
+        result=json.loads(receipt["result"])
+        if not isinstance(result,dict):return None
+        if receipt["status"]=="completed" and row["status"]!="completed":return None
+        return {"receipt_id":token,"receipt_status":receipt["status"],"action":proposal["action"],
+                "project_root":proposal["project_root"],"arguments":proposal["arguments"],"result":result}
 
     def decide_action(self,session,token,approve):
         if type(approve) is not bool:raise ValueError("Choose approve or decline explicitly.")
@@ -172,6 +246,16 @@ class BrowserBackend(WorkspaceSupport):
             result,replayed=actions.execute(self.user,self.space,session,token)
             import json
             answer="Stored action returned. Receipt: "+token+"\n\n"+json.dumps(result,ensure_ascii=False,indent=2,sort_keys=True)
+            fence="\x60"*3
+            if result.get("committed") is True:
+                answer=("Commit created locally: "+result["commit"]+" on "+result["branch"]+
+                        ".\nSelected files: "+", ".join(result["files"])+
+                        ".\nPush has not run. Request a push review for a separate approval.\nReceipt: "+token+
+                        "\n\n"+fence+"json\n"+json.dumps(result,ensure_ascii=False,indent=2)+"\n"+fence)
+            elif result.get("pushed") is True:
+                answer=("Push confirmed: "+result["commit"]+" on "+result["branch"]+
+                        ".\nRemote: "+result["remote_url"]+"\nReceipt: "+token+
+                        "\n\n"+fence+"json\n"+json.dumps(result,ensure_ascii=False,indent=2)+"\n"+fence)
             notices=[]
             if not replayed:
                 try:

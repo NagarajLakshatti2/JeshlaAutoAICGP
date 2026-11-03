@@ -82,6 +82,10 @@ def _fetch_in_process(url,*,resolver=None,connection_factory=None):
                     location=response.getheader("Location")
                     if not location or hop==2:raise ValueError("Redirect limit")
                     target=urljoin(current,location)
+                    # RFC 9110 10.2.2: inherit an omitted fragment, but respect
+                    # a replacement or explicitly empty fragment in Location.
+                    if "#" not in location and parts.fragment:
+                        target=urlsplit(target)._replace(fragment=parts.fragment).geturl()
                     if parts.scheme=="https" and urlsplit(target).scheme!="https":raise ValueError("HTTPS downgrade blocked")
                     current=target;continue
                 if response.status!=200:return {"error":"Source page returned an unsuccessful HTTP status.","http_status":response.status}

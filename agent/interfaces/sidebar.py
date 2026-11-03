@@ -168,7 +168,7 @@ def render_chat_list(backend):
         if row:by_id[active]=row
     query=st.session_state.get("chat_title_filter","").strip().casefold()
     matching=[key for key,row in by_id.items() if query in display_title(row).casefold()]
-    if not by_id:st.caption("No saved chats yet.")
+    if not by_id:st.caption("No chats yet. Start with New chat.")
     elif not matching:st.caption("No loaded titles match. Search saved messages or load older chats.")
     for key in matching:
         current=key==active and st.session_state.get("chat_opened",False)
@@ -199,7 +199,8 @@ def render_sidebar(backend,project_manager=None):
                         if hasattr(backend,"search_chats"):
                             from agent.interfaces.chat_search import render_chat_search
                             render_chat_search(backend)
-                st.caption("Chats and tasks")
+                project=getattr(backend,"project",None)
+                st.caption("Chats and tasks · "+project["name"] if project else "Chats and tasks")
             with st.container(key="sidebar_chats"):
                 render_chat_list(backend)
             with st.container(key="sidebar_footer",horizontal=True,wrap=False):

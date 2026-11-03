@@ -1,4 +1,4 @@
-"""Bounded clone and fast-forward synchronization; never push or execute project code."""
+"""Bounded Git transport; callers control clone/sync and reviewed publication."""
 import base64
 import os
 from pathlib import Path
@@ -22,13 +22,37 @@ def repository_url(value):
     return "https://"+parsed.hostname+"/"+path+".git"
 
 
-def git_command(arguments,*,cwd=None,token="",host="",timeout=180):
+def git_failure_message(stderr,*,authenticated=False,remote=False):
+    """Classify a failed operation without exposing remote text or credentials."""
+    text=stderr.casefold() if isinstance(stderr,str) else ""
+    if any(term in text for term in ("could not resolve host","failed to connect","connection timed out","ssl certificate problem")):
+        return "Git could not reach the repository securely. Check network, proxy and certificate settings; no push was performed."
+    access_errors=("repository not found","authentication failed","could not read username",
+                   "http basic: access denied","error: 401","error: 403","access denied","permission denied")
+    if remote and any(term in text for term in access_errors):
+        if not authenticated:
+            return ("Repository access was denied or the URL was not found. Check the URL. "
+                    "For a private repository, add a GitHub/GitLab account in Settings → Connections, "
+                    "then select it under Repository access. Public repository uses no account. No push was performed.")
+        return ("Git rejected the selected account or its repository permission. Check the token, repository access "
+                "and any required organization authorization, then use Test connection in Settings → Connections. "
+                "No push was performed.")
+    if "not a git repository" in text:
+        return "Choose an existing Git checkout folder, or choose Clone repository with a new destination."
+    return "Git could not complete this operation. Check repository access, branch state and network. No push was performed."
+
+
+def git_command(arguments,*,cwd=None,token="",host="",timeout=180,index_file=None,raw=False):
     executable=shutil.which("git")
     if not executable:raise ProjectConfigurationError("Install Git on the agent server before cloning or syncing.")
     env=os.environ.copy()
     for name in list(env):
-        if name.startswith("GIT_CONFIG_") or name in {"GIT_DIR","GIT_WORK_TREE","GIT_INDEX_FILE","GIT_OBJECT_DIRECTORY","GIT_ALTERNATE_OBJECT_DIRECTORIES","GIT_ASKPASS","SSH_ASKPASS"}:env.pop(name,None)
+        if name.startswith("GIT_CONFIG_") or name in {"GIT_DIR","GIT_WORK_TREE","GIT_INDEX_FILE","GIT_OBJECT_DIRECTORY","GIT_ALTERNATE_OBJECT_DIRECTORIES","GIT_ASKPASS","SSH_ASKPASS","GIT_COMMON_DIR","GIT_REPLACE_REF_BASE"} or name.startswith(("GIT_AUTHOR_","GIT_COMMITTER_")):env.pop(name,None)
     env.update({"GIT_TERMINAL_PROMPT":"0","GCM_INTERACTIVE":"never","GIT_LFS_SKIP_SMUDGE":"1","GIT_CONFIG_GLOBAL":os.devnull,"GIT_CONFIG_NOSYSTEM":"1"})
+    env["GIT_NO_REPLACE_OBJECTS"]="1"
+    env["GIT_OPTIONAL_LOCKS"]="0"
+    if index_file is not None:
+        env["GIT_INDEX_FILE"]=str(Path(index_file).resolve())
     if host:
         env.update({"GIT_CONFIG_COUNT":"1","GIT_CONFIG_KEY_0":"http.https://"+host+"/.extraHeader","GIT_CONFIG_VALUE_0":""})
         if token:
@@ -43,11 +67,17 @@ def git_command(arguments,*,cwd=None,token="",host="",timeout=180):
                                   stderr=subprocess.PIPE,timeout=timeout,encoding="utf-8",errors="replace",
                                   creationflags=getattr(subprocess,"CREATE_NO_WINDOW",0))
         except (OSError,subprocess.TimeoutExpired):
-            raise ProjectConfigurationError("Git could not finish within the time limit. Check the working folder before retrying.") from None
+            message=("Push was not confirmed. Inspect the remote before retrying." if arguments and arguments[0]=="push" else
+                     "Git could not finish within the time limit. Check the working folder before retrying.")
+            raise ProjectConfigurationError(message) from None
     if result.returncode:
         # Remote error text can echo credentials, URLs or untrusted instructions.
-        raise ProjectConfigurationError("Git could not complete this operation. Check repository access, branch state and network. No push was performed.")
-    return result.stdout.strip()
+        message=git_failure_message(result.stderr,authenticated=bool(token),remote=bool(host))
+        if arguments and arguments[0]=="push":
+            message=message.replace("No push was performed.","").replace("no push was performed.","").strip(" ;")
+            message+=" Push was not confirmed; inspect the remote before retrying."
+        raise ProjectConfigurationError(message)
+    return result.stdout if raw else result.stdout.strip()
 
 
 def clone_repository(url,destination,*,token=""):

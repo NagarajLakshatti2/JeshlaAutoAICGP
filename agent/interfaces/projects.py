@@ -1,4 +1,4 @@
-"""One composer project picker; configuration is separate from selecting context."""
+"""Project selection and saved-project rows shared by the workspace panel."""
 import streamlit as st
 from agent.interfaces.sidebar import start_chat_draft
 from agent.storage.projects import ProjectConfigurationError
@@ -14,12 +14,11 @@ def switch_project(manager,project_id):
     views=st.session_state.setdefault("project_views",{})
     views[old]={key:st.session_state[key] for key in VIEW_KEYS if key in st.session_state}
     st.session_state.selected_project_id=project_id
-    # Never show the last conversation automatically when switching projects.
-    # The scoped catalog retains every saved conversation for explicit selection.
+    # Scope the sidebar catalog without automatically opening a saved chat.
     for key in ("active_chat","chat_draft","chat_opened","chat_picker",*VIEW_KEYS):
         st.session_state.pop(key,None)
     for key in list(st.session_state):
-        if key.startswith("memory_") or key in {"saved_facts","chat_notices","last_action_result","archive_results","upload_notice","pending_chat_picker","ui_dialog"}:
+        if key.startswith(("memory_","git_commit_","git_review_","project_knowledge_")) or key in {"git_write_review","saved_facts","chat_notices","last_action_result","archive_results","upload_notice","pending_chat_picker","ui_dialog"}:
             st.session_state.pop(key,None)
     start_chat_draft()
     for key,value in views.get(project_id,{}).items():st.session_state[key]=value
@@ -39,53 +38,62 @@ def begin_project_setup():
     st.session_state.ui_dialog="project_setup"
 
 
-def project_picker_style():
-    st.html("""<style>
-    [data-testid="stPopoverBody"]:has(.st-key-project_picker_content) {
-        width: min(23rem, calc(100vw - 2rem)); max-height: min(70dvh, 34rem); overflow-y: auto;
-    }
-    .st-key-project_picker_content { gap: .5rem; }
-    .st-key-project_picker_content [class*="st-key-project_name_"] button {
-        text-align: left; justify-content: flex-start !important;
-    }
-    .st-key-project_picker_content hr { margin: .25rem 0; }
-    @media (max-width: 640px) {
-        [data-testid="stPopoverBody"]:has(.st-key-project_picker_content) {
-            position: fixed !important; inset: auto 0 0 0 !important;
-            transform: none !important; width: 100vw !important; max-width: 100vw !important;
-            height: fit-content; max-height: 75dvh; border-radius: 1rem 1rem 0 0;
-            padding-bottom: 1.25rem;
-        }
-    }
-    </style>""")
+def render_chat_mode(manager):
+    """Return to saved chats outside a project without merging their scopes."""
+    selected=bool(st.session_state.get("selected_project_id"))
+    if st.button("Chat",key="chat_mode",type="tertiary" if selected else "secondary",
+                 help="Show your chats without a selected project"):
+        if selected:
+            switch_project(manager,"")
+            st.session_state.chat_title_filter=""
+            st.rerun()
 
 
 def render_projects(manager):
+    """Open a single dialog; never stack a popover over project setup."""
     if not hasattr(manager,"project_store"):return
-    project_picker_style()
-    rows=manager.project_store().list();active=st.session_state.get("selected_project_id","")
-    with st.popover("Projects",icon=":material/folder_open:",key="projects_menu"):
-        with st.container(key="project_picker_content"):
-            st.markdown("**Projects**")
-            source=st.segmented_control("Project source",["All","Local","Git"],default="All",
-                                        key="project_source_filter",label_visibility="collapsed",width="stretch")
-            visible=[row for row in rows if source not in {"Local","Git"} or (row.get("source","local")=="git")== (source=="Git")]
-            if not rows:st.caption("Add a project once, then select its name here.")
-            elif not visible:st.caption("No configured projects in this category.")
-            for row in visible:
-                key=row["id"];is_git=row.get("source")=="git"
-                with st.container(horizontal=True,vertical_alignment="center",wrap=False,gap="xsmall"):
-                    label=row["name"]+(" · Active" if key==active else "")
-                    with st.container(key="project_name_"+key):
-                        if st.button(label,key="choose_project_"+key,icon=":material/account_tree:" if is_git else ":material/folder:",
-                                     type="secondary" if key==active else "tertiary",help=row["root"],width="stretch",wrap=False):
-                            switch_project(manager,key);st.rerun()
-                    if is_git and st.button(":material/sync:",key="sync_project_"+key,help="Pull fast-forward updates. Local changes prevent syncing."):
-                        st.session_state.project_settings_id=key;st.session_state.ui_dialog="project_sync";st.rerun()
-                    if st.button(":material/more_vert:",key="project_settings_"+key,help="Project details and connections"):
-                        st.session_state.project_settings_id=key;st.session_state.ui_dialog="project_settings";st.rerun()
-            st.divider()
-            st.button("Add project",key="add_project_menu",icon=":material/create_new_folder:",width="stretch",on_click=begin_project_setup)
-            if active:
-                if st.button("Clear project selection",key="clear_project_selection",type="tertiary",width="stretch"):
-                    switch_project(manager,"");st.rerun()
+    if st.button("Projects",icon=":material/folder_open:",key="projects_menu"):
+        st.session_state.ui_dialog="projects"
+
+
+def render_saved_projects(manager):
+    notice=st.session_state.pop("project_created_notice",None)
+    if notice:st.success(notice)
+    rows=manager.project_store().list()
+    active=st.session_state.get("selected_project_id","")
+    names=[row["name"].casefold() for row in rows]
+    duplicate_names={name for name in names if names.count(name)>1}
+    st.html("""<style>
+    .st-key-saved_projects_list { gap: .35rem; }
+    .st-key-saved_projects_list [class*="st-key-project_name_"] button {
+        justify-content: flex-start; text-align: left;
+    }
+    .st-key-saved_projects_list [class*="st-key-project_name_"] button > div {
+        justify-content: flex-start !important;
+    }
+    .st-key-saved_projects_list [class*="st-key-project_name_"] button [data-testid="stMarkdownContainer"] {
+        flex: 1; text-align: left;
+    }
+    </style>""")
+    with st.container(key="saved_projects_list",height="content"):
+        if not rows:st.caption("No saved projects yet. Add a local folder or Git repository.")
+        for row in rows:
+            key=row["id"];is_git=row.get("source")=="git"
+            with st.container(horizontal=True,vertical_alignment="center",wrap=False,gap="xsmall"):
+                label=row["name"]+(" · Active" if key==active else "")
+                with st.container(key="project_name_"+key):
+                    if st.button(label,key="choose_project_"+key,icon=":material/account_tree:" if is_git else ":material/folder:",
+                                 type="secondary" if key==active else "tertiary",help=row["root"],width="stretch",wrap=False):
+                        switch_project(manager,key)
+                        st.session_state.ui_dialog=None
+                        st.rerun()
+                    if row["name"].casefold() in duplicate_names:st.caption(row["root"])
+                if is_git and st.button(":material/sync:",key="sync_project_"+key,help="Pull fast-forward updates. Local changes prevent syncing."):
+                    st.session_state.project_settings_id=key;st.session_state.ui_dialog="project_sync";st.rerun()
+                if st.button(":material/more_vert:",key="project_settings_"+key,help="Project details and connections"):
+                    st.session_state.project_settings_id=key;st.session_state.ui_dialog="project_settings";st.rerun()
+    st.divider()
+    st.button("Add project",key="add_project_menu",icon=":material/create_new_folder:",width="stretch",on_click=begin_project_setup)
+    if active:
+        if st.button("Clear project selection",key="clear_project_selection",type="tertiary",width="stretch"):
+            switch_project(manager,"");st.session_state.ui_dialog=None;st.rerun()

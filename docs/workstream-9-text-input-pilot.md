@@ -1,8 +1,173 @@
 # WS9 Text Input pilot test pack
 
-Updated 23 October 2026. Project: D:/PlayWrightDemoGradle. Feature selected by the user: Text Input module.
+<!-- current-task-progress:start -->
+## Current task progress — 31 October 2026
 
-**Current status: 9.0 Y; 9.1 Y for the selected Text Input design pilot.** Revision 2 contains 12 not-run cases covering nine source stories with 35 step/result pairs and six recorded pilot decisions. The design is accepted by the assistant acting under the user's explicit choose-the-best delegation; independent human review is not claimed. Gemini completed one live source read -> rejected quote -> corrected draft -> final answer in four model calls (30.55 seconds). The saved answer clearly states that the test has not been run. The original design pack remains a not_run baseline; user notes and a later actual Chromium TI-TC-001 pass are recorded separately below. Other 11 cases remain not run; wider WS9/release gates are separate.
+**Latest completed task: T21 — Text Input acceptance (Y). Accepted checks: 12/12.**
+
+| Check scope | Current status |
+| --- | --- |
+| TI-TC-001–006: text/clear, two email samples, password, two numeric checks | Y — accepted for recorded scopes; six logical checks in five native scenarios |
+| TI-TC-007: date picker | Y — actual native picker selection and exact ISO date passed with the approved API strategy; prior failures retained |
+| TI-TC-010: multiline textarea | Y — one actual selected scenario passed; full two-line retention and empty-after-clear verified |
+| TI-TC-008, TI-TC-011/012: valid phone, read-only, disabled | Y — actual selected native scenarios passed; protections and exact values verified |
+| TI-TC-009: short phone | Y — final approved unchanged-source retry passed India nine-digit invalid-state assertions after blur |
+
+Current task outcome: T21 is completed and closed Y. All twelve logical checks map to retained passing evidence; the combined email scenario accounts for two logical checks. No next T-number has started.
+
+T21 has now met its agreed selected-pilot acceptance scope and moves from P to Y. The twelve logical checks correspond to eleven accepted native scenarios across retained runs; they are not twelve new T-numbers or a new full-suite run.
+
+Status reporting preference: include the current T-number, accepted/total subchecks and unresolved focus in updates; end with one line of overall Y/P/X counts.
+
+**Overall task counts: Y 7 | P 22 | X 8 — total 37.**
+<!-- current-task-progress:end -->
+
+## T21 Y — selected Text Input pilot completed, 31 October 2026
+
+**T21 is closed Y: 12/12 accepted logical checks, reconciled against 11 accepted native scenarios across seven completed execution receipts.** The valid/invalid email samples share one accepted native scenario, so twelve independent native tests are not claimed. Final TI-TC-009 passed its explicitly approved unchanged-source retry in 59.45 seconds, exit 0, with all four Cucumber steps, no timeout/failures/skips/configuration failures and unchanged source hashes. It verified India +91, exact nine-digit sample and a phone-specific invalid state after blur.
+
+Every TI-TC-001–012 requirement scope is now mapped to a retained native pass, report hash and completed receipt. Earlier accepted cases were reconciled read-only and were not rerun. Prior date/network failures, the mixed five-case run's overall exit 1, and local verification timeouts remain preserved as historical evidence. Only four individually identified cases passed in that mixed run; its failed short-phone navigation was resolved for acceptance by the separately approved final retry. No failed history is rewritten as a success.
+
+Evidence: outputs/acceptance/t21-remaining-inputs-review-20261031/completion.md and completion.json (complete mapping, source hashes, native scenario identities and seven receipt checks), final-case-acceptance.json and native-short-phone-final-passed.xml. Completed pilot scope is the accepted samples/rules on the selected QA Practice Hub environment in headless Chromium. This is not a newly executed all-case full suite or full WS9/WS8 release; cross-browser/mobile, pixel glyphs, security/backend storage and expanded inputs remain separate. No further code change, provider request, package install, Git/Jira operation or replay occurred during closure. Word snapshot is unchanged.
+
+**Do not reopen T21 or its completed checks without a new documented regression or separately agreed scope.** No next T-number has started. Earlier progress entries below are historical; this completion and the current consolidated register supersede their pending statuses.
+
+## T21 P — 11/12 accepted; only short-phone navigation retry remains, 31 October 2026
+
+The three approved exact source edits were applied and hash-verified. The separately approved five-case run completed in 146.96 seconds with exit 1 overall, no timeout, zero skips/incomplete/configuration failures. Four fresh native cases passed: TI-TC-007 date with the explicit native-picker API strategy, TI-TC-008 valid India phone, TI-TC-011 read-only and TI-TC-012 disabled. Sixteen passed Cucumber step records and unchanged source hashes support those four individual scoped acceptances. The overall run is not called successful.
+
+TI-TC-009 failed at initial homepage navigation with ERR_CONNECTION_CLOSED; its phone assertions did not execute. Other same-site navigations passed, including later cases. No phone code defect is established and no source repair is proposed. Receipt t21-remaining-cases-20261031 and its native partial report/failed-case trace are preserved. Prior date failures and the textarea DNS failure/pass remain retained.
+
+Current T21 acceptance is **11/12 logical checks in ten accepted native scenarios**. Date/valid-phone/read-only/disabled join earlier accepted scopes and are now closed; do not repeat them. Only TI-TC-009 remains P. One unchanged-source run-only retry review selects @TI-TC-009 with the existing 300-second limit, requiring a fresh explicit execution approval. No automatic retry, new source change, provider request, installation or Jira/Git operation occurred. Full T21 remains P until the final case and evidence reconciliation complete. Word is unchanged.
+
+Evidence: outputs/acceptance/t21-remaining-inputs-review-20261031/case-acceptance.json, native-five-case-partial.xml, target-run-summary.json and final-case-review.md. Earlier pending/source/failed-date entries below are historical.
+
+## T21 P — all remaining five cases prepared and locally verified, 31 October 2026
+
+The user requested completing all T21 items. Current work covers only unaccepted TI-TC-007/008/009/011/012. Four new phone/read-only/disabled scenarios and a different date strategy are staged in the existing page/step/feature packages. The date uses explicit native showPicker after a standard click, selection/confirmation and blur; no expected-date assignment or repeated Alt+ArrowDown/refocus strategy. Exact phone rules use real India selection and field-specific validation after blur. Protected fields use observed baselines and ordinary unforced interaction, preserving attributes.
+
+Java 17 compilation and 13/13 local candidate checks passed with zero page network requests. All reviewed target hashes are unchanged. No live target case or source edit ran. Three exact source edits and one selected five-case @T21-REMAINING run (300 seconds) are ready for separate explicit approvals together; execution depends on successful approved edits and exact hashes. Accepted cases are excluded. Prior date failures and textarea DNS failure/pass remain preserved. Full T21 will be marked Y only if every pending case meets its agreed scope and native evidence is reconciled.
+
+Evidence/reviews: outputs/acceptance/t21-remaining-inputs-review-20261031/review.md, exact-actions.json, focused-run-review.md, focused-run-review.json and probe/results.json. Current T21 stays P, 7/12 accepted. No provider request, installation, default suite/build/runner change or Jira/Git operation is introduced. Word remains unchanged.
+
+## TI-TC-010 Y — actual textarea scenario passed; T21 7/12 accepted, 31 October 2026
+
+The explicitly approved unchanged-source retry passed **1/1 actual native TI-TC-010 scenario** in 39.27 seconds: exit 0, no timeout, failures, skips, incomplete cases or configuration failures. Six native Cucumber step records confirm entry of First line + newline + Second line, exact complete multiline retention, clearing and an exactly empty result. Reviewed source hashes remained unchanged. Receipt: t21-textarea-navigation-retry-20261031. Native XML SHA256: 4bdd92b82ffbd5e067e0155bddbcae28604b24e0c4eb4c8b0918d068c0054e0b.
+
+**TI-TC-010 is closed Y for this selected scope. Do not repeat it without a new reason.** The original attempt failed at homepage DNS before textarea assertions; it and its trace/XML are preserved. The later pass used unchanged source, so it is not claimed as a causal code repair of the DNS failure. Earlier missing local-fixture results are not counted as passing checks.
+
+**Current T21 progress: 7/12 accepted logical checks in six accepted native scenarios.** Five remain: TI-TC-007 date (previous failures unresolved), TI-TC-008/009 phone, TI-TC-011 read-only and TI-TC-012 disabled. Next recommended single case is TI-TC-011 read-only. Existing accepted text/email/password/numeric cases and the date case were excluded from this run. No further source edit, provider request, installation or Jira/Git operation occurred. Word remains unchanged.
+
+Evidence: outputs/acceptance/t21-textarea-pilot-review-20261031/case-acceptance.json, target-retry-summary.json, target-retry-result.json and native-textarea-scenario-passed.xml. The initial failure is retained as case-acceptance-initial-navigation-failed.json. Previous pending or blocked textarea entries below are historical.
+
+## T21 P — textarea source applied; first live attempt blocked at DNS, 31 October 2026
+
+The user separately approved all three exact source edits and one conditional live run. Edits are applied through completed receipts t21-textarea-edit-1-20261031 through t21-textarea-edit-3-20261031, with exact reviewed hashes. Existing package structure/methods/scenarios, runner and build remain unchanged. This source-approval gate is closed; do not reapply or request it again.
+
+The selected TI-TC-010 run completed in 214.01 seconds, exit 1, no timeout: one fresh native scenario failed at initial homepage navigation with ERR_NAME_NOT_RESOLVED for qapracticehub.com. The textarea assertions were not reached. This is blocked live acceptance, not an established textarea code defect. Source hashes stayed unchanged. Original receipt: t21-textarea-scenario-20261031. Native XML and trace are preserved.
+
+A single subsequent read-only system DNS lookup succeeded (75.2.60.5); the earlier browser DNS cause/recovery remains unconfirmed. No source, browser, DNS, network or certificate setting was changed, and no automatic live retry occurred. One unchanged-source run-only retry review is prepared for separate approval. Source approval is already complete. No passed cases, failed date, full suite, installation, provider request or Jira/Git operation ran. T21 remains P with 6/12 checks accepted. Word is unchanged.
+
+Evidence: outputs/acceptance/t21-textarea-pilot-review-20261031/applied.json, case-acceptance.json, native-textarea-navigation-failed.xml, dns-followup.json and focused-retry-review.md. Earlier pending-source entries below are historical.
+
+## T21 P — TI-TC-010 textarea prepared; compile passed, local browser timed out, 31 October 2026
+
+Current work is one independent case: TI-TC-010 exact multiline retention and clearing. Three additive edits are staged in the existing page/step/feature packages, using the already-designed First line + newline + Second line sample. Full exact content and after-edit hashes are reviewed. All existing method bodies/scenarios and current target hashes remain unchanged. No target edit or actual test has run.
+
+Java 17 compilation passed after correcting quoting in the isolated probe and excluding runtime-only archives from the compiler classpath. The subsequent local browser process timed out after 90 seconds without producing fixture results. No fixture pass is claimed and no further local retry is planned. Actual Cucumber/target acceptance remains pending. Source approval and single-run approval are presented together as separate questions to reduce round trips; execution is conditional on both explicit approvals, completed edit receipts and exact source hashes.
+
+Review: outputs/acceptance/t21-textarea-pilot-review-20261031/review.md, exact-actions.json, focused-run-review.md and focused-run-review.json. The command selects only @T21-TEXTAREA with a 300-second limit. Completed cases and the failed date scenario are excluded. T21 remains P with 6/12 accepted checks; date is unresolved and TI-TC-008–012 remain unaccepted. No provider request, installation or Jira/Git action occurred. Word is unchanged.
+
+## T21 P — date repair retry failed; stop repeating this strategy, 30 October 2026
+
+The separately approved one-case retry completed in 94.55 seconds, exit 1, no timeout. Fresh native results show exactly one failed TI-TC-007 scenario and zero passes/skips/incomplete/configuration failures. It still expected 2026-09-25 and found the setup date 2026-09-24. All reviewed source hashes stayed unchanged. Receipt: t21-date-scroll-repair-retry-20261030. This execution approval is consumed; no automatic retry is permitted.
+
+**The stable-click edit did not resolve the live failure.** It fixes the controlled smooth-scroll fixture, but that reproduction does not establish the complete live cause. Both failed native runs and their traces are retained; no live repair success, application defect or date-case Y is claimed. The one approved source edit remains applied in the existing page package; no further source change or rollback occurred. No passed case, full suite, installation, provider request or Jira/Git action ran.
+
+**Current T21 progress remains 6/12 accepted.** TI-TC-007 stays P pending a different evidence-based native-picker strategy. The five independent phone/multiline/read-only/disabled checks can proceed without this date repair. Recommendation: complete those independent checks before another date attempt; do not repeat unchanged keyboard/stable-click retries. Any new target change and live execution still need their respective exact approvals. Evidence: outputs/acceptance/t21-date-scroll-repair-20261030/case-acceptance.json, target-retry-summary.json, native-date-retry-failed.xml and native-date-retry-failed-trace.zip. Earlier applied/pending entries are historical. Word remains unchanged.
+
+## T21 P — approved date scroll repair applied; separate retry pending, 30 October 2026
+
+The user approved the one exact source edit. The standard stable click before native picker opening is applied in existing TextInputPilotPage.java through completed receipt t21-date-scroll-repair-edit-20261030. Current bytes match candidate SHA256 763313617ee80907a64d64f7ab2760dccf6dd38e03bdc0fcd4e34ef7b0048874. Other reviewed source files remain unchanged. The source-edit approval is closed; do not reapply it.
+
+The local smooth-scroll reproduction and 12 date/four scroll checks retain their fixture-only scope. A separately reviewed retry selects only @T21-DATE once, uses headless Chromium/offline Gradle with a 300-second limit, and reconciles fresh native results against the preserved original failure. The expected date/retention assertions are unchanged. No live retry, passed-case rerun, provider request, installation, Jira/Git operation or further source change occurred during application. T21 remains P with 6/12 checks accepted and six live checks pending.
+
+Evidence: outputs/acceptance/t21-date-scroll-repair-20261030/applied.json, focused-retry-review.md and focused-retry-review.json. Original failed-run XML/trace and receipt remain preserved. Exact source approval and live execution approval remain separate; a pass is not yet claimed. Word is unchanged.
+
+## T21 P — date scroll-interaction repair reproduced and staged, 30 October 2026
+
+The saved failed-run stylesheet enables smooth scrolling. Adding this rule to a below-fold local fixture reproduces the exact September-24-instead-of-25 symptom; the otherwise matching control passes. The staged single-method correction adds a standard stable click before opening the native picker. Java 17 compilation, all 12 existing date fixture checks and four scroll checks (including three repetitions of the reproduced smooth-scroll condition) pass with zero page network requests. This supports a scroll/picker interaction explanation; the exact live cause/causal repair remains unconfirmed pending an approved live retry.
+
+One exact source edit in the existing TextInputPilotPage package awaits user approval. No target source, assertion, date sample, build, runner or completed scenario was changed or rerun. No sleep, forced click, CSS override, direct expected-date fill, provider request, installation or Jira/Git operation is introduced. Review: outputs/acceptance/t21-date-scroll-repair-20261030/review.md, exact-action.json and probe/ result JSON files. The original live failure and baseline diagnostics remain preserved. After applying the approved edit, request a separate exact @T21-DATE retry approval. T21 remains P: 6/12 checks accepted, six live checks pending. Other independent input cases are not blocked. Word remains unchanged.
+
+## T21 P — actual date run failed; no automatic retry, 30 October 2026
+
+The approved single @T21-DATE run completed in 82.09 seconds, exit 1, no timeout. One fresh native TI-TC-007 scenario failed, with zero passes/skips/configuration failures: the final ISO-date assertion expected 2026-09-25 but found the setup date 2026-09-24. Reviewed source hashes remain unchanged. Receipt: t21-date-scenario-20261030. The source-edit gate and this one execution approval are closed; do not reapply or replay them.
+
+**TI-TC-007 stays P.** Saved XML/trace confirm the keyboard actions were issued and the field retained the setup value; they do not prove the native popup opened/received navigation or establish an application defect. Twelve original local candidate fixtures passed. Three additional local tracing/viewport/scroll diagnostics also passed with zero page network requests, so a page-specific cause remains unconfirmed. No unproven source fix, direct fill of the expected date or automatic live retry was applied.
+
+**T21 remains P with six checks pending:** date TI-TC-007 requires diagnosis/repair and separate reviewed retry; TI-TC-008/009 phone, TI-TC-010 multiline, TI-TC-011 read-only and TI-TC-012 disabled remain unexecuted. Accepted TI-TC-001–006 retain their recorded Y scopes and were not rerun. This date failure does not block preparing the other independent checks. Next date work must establish a scoped correction from evidence before fresh source-edit and execution approvals. Evidence: outputs/acceptance/t21-date-pilot-review-20261030/case-acceptance.json, diagnosis.json, native-date-scenario-failed.xml and native-date-failed-trace.zip. Previous applied/pending entries below are historical. Parked work and Word remain unchanged.
+
+## T21 P — date source edits applied; single-scenario execution approval pending, 30 October 2026
+
+The user approved the three exact TI-TC-007 source edits. They were applied through durable receipts t21-date-edit-1-20261030 through t21-date-edit-3-20261030, and current bytes match the reviewed candidate hashes. Other reviewed source files remain unchanged. Existing page/step/feature packages were extended; no unnecessary package or flat Python helper was created. The source-edit gate is closed; do not apply these edits again.
+
+TI-TC-007 is implemented but not yet run against the target site. Java 17 compilation and 12 isolated local Chromium fixture checks remain candidate-only evidence. The next separate approval is one 300-second headless Chromium run selecting only @T21-DATE, followed by fresh native report and source-hash reconciliation. Passed password/numeric/text/email cases are excluded. T21 stays P with six live checks pending (TI-TC-007–012). No live test, provider request, installation, Jira/Git operation or automatic retry occurred during source application.
+
+Evidence: outputs/acceptance/t21-date-pilot-review-20261030/applied.json, focused-run-review.md and focused-run-review.json. Completed Y scopes and parked work remain closed. Word is unchanged.
+
+## T21 P — date-picker candidate verified; source approval pending, 30 October 2026
+
+TI-TC-007 is prepared in the existing page/step/feature packages. It uses the saved native date locator, seeds only the preceding date for setup, selects the source sample 2026-09-25 through Chromium's native picker using keyboard interaction, then verifies visible native control, exact ISO value and matching UTC representation. Localized display is allowed; pixel glyphs are not inspected. A no-picker control leaves the preceding date unchanged, while opening the picker selects the next day. Blocked picker/unavailable samples fail rather than falling back to fill of the expected value.
+
+Java 17 compilation and 12/12 isolated local Chromium fixture checks passed with zero page network requests. Target/source hashes remain unchanged; no target edit, site reinspection or live scenario ran. Three exact source edits await the user's required approval; one actual @T21-DATE run will require a subsequent separate command approval. Review/evidence: outputs/acceptance/t21-date-pilot-review-20261030/review.md, exact-actions.json and probe/results.json. T21 remains P with six live checks pending. Accepted text/email/password/numeric/export scopes remain closed; parked work and Word are unchanged.
+
+## TI-TC-005/006 Y — actual numeric scenarios passed; T21 P with six checks remaining, 30 October 2026
+
+The separately approved single selected run passed **2/2 actual native scenarios**, TI-TC-005 and TI-TC-006, in 72.68 seconds: exit 0, no timeout, failures, skips, incomplete cases or configuration failures. Fresh native report identity and eight captured Cucumber steps confirm exact `123` retention and initially empty `abc` rejection/ignore assertions executed. All reviewed source hashes remain unchanged. Receipt: t21-number-scenarios-20261030. Native XML SHA256: f8741eb2f3fc8f0dfbf9e2de250be2c6167b3e45f8a780bbbaeba8fe776d8cbd.
+
+**Y — selected numeric scope closed.** Do not rerun these cases without a new documented reason. Password/text/email and report export remain closed; none were rerun. **T21 remains P with six live input checks:** TI-TC-007 date picker, TI-TC-008/009 phone, TI-TC-010 multiline textarea, TI-TC-011 read-only and TI-TC-012 disabled. Six logical input checks now have recorded evidence in five native scenarios (the two email samples share one scenario). No full-pack, cross-browser or release pass is claimed. Fourteen isolated fixtures remain separate candidate evidence.
+
+Evidence: outputs/acceptance/t21-number-pilot-review-20261030/case-acceptance.json, target-run-summary.json, target-run-result.json and native-number-scenarios.xml. Prior source staging/application entries below are historical; their approval gates are closed. No provider request, Jira/Git operation, package installation, automatic retry or repair occurred. Word is unchanged.
+
+## T21 P — numeric source edits applied; separate execution approval pending, 30 October 2026
+
+The user approved only the three reviewed numeric source edits. All three were applied through durable exact-action receipts t21-number-edit-1-20261030 through t21-number-edit-3-20261030. Current bytes match the reviewed candidate hashes. Other reviewed sources, the existing password scenario, runner and build remain unchanged. The edits extend existing appropriate page/step/feature packages; no new flat helper or unnecessary package was created.
+
+TI-TC-005 exact `123` retention and TI-TC-006 initially empty `abc` rejection/ignore are implemented but not yet run against the target site. The Java 17 compilation and 14 isolated fixture checks retain their candidate-only scope. T21 remains P with eight remaining live input checks. Three source-edit approvals are closed; do not apply them again. The next gate is one separate 300-second headless Chromium run selecting only @T21-NUMBER, with fresh native report/source-hash reconciliation. Passed password/text/email cases are excluded. No target test, provider request, Jira/Git operation or package install occurred while applying these edits.
+
+Evidence: outputs/acceptance/t21-number-pilot-review-20261030/applied.json and focused-run-review.md (exact command, scope and source hashes). Existing completed Y scopes and parked tasks remain unchanged. Word is unchanged.
+
+## T21 P — numeric candidate verified; exact edits awaiting approval, 30 October 2026
+
+TI-TC-005/006 are staged in the existing page/step/feature packages: exact `123` retention and initially empty `abc` rejection/ignore using real keyboard entry. Both require an editable field. Java 17 compilation and 14/14 isolated local Chromium fixture probes passed with zero page network requests. The initial fixture key observer included clearing keys; only that observer was corrected, initial evidence retained, and candidate source unchanged. These are candidate checks, not current target-site acceptance. Target/source hashes and existing password bodies remain unchanged; no target edits or live target cases ran.
+
+Review: outputs/acceptance/t21-number-pilot-review-20261030/review.md, exact-actions.json, preservation.json and probe/results.json. Three exact replace_text edits need the user's previously required source approval; actual execution will need a subsequent separate command approval for only @T21-NUMBER. T21 stays P with eight remaining live input checks. Completed Y scopes and parked work are not reopened. Word is unchanged.
+
+## Current execution ledger — 30 October 2026
+
+**Y — TI-TC-004 password case:** separately approved actual selected Cucumber run passed 1/1, with no failures/skips/configuration failures, exit 0, no timeout and unchanged source hashes. Both the native masked type and complete retained value assertion executed. Evidence: outputs/acceptance/t21-password-pilot-review-20261030/case-acceptance.json and native-password-scenario.xml. Backend storage/security and visual screenshot glyphs remain outside scope. This completed case should not be rerun without a new reason.
+
+**T21 Y — no remaining checks in the agreed selected pilot.** TI-TC-001–012 have twelve accepted logical scopes in eleven native scenarios. Final TI-TC-009 retry passed; all retained reports/receipts/hashes reconcile in completion.json. Historical design JSON and original failed attempts remain unchanged. No new full-suite or release certification is claimed.
+
+## TI-TC-004 source applied — 30 October 2026
+
+**P — live password run awaits separate approval.** The reviewed four new page/step/runner/feature files are applied with exact hashes and durable creation receipts. Existing text/email code, default suite and build remain unchanged. The source staging CRLF/LF mismatch was caught before writing and normalized to unchanged approved action content. Java 17 compilation and nine synthetic assertion probes remain bounded candidate evidence, not actual application results. Exactly one selected-run proposal is prepared in outputs/acceptance/t21-password-pilot-review-20261030/focused-run-review.md (300 seconds, headless Chromium, @TI-TC-004). No target tests have run; all nine remaining case checks are still not run. The previous source-edit approval gate is closed; do not apply those files again.
+
+## T21 implementation review — 30 October 2026
+
+**P — TI-TC-004 source candidate staged only.** Existing source still contains two native scenarios. Four new opt-in password-pilot files are prepared in outputs/acceptance/t21-password-pilot-review-20261030/, with exact contents/hashes and edit review. Candidate Java 17 compilation and nine synthetic assertion probes for this ONE case passed; no target file was applied and no application test/browser was run. Source QPH-003 and agreed TI-D03 are preserved. All nine remaining input-case checks stay not run. Apply only after exact review approval, then request separate focused execution approval. Existing text/email acceptance and historical baseline records below are retained.
+
+## Current execution update — selected text and combined email acceptance, 29 October 2026
+
+**Y — T04 selected assertion scope.** The real Cucumber @QAP-3 text-entry/clear scenario passed separately, and the explicitly approved retry of Verify Email Input Validation passed one fresh native case with no failures/skips. Both supplied email samples and their after-blur assertions executed within that combined scenario. This exercises the TI-TC-002/003 requirement checks but is not two independently executed native tests. The earlier navigation-timeout attempt is retained, and the unchanged-code retry is not causal-repair evidence. Other nine designed input-case checks remain not run; WS9/release acceptance is separate.
+
+Current evidence and source hashes: outputs/acceptance/t04-email-assertion-review-20261029/ (retry-run-summary.json, native-email-scenario-retry-passed.xml, applied.json and verification.json); real text result: outputs/acceptance/t04-text-assertion-review-20261029/. The original 23 October JSON design/source records are frozen historical baselines; later execution evidence does not retroactively change their not_run values. Current Markdown statuses below distinguish those baselines from observed results.
+
+
+Updated 29 October 2026. Project: D:/PlayWrightDemoGradle. Feature selected by the user: Text Input module.
+
+**Current status: 9.0 Y; 9.1 Y for the selected Text Input design pilot.** Revision 2 contains 12 not-run cases covering nine source stories with 35 step/result pairs and six recorded pilot decisions. The design is accepted by the assistant acting under the user's explicit choose-the-best delegation; independent human review is not claimed. Gemini completed one live source read -> rejected quote -> corrected draft -> final answer in four model calls (30.55 seconds). The saved answer clearly states that the test has not been run. The original design pack remains a not_run baseline; user notes and a later actual Chromium TI-TC-001 pass are recorded separately below. The later selected text and combined email execution updates below supersede execution counts; the other nine input-case checks remain not run, and wider WS9/release gates are separate.
 
 The selected repository document is the planning source. Feature files and Java code supply implementation evidence, not independent proof that the business rules are correct. QPH case identifiers and the @QAP-3 source tag have not been verified against live Jira.
 
@@ -21,7 +186,7 @@ The user asked the assistant to choose the best option and include all useful op
 | Sampled live planning flow | **Y** | Gemini read/check/final, one quote correction; source QPH-001 maps to TI-TC-001 |
 | **9.1 Selected Text Input design pilot** | **Y** | Required design and sampled live gates complete within this stated scope |
 | 9.2 Observations and defect drafting | **Y — TI-TC-001 observation pilot** | Actual Chromium entry/clear passed after normal overlay dismissal and field click; values/screenshots/timestamps saved. Failure drafts tested offline; no actual defect or external filing |
-| Application execution evidence | **One browser case passed; 11 not run** | Direct isolated Playwright TI-TC-001 check; target Gradle suite not run. Deployed agent-chat browser actions remain unconnected |
+| Application execution evidence | **Text and combined email passed; nine remaining input-case checks not run** | Actual selected Cucumber text and combined email scenarios passed in separate runs; no full suite or independently executed email case pair is claimed. |
 
 The live checker still returns P for human/factual/execution checks on its generic draft result and approval_granted false. The scoped design-review decision is recorded separately with its authority; no tool output grants action approval. No claim is made that all 12 cases were generated live or that all three providers passed the live flow. Completion evidence is in outputs/acceptance/ws9-9-1-pilot-completion-20261023.
 
@@ -59,15 +224,15 @@ Hashes and exact file/line references are retained in outputs/acceptance/ws9-tex
 
 | Requirement | Existing source case | Draft case IDs | State |
 |---|---|---|---|
-| TI-R01 Basic text entry and clearing | QPH-001 | TI-TC-001 | Passed in isolated Chromium; see separate execution ledger |
-| TI-R02 Valid and invalid email handling | QPH-002 | TI-TC-002, TI-TC-003 | Not run |
-| TI-R03 Password masking and retained input value | QPH-003 | TI-TC-004 | Not run |
-| TI-R04 Number input constraints | QPH-004 | TI-TC-005, TI-TC-006 | Not run |
-| TI-R05 Date selection and display | QPH-005 | TI-TC-007 | Not run |
-| TI-R06 Phone input with country code | QPH-006 | TI-TC-008, TI-TC-009 | Not run |
-| TI-R07 Multiline textarea entry and clearing | QPH-007 | TI-TC-010 | Not run |
-| TI-R08 Read-only input preserves existing value | QPH-008 | TI-TC-011 | Not run |
-| TI-R09 Disabled input prevents interaction | QPH-009 | TI-TC-012 | Not run |
+| TI-R01 Basic text entry and clearing | QPH-001 | TI-TC-001 | Passed in isolated Chromium and actual selected Cucumber scenario; see execution ledgers |
+| TI-R02 Valid and invalid email handling | QPH-002 | TI-TC-002, TI-TC-003 | Supplied checks passed together in one native Cucumber scenario on 29 October; separate independent native cases not claimed |
+| TI-R03 Password masking and retained input value | QPH-003 | TI-TC-004 | Passed in one actual selected Cucumber scenario on 30 October; native type and exact value only |
+| TI-R04 Number input constraints | QPH-004 | TI-TC-005, TI-TC-006 | Y — 2/2 actual selected Cucumber scenarios passed on 30 October; exact 123 and empty-after-abc assertions |
+| TI-R05 Date selection and display | QPH-005 | TI-TC-007 | Y — actual selected native-picker API strategy passed; original failed approaches retained |
+| TI-R06 Phone input with country code | QPH-006 | TI-TC-008, TI-TC-009 | Y — separate actual valid/invalid India samples passed after blur; initial connection failure retained |
+| TI-R07 Multiline textarea entry and clearing | QPH-007 | TI-TC-010 | Y — 1/1 actual selected unchanged-source retry passed exact two-line retention and clearing; initial DNS failure retained |
+| TI-R08 Read-only input preserves existing value | QPH-008 | TI-TC-011 | Y — actual selected ordinary typing preserved observed baseline and protection |
+| TI-R09 Disabled input prevents interaction | QPH-009 | TI-TC-012 | Y — actual selected unforced click/typing remained blocked and baseline/protection unchanged |
 
 
 ## Coverage by input type — revision 2
@@ -164,7 +329,7 @@ Reset editable fields as stated so cases are independent. For read-only and disa
 
 Requirement: TI-R01. Source: SPEC:15-29. Priority: High.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: exact text/clear checks passed in actual selected Cucumber and isolated browser runs.**
 
 Preconditions:
 
@@ -188,7 +353,7 @@ Expected-result provenance: source/decision/setup distinctions are listed per st
 
 Requirement: TI-R02. Source: SPEC:31-44. Priority: High.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: supplied valid-email checks passed within the combined native email scenario on 29 October; separate independent case execution is not claimed.**
 
 Preconditions:
 
@@ -204,7 +369,7 @@ Test data: `{"email": "test@example.com"}`. Origin: source_sample.
 | 2 | Enter test@example.com, then move focus away without submitting the form. | The email field loses focus after the supplied sample is entered; validation is observed at blur. | SPEC:40-41; TI-D01 |
 | 3 | Inspect the retained value and any validation signal associated with this email field. | The value remains test@example.com and there is no email-associated validation error or invalid state after blur. | SPEC:40-44; TI-D01 |
 
-Existing automation evidence: FEATURE lines 15-16 include valid email in a combined scenario; STEPS lines 59-60 check absence of a broadly located error. No run performed.
+Historical implementation evidence (23 October baseline; superseded by the current execution update above): FEATURE lines 15-16 include valid email in a combined scenario; STEPS lines 59-60 check absence of a broadly located error. No run performed.
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
 
@@ -212,7 +377,7 @@ Expected-result provenance: source/decision/setup distinctions are listed per st
 
 Requirement: TI-R02. Source: SPEC:31-44. Priority: High.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: supplied invalid-email checks passed within the combined native email scenario on 29 October; separate independent case execution is not claimed.**
 
 Preconditions:
 
@@ -228,7 +393,7 @@ Test data: `{"email": "invalid-email"}`. Origin: source_sample.
 | 2 | Enter invalid-email, then move focus away without submitting the form. | Validation is observed after this email field loses focus. | SPEC:42-44; TI-D01; TI-D02 |
 | 3 | Inspect a message or invalid-state indicator specifically associated with the email field. | An email-specific error message or verifiable field invalid state is present. An unrelated page error or retained text alone is insufficient; exact message wording is unconstrained. | SPEC:42-44; TI-D02 |
 
-Existing automation evidence: FEATURE lines 17-18 require a validation error. STEPS lines 75-78 assert only the invalid string value; the validation assertion is commented out.
+Historical implementation evidence (23 October baseline; superseded by the current execution update above): FEATURE lines 17-18 require a validation error. STEPS lines 75-78 assert only the invalid string value; the validation assertion is commented out.
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
 
@@ -236,7 +401,7 @@ Expected-result provenance: source/decision/setup distinctions are listed per st
 
 Requirement: TI-R03. Source: SPEC:46-58. Priority: High.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: actual selected Cucumber scenario passed on 30 October 2026 (1 native pass); backend storage and visual glyph validation are outside scope.**
 
 Preconditions:
 
@@ -256,16 +421,18 @@ Existing automation evidence: No corresponding scenario was found in the selecte
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
 
+Current implementation/execution: the separate opt-in Remaining Text Input Pilot.feature, TextInputPilotSteps/Page and TextInputPilotTestRunner implement this case. Native receipt t21-password-scenario-20261030 passed exactly one selected scenario; see the current execution ledger. The earlier baseline implementation note above is historical.
+
 ### TI-TC-005 Accept the supplied numeric input
 
 Requirement: TI-R04. Source: SPEC:60-73. Priority: Medium.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: Y — actual selected scenario passed, 30 October 2026. Actual result: The supplied value 123 was retained exactly after clearing.**
 
 Preconditions:
 
 - Use the selected QA Practice Hub environment and navigate to its Inputs section, as required by SPEC.
-- Record the environment and browser for a future run. Application availability, live controls and locators remain unverified.
+- Recorded execution used the selected QA Practice Hub environment and headless Chromium; this is one observed run, not future availability or cross-browser acceptance.
 - Keep cases independent: reset editable fields only as stated; record read-only/disabled baselines without changing their protections.
 
 Test data: `{"number": "123"}`. Origin: source_sample.
@@ -275,7 +442,7 @@ Test data: `{"number": "123"}`. Origin: source_sample.
 | 1 | Locate the numeric input and clear any existing value. | The correct numeric field starts empty so prior data cannot satisfy this check. | Test setup; no new business rule |
 | 2 | Enter 123 and inspect the resulting numeric value. | The numeric value 123 is accepted and retained; a different nonempty value does not satisfy the case. | SPEC:69-70 |
 
-Existing automation evidence: No corresponding scenario was found in the selected Text Input Module.feature; no runtime coverage claim.
+Current automation evidence: opt-in Remaining Text Input Pilot.feature and existing TextInputPilotSteps/Page packages implement this case. Receipt t21-number-scenarios-20261030 passed the two independently selected numeric scenarios; see case-acceptance.json. The original selected Text Input Module.feature remains unchanged.
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
 
@@ -283,12 +450,12 @@ Expected-result provenance: source/decision/setup distinctions are listed per st
 
 Requirement: TI-R04. Source: SPEC:60-73. Priority: Medium.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: Y — actual selected scenario passed, 30 October 2026. Actual result: After real alphabetic abc entry from empty, the field remained empty.**
 
 Preconditions:
 
 - Use the selected QA Practice Hub environment and navigate to its Inputs section, as required by SPEC.
-- Record the environment and browser for a future run. Application availability, live controls and locators remain unverified.
+- Recorded execution used the selected QA Practice Hub environment and headless Chromium; this is one observed run, not future availability or cross-browser acceptance.
 - Keep cases independent: reset editable fields only as stated; record read-only/disabled baselines without changing their protections.
 
 Test data: `{"text": "abc"}`. Origin: source_sample.
@@ -299,7 +466,7 @@ Test data: `{"text": "abc"}`. Origin: source_sample.
 | 2 | Attempt ordinary user entry of abc and record whether entry is rejected or the letters are ignored. | The control rejects or ignores the alphabetic entry; the requirement permits either behavior. | SPEC:71-73; TI-D04 |
 | 3 | Inspect the resulting field value after the attempted entry. | The initially empty field remains empty; alphabetic text is not retained as an accepted numeric value. No specific error message is required. | SPEC:71-73; TI-D04 |
 
-Existing automation evidence: No corresponding scenario was found in the selected Text Input Module.feature; no runtime coverage claim.
+Current automation evidence: opt-in Remaining Text Input Pilot.feature and existing TextInputPilotSteps/Page packages implement this case. Receipt t21-number-scenarios-20261030 passed the two independently selected numeric scenarios; see case-acceptance.json. The original selected Text Input Module.feature remains unchanged.
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
 
@@ -307,7 +474,7 @@ Expected-result provenance: source/decision/setup distinctions are listed per st
 
 Requirement: TI-R05. Source: SPEC:75-87. Priority: Medium.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: Y — actual selected native case passed on 31 October 2026; source hashes unchanged.**
 
 Preconditions:
 
@@ -323,15 +490,17 @@ Test data: `{"date": "2026-09-25"}`. Origin: source_sample.
 | 2 | Select the supplied 2026-09-25 sample through the picker. | The sample date is selected. An unavailable sample or missing picker is recorded as an observation to review, not silently replaced by an invented date rule. | SPEC:85-85 |
 | 3 | Inspect the selected value and the displayed date. | The underlying value is 2026-09-25 in YYYY-MM-DD form and the display represents that date. Localized display is allowed; no fixed locale-specific string is imposed. | SPEC:86-87; TI-D05 |
 
-Existing automation evidence: No corresponding scenario was found in the selected Text Input Module.feature; no runtime coverage claim.
+Current automation evidence: opt-in Remaining Text Input Pilot.feature and existing TextInputPilotSteps/Page implement this case. Actual receipt t21-date-scenario-20261030 failed the final date assertion; source hashes stayed unchanged. The separately approved stable-click retry t21-date-scroll-repair-retry-20261030 failed with the same value. No picker-selection acceptance, application defect or successful live repair is claimed. Stop repeating this strategy. The original Text Input Module.feature remains unchanged.
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
+
+Current accepted execution: receipt t21-remaining-cases-20261031 contains this independently identified native pass with all four Cucumber steps. The batch overall failed only at TI-TC-009 navigation. Prior stage notes above are historical; no full-run success is inferred.
 
 ### TI-TC-008 Accept a ten-digit phone value with the specified country code
 
 Requirement: TI-R06. Source: SPEC:89-102. Priority: Medium.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: Y — actual selected native case passed on 31 October 2026; source hashes unchanged.**
 
 Preconditions:
 
@@ -351,11 +520,13 @@ Existing automation evidence: No corresponding scenario was found in the selecte
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
 
+Current accepted execution: receipt t21-remaining-cases-20261031 contains this independently identified native pass with all four Cucumber steps. The batch overall failed only at TI-TC-009 navigation. Prior stage notes above are historical; no full-run success is inferred.
+
 ### TI-TC-009 Validate the nine-digit phone sample after blur
 
 Requirement: TI-R06. Source: SPEC:89-102. Priority: Medium.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: Y — final actual selected unchanged-source retry passed on 31 October 2026. Actual result: India +91, exact nine-digit sample and field-specific invalid state after blur verified.**
 
 Preconditions:
 
@@ -371,7 +542,7 @@ Test data: `{"country_code": "+91", "phone": "987654321", "digits": 9}`. Origin:
 | 2 | Enter the proposed nine-digit value 987654321 and move focus away. | The nine-digit sample is entered and this phone field loses focus before validation is checked. | SPEC:100-101; TI-D06 |
 | 3 | Inspect the invalid state specifically associated with the phone field. | A phone-field-specific invalid state is present after blur. An unrelated page error or the retained short value alone does not satisfy validation; exact message text is unconstrained. | SPEC:100-102; TI-D06 |
 
-Existing automation evidence: No corresponding scenario was found in the selected Text Input Module.feature; no runtime coverage claim.
+Current automation evidence: approved opt-in Remaining Text Input Pilot.feature plus existing TextInputPilotSteps/Page. Receipt t21-short-phone-final-retry-20261031 passed one fresh native case with all four Cucumber steps; initial homepage connection failure remains preserved. Original selected Text Input Module.feature is unchanged.
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
 
@@ -379,7 +550,7 @@ Expected-result provenance: source/decision/setup distinctions are listed per st
 
 Requirement: TI-R07. Source: SPEC:104-116. Priority: Medium.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: Y — actual selected unchanged-source retry passed on 31 October 2026. Actual result: both lines including their newline retained exactly; empty after clearing. The initial DNS failure is preserved.**
 
 Preconditions:
 
@@ -395,7 +566,7 @@ Test data: `{"text": "First line\nSecond line"}`. Origin: Proposed synthetic two
 | 2 | Enter the proposed two-line sample: First line followed by a line break and Second line. | Both sample lines appear in order with their separating line break; a single joined line or missing content is insufficient. | SPEC:113-114 |
 | 3 | Clear the textarea and inspect its content. | The textarea is empty after clearing. | SPEC:115-116 |
 
-Existing automation evidence: No corresponding scenario was found in the selected Text Input Module.feature; no runtime coverage claim.
+Current automation evidence: the separately approved opt-in feature and existing TextInputPilotSteps/Page implement exact two-line retention and empty-after-clear checks. Java 17 compilation passed. The original receipt t21-textarea-scenario-20261031 failed before these steps at ERR_NAME_NOT_RESOLVED. Separately approved unchanged-source retry t21-textarea-navigation-retry-20261031 passed one fresh native scenario and all six Cucumber steps. No source repair of the DNS failure is claimed.
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
 
@@ -403,7 +574,7 @@ Expected-result provenance: source/decision/setup distinctions are listed per st
 
 Requirement: TI-R08. Source: SPEC:118-130. Priority: Low.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: Y — actual selected native case passed on 31 October 2026; source hashes unchanged.**
 
 Preconditions:
 
@@ -423,11 +594,13 @@ Existing automation evidence: No corresponding scenario was found in the selecte
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
 
+Current accepted execution: receipt t21-remaining-cases-20261031 contains this independently identified native pass with all four Cucumber steps. The batch overall failed only at TI-TC-009 navigation. Prior stage notes above are historical; no full-run success is inferred.
+
 ### TI-TC-012 Prevent interaction with the disabled input
 
 Requirement: TI-R09. Source: SPEC:132-144. Priority: Low.
 
-**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: not run. Actual result: none.**
+**Design acceptance: Y — user-delegated review. Independent human review: not performed. Execution: Y — actual selected native case passed on 31 October 2026; source hashes unchanged.**
 
 Preconditions:
 
@@ -446,6 +619,8 @@ Test data: `{"typing_attempt": "New text"}`. Origin: Proposed synthetic typing-a
 Existing automation evidence: No corresponding scenario was found in the selected Text Input Module.feature; no runtime coverage claim.
 
 Expected-result provenance: source/decision/setup distinctions are listed per step. Source membership checks do not establish observed behavior or business approval.
+
+Current accepted execution: receipt t21-remaining-cases-20261031 contains this independently identified native pass with all four Cucumber steps. The batch overall failed only at TI-TC-009 navigation. Prior stage notes above are historical; no full-run success is inferred.
 
 ## Static findings requiring a reviewed follow-up
 

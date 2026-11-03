@@ -2,7 +2,6 @@
 import os
 from pathlib import Path
 import streamlit as st
-from agent.interfaces.dialogs import dismiss_dialog
 from agent.storage.projects import ProjectConfigurationError,validate_local_folder
 
 
@@ -29,7 +28,6 @@ def folder_entries(folder,limit=150):
     return root,sorted(rows,key=str.casefold),limited
 
 
-@st.dialog("Choose project folder",width="medium",on_dismiss=dismiss_dialog,icon=":material/folder_open:")
 def folder_dialog():
     st.caption("Folders belong to the computer running JeshlaAutoAI. Select a folder; its files are not uploaded.")
     path=st.session_state.get("folder_browser_path",str(Path.home()))

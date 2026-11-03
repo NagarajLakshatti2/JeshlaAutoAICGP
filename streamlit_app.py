@@ -10,6 +10,7 @@ from agent.interfaces.chat_toolbar import provider_options,render_provider_picke
 from agent.interfaces.header_actions import render_header_actions
 from agent.interfaces.request_status import status_label,remember_status,render_status
 from agent.interfaces.action_approval import approval_answer_for_display,render_pending_actions
+from agent.interfaces.execution_results import render_execution_result
 
 st.set_page_config(page_title="JeshlaAutoAI",page_icon=":material/smart_toy:",layout="wide")
 
@@ -27,6 +28,8 @@ try:backend=selected_backend(project_manager)
 except Exception as error:
     from agent.interfaces.projects import render_projects
     render_projects(project_manager)
+    from agent.interfaces.project_dialogs import render_project_dialogs
+    render_project_dialogs(project_manager)
     st.error(user_error_message(error));st.stop()
 provider_options(backend)
 render_sidebar(backend,project_manager=project_manager)
@@ -50,7 +53,9 @@ with st.container(horizontal=True,horizontal_alignment="center"):
                 if len(turns)>100:st.caption("Showing the latest 100 turns. The conversation download includes the full archive.")
                 for turn in turns[-100:]:
                     with st.chat_message("user"):st.markdown(turn["question"].split("\n\nUploaded document evidence (",1)[0])
-                    with st.chat_message("assistant"):st.markdown(approval_answer_for_display(turn["answer"]))
+                    with st.chat_message("assistant"):
+                        if not render_execution_result(backend,session,turn=turn):
+                            st.markdown(approval_answer_for_display(turn["answer"]))
                 unsaved=st.session_state.get("unsaved_response",{}).get(session)
                 if unsaved:
                     with st.chat_message("user"):st.markdown(unsaved["question"].split("\n\nUploaded document evidence (",1)[0])
@@ -75,12 +80,21 @@ with st.container(horizontal=True,horizontal_alignment="center"):
             prompt=st.chat_input("Message JeshlaAutoAI…",key="message",height=100,submit_mode="disable",disabled=False)
             with st.container(horizontal=True,horizontal_alignment="distribute",vertical_alignment="center"):
                 with st.container(horizontal=True,width="content",vertical_alignment="center"):
-                    render_upload_menu(session)
-                    st.caption("Chat")
-                    from agent.interfaces.projects import render_projects
+                    render_upload_menu(session,project_selected=bool(project))
+                    from agent.interfaces.projects import render_chat_mode,render_projects
+                    render_chat_mode(project_manager)
                     render_projects(project_manager)
                 render_provider_picker(backend)
 
+
+        if prompt and prompt.strip():
+            from agent.runtime.chat_shortcuts import parse_shortcut
+            try:
+                shortcut=parse_shortcut(prompt)
+                if shortcut and shortcut["name"] in {"read","results"} and not project:
+                    raise ValueError("Select a saved project in Projects before using /"+shortcut["name"]+".")
+            except ValueError as error:
+                st.warning(str(error));prompt=None
 
         if prompt and prompt.strip():
             selected=st.session_state.browser_provider
@@ -99,6 +113,11 @@ with st.container(horizontal=True,horizontal_alignment="center"):
                 st.session_state.setdefault("answer_downloads",{})[session]=result["answer"]
                 st.session_state.chat_notices=result.get("notices",[])
                 st.session_state.chat_opened=True
+                if result.get("open_git_review"):
+                    st.session_state.project_settings_id=result["open_git_review"]
+                    st.session_state.ui_dialog="project_git"
+                    st.session_state.git_review_mode=result.get("git_review_action","Commit")
+                    st.session_state.pop("git_write_review",None)
                 st.session_state.pop("saved_facts",None)
                 if result.get("persistence_status",{}).get("archive_saved") is False:
                     st.session_state.setdefault("unsaved_response",{})[session]={"question":question,"answer":result["answer"]}

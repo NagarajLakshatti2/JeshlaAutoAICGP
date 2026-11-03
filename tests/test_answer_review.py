@@ -361,6 +361,35 @@ class PassageSelectionReviewTests(unittest.TestCase):
         self.assertEqual(caught.exception.category,"ANSWER_REVIEW_FORMAT")
         self.assertEqual(len(calls),2)
 
+    def test_bad_source_urls_cannot_erase_valid_negative_concerns(self):
+        for status in ("revise", "insufficient_evidence"):
+            for invalid_urls in (["https://unread.test/rules"], "not-a-list", [True]):
+                with self.subTest(status=status, invalid_urls=invalid_urls):
+                    calls=[]
+                    def model(request,specs):
+                        value=self.value(request,status=status if not calls else "supported")
+                        if not calls:value["source_urls"]=invalid_urls
+                        calls.append(value)
+                        return self.reply(value)
+                    with self.assertRaises(ProviderError) as caught:self.run_review(model)
+                    self.assertEqual(caught.exception.category,"ANSWER_REVIEW_FORMAT")
+                    self.assertEqual(len(calls),2)
+
+    def test_bad_source_urls_can_be_corrected_while_retaining_negative_verdict(self):
+        for status in ("revise", "insufficient_evidence"):
+            with self.subTest(status=status):
+                calls=[]
+                def model(request,specs):
+                    value=self.value(request,status=status)
+                    value["evidence"]=[]
+                    if not calls:value["source_urls"]=["https://unread.test/rules"]
+                    calls.append(value)
+                    return self.reply(value)
+                result=self.run_review(model)
+                self.assertEqual(result["status"],status)
+                self.assertEqual(result["issues"],calls[0]["issues"])
+                self.assertEqual(len(calls),2)
+
     def test_catalogue_uses_bounded_exact_passages_from_long_inputs(self):
         draft=("A widget has one explicit parent. "*35)+"Draft tail."
         source=("The publisher describes an explicit parent requirement. "*30)+"Source tail."

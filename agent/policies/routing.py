@@ -53,3 +53,33 @@ def is_saved_result_followup(question):
         r"\b(?:saved|previous|earlier|last|returned|completed|existing)\s+(?:(?:tool|browser|action|test)\s+)?(?:inspection|results?|reports?|output|observations?)\b"
         r"|\b(?:inspection|results?|reports?|output|observations?)\s+(?:you|we)\s+(?:just\s+)?(?:completed|returned|collected|produced)\b",
         active))
+
+def git_write_mode(question):
+    """Find an explicit publication instruction in the user's active text."""
+    from agent.runtime.input_evidence import split_uploaded_input
+    text=split_uploaded_input(question)[0].strip().casefold()
+    normalized=text.lstrip(" \t\n“”‘’'\"`-*•")
+    if re.match(r"^(?:why|what|how|explain|can i|could i|did you|have you)\b",normalized):return None
+    active=re.sub(r"\b(?:do not|don't|never|without)\b[^.!?\n]*(?:[.!?\n]|$)"," ",text)
+    # File creation is a preceding action, with a separate review for publication.
+    if re.search(r"\b(?:create|reate|add|write|save)\b",active) and re.search(r"\b(?:file|script)\b|\.\w{1,8}\b",active):return None
+    pattern=r"(?:^|[\n.!?;“”‘’'\"`])\s*(?:(?:please|can you|could you|would you)\s+)?(?:git\s+)?(commit|push)\b"
+    actions={match.group(1) for match in re.finditer(pattern,active)}
+    actions.update(re.findall(r"\bgit\s+(commit|push)\b",active))
+    if "commit" in actions:return "Commit"
+    if "push" in actions:return "Push"
+    return None
+
+
+def is_git_write_request(question):
+    return git_write_mode(question) is not None
+
+
+def is_project_change_request(question):
+    from agent.runtime.input_evidence import split_uploaded_input
+    text=split_uploaded_input(question)[0].strip().casefold()
+    if re.match(r"^(?:why|what|how|explain|did you|have you)\b",text):return False
+    active=re.sub(r"\b(?:do not|don't|never|without)\b[^.!?\n]*(?:[.!?\n]|$)"," ",text)
+    write=re.search(r"\b(?:create|reate|add|write|save|edit|replace|modify)\b",active)
+    file=re.search(r"\b(?:files?|scripts?|project root)\b|[\w-]+\.(?:py|java|js|ts|json|md|txt|feature)\b",active)
+    return bool(write and file) or is_git_write_request(question)

@@ -1,12 +1,68 @@
 # JeshlaAutoAI UI implementation
 
+## T01 automatic post-run review — Y, 25 October 2026
+
+**Y — completed bounded local review for approved execution.** Newly approved run_command, run_python_file and run_tests_and_parse results now retain a read-only post_run_review in their durable receipt. The reviewer adds advisory findings and suggested next checks, without changing command exits, native results, approval arguments or effects. No hosted model or paid service is needed. Browser chats show a Post-run review panel alongside the existing execution summary and expandable raw receipt; console tool results include the same structured review.
+
+The reviewer distinguishes failed commands from reported passing tests, flags native/configuration failures and skipped/incomplete/empty results, and cites captured error signals without treating a log string as proof of failure. Stale, inconsistent or unassociated reports are not used as evidence of a successful run. Overlapping reports remain separate. Missing native evidence is explicitly unverified; a zero exit does not certify tests.
+
+For fresh native cases, exact conventional Java/Python source paths are matched without recursive project scanning. Unique Java void test methods and Python class/module functions receive bounded static assertion checks. Suspected missing direct assertions, commented Java assertions and always-true checks cite the source file, method line and SHA256. Strings, other methods and uninvoked nested Python helpers are not counted as direct checks. Missing/ambiguous/unsupported sources are labelled not reviewed. Source reads are capped at ten files, 256 KB per file and 1 MB total, across at most 20 case records and 20 reports; private paths, traversal, symlinks and junctions are excluded.
+
+**Acceptance: 148 tests passed, one skipped across 149 checks, with no failures/errors.** The final main run completed 100 tests (99 passed, one Windows symlink-creation test skipped because privileges were unavailable); a separate guarded compatibility run passed 49 existing project/routing/console-budget/isolation checks. Windows junction exclusion was also checked without requiring link-creation privileges. Tests cover actual native-report collection, durable approved command/Python/test receipts, replay protection, source hashes and limits, conservative assertion findings, review failure isolation, owner/project/chat access, UI refresh, archive/timeout fallback, and existing policy/reporting behavior. Chromium checks passed at 1440×900 and 390×844: warning/evidence visible, raw details initially closed and expandable, no horizontal overflow. Screenshots were inspected. Acceptance commands/projects were synthetic or mocked; no user target suite, hosted model, Git/Jira operation or account check was run.
+
+**Limits of Y:** this is an advisory static-review capability, not general semantic proof, business-requirement verification or established root-cause diagnosis. Helper/inherited assertions and expected-exception/framework behavior may provide checks the local recognizer cannot follow. Source hashes identify the revision read after execution, not a proven executed revision. Other layouts/languages require explicit review. Review errors preserve the execution result and never trigger a retry; uncertain outcomes remain uncertain. Historical receipts are not rewritten or backfilled, and reopening a saved review does not rescan source or rerun an action. Automatic repairs and focused reruns remain T02 (P); target assertion changes remain T04 (P).
+
+Implementation stays in existing packages: agent/tools/execution_review.py; shared bounded evidence reading in agent/tools/test_failures.py; native collection in agent/tools/test_results.py; durable execution integration in agent/actions/receipts.py; rendering in agent/interfaces/execution_results.py. Tests live in tests/test_execution_review.py and the existing execution-result tests. Scoped backups, logs, screenshots, checksums and diff: outputs/acceptance/t01-post-run-review-20261025/. The Word snapshot is unchanged.
+
+To use: restart console/Streamlit when convenient. The next separately approved execution automatically saves its review; the browser displays Post-run review in that result. Do not rerun an uncertain or old action merely to populate this panel. GitHub push, Ollama and new MCP work remain parked. **Next recommended work is T02: evidence-backed diagnosis and an exact proposed repair, with a separate approval for changes and for a focused rerun.** T01 completion does not change unrelated workstream/release statuses.
+
+## T03 execution results — Y for the agreed quick slice, 25 October 2026
+
+**Y — bounded execution-result presentation; overall T03 remains P for broader result types.** The user authorized the quick task. Browser chats now show a readable saved result for approved run_command, run_python_file and run_tests_and_parse actions: command success/failure/timeout/uncertainty, native report counts when genuinely attached, evidence paths, receipt identity and explicit limitations. Full structured receipt/stdout/stderr remain under a collapsed Raw receipt and logs expander.
+
+A zero exit or text saying tests passed does not invent native results. Associated fresh JUnit/TestNG/Cucumber report counts are shown per report; stale/unlinked/inconsistent data is labelled unverified. Overlapping reports are never added together. Missing/empty/skipped/incomplete reports, parser errors, configuration failures and truncated output remain explicit. Reported passes do not turn a failed command into success. Evidence is a saved execution-time record, not a new source/requirement audit.
+
+Receipt reads require the same user/project/chat, expected execution action, matching action fingerprint and an actual stored result. Ordinary conversation and non-execution receipts keep their existing display. Stored answers/downloadable transcripts, action arguments, approval, execution and model-visible history are unchanged. Refresh/reopen is read-only; an archive-failure or timed-out action retains one structured fallback without rerunning it.
+
+**36 focused offline tests passed**: pure result edge cases, real adapter receipt ownership/tamper checks, approval-to-render UI, failure despite native passes, timeout/archive fallback, replay/refresh and project switching, plus existing approvals/commands. Actual Chromium checks passed at **1440×900 and 390×844**, including collapsed/expanded raw details and no horizontal overflow; screenshots were inspected. All data/commands in these acceptance checks were synthetic or mocked, not the user's target suite. No hosted model, Git/Jira operation, account check or parked task was invoked.
+
+New production module: agent/interfaces/execution_results.py, in the existing browser-interface package; tests: tests/test_execution_results.py. No flat agent helper or new package hierarchy was introduced. Evidence, screenshots and pre-change backups: outputs/acceptance/t03-execution-results-20261025/.
+
+To use: restart the running Streamlit server, then open a saved chat containing an approved command/test result. Existing matching receipts are rendered directly; no rerun is required. Automatic source/assertion review is now available through the bounded T01 implementation above; approved causal repair is T02 (P); broad interpretation of other result types remains T03 (P). The Word snapshot is unchanged.
+
+## Chat return and Gradle wrapper correction — 24 October 2026
+
+**Y — scoped fixes.** Chat beside Projects is now a working button. From a selected project it restores the earlier, unscoped chat list; it leaves the main conversation empty until the user selects a saved session. Project sessions remain separate and return when that project is selected again. Clicking Chat while already in Chat does not reset an open conversation. Same-named saved projects show their folder paths to prevent selecting the wrong root.
+
+Read-only diagnosis found 65 earlier chats in the base space, one chat in the PlayWrightDemoGradle project scope, and no chats in the separately configured LeetCode folder. Both saved projects had the same display name. No chats were deleted, migrated or assigned to a project automatically.
+
+Windows run_command now accepts gradlew.bat and the explicit current-folder Gradle wrapper spellings as aliases for the selected project's wrapper. Approved arguments and receipt identity stay unchanged; arbitrary batch paths remain rejected. The actual saved successful execution used **-Dheadless=true** (exit 0). That hides the test browser. The target build separately opens the HTML report after tests. A later headed request used gradlew.bat and was still pending when inspected; it was not executed by this correction.
+
+To request a visible browser in the project's normal Playwright test configuration, use **-Dheadless=false**, review a fresh exact action and approve it once. The agent does not silently flip this setting. The separate WS9 inspection/pilot code has its own headless behavior; this change does not alter those profiles or the target project.
+
+Validation: **35 focused guarded offline tests passed**, including earlier-chat return/open behavior, separate project sessions, unchanged arguments for both headless values, wrapper/path restrictions, approvals, attachments, memory/settings and downloads. Chromium checks passed at 1440×900 and 390×844, including the restored chat list being on screen. Evidence/backups: `outputs/acceptance/chat-navigation-runner-20261024/`. No target Gradle suite, account connection or model-provider request was run.
+
+
+## Saved projects panel correction — 24 October 2026
+
+**Y — scoped UI acceptance.** Projects beside Chat opens one **Saved projects** panel containing local folders and Git repositories together. Folder/Git icons identify the source; clicking a name activates it and closes the panel, including when the same project is already active. The All/Local/Git list filters were removed.
+
+Add project, folder browsing, project details and explicit Git sync now replace content inside that same panel. Back to saved projects returns to the list without discarding setup fields. Local/Git source choice belongs only to setup. Desktop width is compact; taller forms scroll inside the mobile viewport.
+
+The left sidebar remains present after selection and displays only the selected project's saved sessions, identified by project name. A new project shows **No chats yet. Start with New chat.** New chat, Search chats, Memory and Settings remain available. Switching does not automatically open a conversation or delete another project's sessions.
+
+Validation: **27 focused offline tests passed** (project switching, setup/folder navigation, chat, attachments, memory/settings, approvals and downloads). Actual Chromium checks passed at **1440×900 and 390×844**, verifying one visible dialog, no overlapping project popover, mixed saved sources, field retention, selection/close behavior and the scoped sidebar. Screenshots inspected. Evidence/backups: `outputs/acceptance/saved-projects-panel-20261024/`. Initial browser timing/height failures are retained; final visual acceptance passes.
+
+Private-account live acceptance remains P. New MCP functionality remains **P — PARKED** under the free-only instruction. This correction makes no provider, Git service, registry schema or user-project changes, and does not change WS8/WS9 release status.
+
+
 ## Smart Projects implementation — 24 October 2026
 
 This checkpoint supersedes the older sidebar/General selector design. The user approved one Projects menu beside Chat, removed Recent projects/General/View all, and subsequently required free-only operation. New MCP functionality is explicitly parked.
 
 | Status | Scope |
 | --- | --- |
-| **Y** | One composer Projects picker with All/Local/Git filters, clickable saved names, active project context/path, separate Add project setup, and a full-width mobile sheet. No Recent projects section or General selector. |
+| **Y** | One Saved projects panel beside Chat with a combined icon-labelled local/Git list and clickable names. Setup/folder/details/sync are views inside that same panel; no stacked picker/dialog or All/Local/Git list filters. See the correction checkpoint above. |
 | **Y** | New chat and Search chats share one sidebar row; the common chat list scrolls independently of fixed Memory/Settings. First load and project switching show an empty conversation; old chats open only by explicit selection. |
 | **Y** | Local folder browser navigates folders/drives on the server computer; selecting a folder preserves setup fields. Existing local folders are registered without copying or modifying source. |
 | **Y — scoped** | GitHub.com/GitLab.com HTTPS clone or attach-existing-checkout setup. Git account choice is separate from project selection. Anonymous public sample clone passed without any account, registry insertion or push. |

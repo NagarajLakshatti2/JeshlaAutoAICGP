@@ -7,7 +7,11 @@ from agent.tool_policy import CONTROLLED_PROJECT_ACTIONS,READ_ONLY_PROJECT_ACTIO
 from agent.tools.project_tools import ProjectTools
 
 ROOT=Path(__file__).resolve().parents[1]
-def arguments(action):
+def arguments(action,root=None):
+ if action=="create_project":return {"plan":json.loads((root/"fixture-project-plan.json").read_text(encoding="utf-8"))}
+ if action in {"apply_test_repair","rerun_test_repair"}:
+  plans=json.loads((root/'fixture-repair-plans.json').read_text(encoding='utf-8'))
+  return {'plan':plans[action]}
  return {
   'inspect_browser_page':{'url':'https://example.test','evidence_folder':'test-output/agent-web','limit':20},
   'create_file':{'relative_path':'target.txt','content':'fixture'},
@@ -18,12 +22,16 @@ def arguments(action):
  }[action]
 def prepare(root):
  (root/'fixture.py').write_text('print("fixture")',encoding='utf-8')
+ plan=ProjectTools(root).prepare_project("created-project",[{"relative_path":"src/demo/__init__.py","content":"# demo package"}])["plan"]
+ (root/"fixture-project-plan.json").write_text(json.dumps(plan),encoding="utf-8")
  (root/'target.txt').write_text('old',encoding='utf-8')
+ from tests.repair_fixtures import policy_plans
+ (root/'fixture-repair-plans.json').write_text(json.dumps(policy_plans(root)),encoding='utf-8')
 
 class PolicyMatrixTests(unittest.TestCase):
  def test_every_core_project_tool_is_classified_and_implemented(self):
   self.assertFalse(CONTROLLED_PROJECT_ACTIONS&READ_ONLY_PROJECT_ACTIONS)
-  self.assertEqual(len(PROJECT_ACTIONS),16)
+  self.assertEqual(len(PROJECT_ACTIONS),23)
   for name in PROJECT_ACTIONS:self.assertTrue(callable(getattr(ProjectTools,name)))
   from agent.conversation import TOOL_SPECS
   exposed={item['function']['name'] for item in TOOL_SPECS}
@@ -32,17 +40,17 @@ class PolicyMatrixTests(unittest.TestCase):
   for action in CONTROLLED_PROJECT_ACTIONS:
    with self.subTest(action=action),tempfile.TemporaryDirectory() as folder:
     root=Path(folder);prepare(root);store=LocalActionReceipts(root/'r.sqlite3');handler=Mock(return_value={'effect':'once'})
-    with self.assertRaises(ActionDeclined):store.run(root,action,arguments(action),handler,lambda *a:False,'declined')
+    with self.assertRaises(ActionDeclined):store.run(root,action,arguments(action,root),handler,lambda *a:False,'declined')
     handler.assert_not_called()
-    first=store.run(root,action,arguments(action),handler,lambda *a:True,'approved')
-    again=LocalActionReceipts(root/'r.sqlite3').run(root,action,arguments(action),handler,Mock(side_effect=AssertionError('must not reapprove')),'approved')
+    first=store.run(root,action,arguments(action,root),handler,lambda *a:True,'approved')
+    again=LocalActionReceipts(root/'r.sqlite3').run(root,action,arguments(action,root),handler,Mock(side_effect=AssertionError('must not reapprove')),'approved')
     self.assertEqual(first,again);self.assertEqual(handler.call_count,1)
  def test_all_controlled_kinds_preserve_uncertain_outcome_after_cancel(self):
   for action in CONTROLLED_PROJECT_ACTIONS:
    with self.subTest(action=action),tempfile.TemporaryDirectory() as folder:
     root=Path(folder);prepare(root);store=LocalActionReceipts(root/'r.sqlite3');handler=Mock(side_effect=KeyboardInterrupt())
-    with self.assertRaises(KeyboardInterrupt):store.run(root,action,arguments(action),handler,lambda *a:True,'cancelled')
-    with self.assertRaises(ActionBlocked):LocalActionReceipts(root/'r.sqlite3').run(root,action,arguments(action),handler,lambda *a:True,'fresh-token')
+    with self.assertRaises(KeyboardInterrupt):store.run(root,action,arguments(action,root),handler,lambda *a:True,'cancelled')
+    with self.assertRaises(ActionBlocked):LocalActionReceipts(root/'r.sqlite3').run(root,action,arguments(action,root),handler,lambda *a:True,'fresh-token')
     self.assertEqual(handler.call_count,1)
  def test_file_read_write_and_report_paths_cannot_escape_root(self):
   with tempfile.TemporaryDirectory() as folder:
@@ -58,10 +66,30 @@ class PolicyMatrixTests(unittest.TestCase):
     with patch('agent.tools.project_tools.subprocess.run') as run:
      with self.assertRaises(ValueError):operation()
      run.assert_not_called()
+ @unittest.skipUnless(sys.platform=="win32","Windows project wrapper aliases")
+ def test_windows_gradle_aliases_keep_exact_headless_arguments_and_project_root(self):
+  with tempfile.TemporaryDirectory() as folder:
+   root=Path(folder);wrapper=root/"gradlew.bat";wrapper.write_text("@echo fixture")
+   tools=ProjectTools(root)
+   for spelling in ["gradlew","gradlew.bat",r".\gradlew.bat","./gradlew.bat"]:
+    for headless in ("true","false"):
+     command=[spelling,"clean","test","-Denv=dev","-Dbrowser=chromium","-Dheadless="+headless,"--rerun-tasks"]
+     with self.subTest(spelling=spelling,headless=headless),patch("agent.tools.project_tools.subprocess.run",return_value=Mock(returncode=0,stdout="fixture",stderr="")) as run:
+      result=tools.run_command(command)
+      self.assertEqual(result["command"],command)
+      self.assertIn(str(wrapper),run.call_args.args[0])
+      self.assertIn('"-Dheadless='+headless+'"',run.call_args.args[0])
+      self.assertEqual(run.call_args.kwargs["cwd"],root.resolve())
+      self.assertFalse(run.call_args.kwargs["shell"])
+   for forbidden in [r"..\gradlew.bat",str(root/"gradlew.bat"),"evil.bat"]:
+    with patch("agent.tools.project_tools.subprocess.run") as run:
+     with self.assertRaises(ValueError):tools.run_command([forbidden,"test"])
+     run.assert_not_called()
+
  def test_real_python_script_and_command_replay_does_not_execute_again(self):
   for action in ['run_python_file','run_command']:
    with self.subTest(action=action),tempfile.TemporaryDirectory() as folder:
-    root=Path(folder);prepare(root);tools=ProjectTools(root);store=LocalActionReceipts(root/'r.sqlite3');handler=Mock(wraps=getattr(tools,action));args=arguments(action);args['timeout']=10
+    root=Path(folder);prepare(root);tools=ProjectTools(root);store=LocalActionReceipts(root/'r.sqlite3');handler=Mock(wraps=getattr(tools,action));args=arguments(action,root);args['timeout']=10
     result=store.run(root,action,args,handler,lambda *a:True,'real-python')
     self.assertEqual(result['exit_code'],0);self.assertIn('fixture',result['stdout'])
     again=LocalActionReceipts(root/'r.sqlite3').run(root,action,args,handler,lambda *a:False,'real-python')
@@ -71,7 +99,7 @@ class PolicyMatrixTests(unittest.TestCase):
   from agent.browser_actions import BrowserActions
   for action in CONTROLLED_PROJECT_ACTIONS:
    with self.subTest(action=action),tempfile.TemporaryDirectory() as folder:
-    root=Path(folder);prepare(root);store=BrowserActions(root/'r.sqlite3');args=arguments(action)
+    root=Path(folder);prepare(root);store=BrowserActions(root/'r.sqlite3');args=arguments(action,root)
     if action=='create_file':args['relative_path']='new.txt'
     proposal={'project_root':str(root),'action':action,'arguments':args}
     declined=store.propose('u','p','chat',action,proposal);store.decline('u','p','chat',declined)
@@ -93,7 +121,7 @@ class PolicyMatrixTests(unittest.TestCase):
 
 class FreshProcessReceiptTests(unittest.TestCase):
  def worker(self,root,action,mode):
-  payload={'root':str(root),'action':action,'arguments':arguments(action),'mode':mode}
+  payload={'root':str(root),'action':action,'arguments':arguments(action,root),'mode':mode}
   return subprocess.run([sys.executable,str(ROOT/'tests/local_action_process_worker.py')],input=json.dumps(payload),capture_output=True,text=True,timeout=20,cwd=ROOT,shell=False)
  def test_all_action_kinds_return_completed_receipt_in_new_process(self):
   for action in CONTROLLED_PROJECT_ACTIONS:

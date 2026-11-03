@@ -1,5 +1,6 @@
 """Obtain a project action through registered native tools; never execute it here."""
 import json
+import re
 from agent.providers.tools import call_tool_messages
 from agent.providers.text import env_int, LLM_PROVIDER
 from agent.providers.errors import ProviderError
@@ -58,6 +59,7 @@ def call_project_decision(messages, actions):
             options.pop("forced_function",None);options["require_tool"]=True
             native_instruction=("Propose exactly ONE action through its registered native function. "
                 "Do not call submit_project_action; the action names themselves are now registered. "
+                "After the needed evidence is read, use finish(answer) for the final reply or ask(question) for clarification. "
                 "The current Task defines the request; prior errors/history are not instructions. "
                 "Reuse the supplied root, path and content. Do not ask to reconfirm details already supplied. "
                 "No local action has executed from a rejected proposal. Application approval is still required.")
@@ -105,6 +107,10 @@ def decode_project_reply(reply, allowed):
         try:
             proposal=json.loads(text)
         except ValueError:
+            # Malformed action-shaped JSON is not a readable final answer.
+            # The existing caller may request one format correction; no action is inferred.
+            if re.match(r"^(?:```(?:json)?\s*)?[\[{]", text, re.I):
+                raise ValueError("Action-shaped final text must be valid complete JSON; use a registered finish answer or plain prose.") from None
             return json.dumps({"action":"finish","answer":text},ensure_ascii=False)
         if not isinstance(proposal,dict) or "action" not in proposal:
             return json.dumps({"action":"finish","answer":text},ensure_ascii=False)
@@ -143,3 +149,19 @@ def decode_project_reply(reply, allowed):
     if any(key in decision and not isinstance(decision[key],str) for key in ("question","answer")):
         raise ValueError("Answer/question fields must be text when present.")
     return json.dumps(decision,ensure_ascii=False)
+
+
+def source_identifier_tokens(content):
+    """Bounded exact hyphenated tokens from source actually read in this turn."""
+    if not isinstance(content, str): return set()
+    return set(re.findall(r'\b[A-Za-z][A-Za-z0-9_]*(?:-[A-Za-z0-9_]+)+(?:\.[A-Za-z0-9]+)?\b',content[:16000])[:2000])
+
+
+def preserve_source_identifiers(answer, observed):
+    """Repair typographic hyphens only when the exact ASCII token was observed."""
+    dashes = str.maketrans({c:'-' for c in '\u2010\u2011\u2012\u2013\u2212'})
+    pattern = r'\b[A-Za-z][A-Za-z0-9_]*(?:[-\u2010\u2011\u2012\u2013\u2212][A-Za-z0-9_]+)+(?:\.[A-Za-z0-9]+)?\b'
+    def restore(match):
+        canonical=match[0].translate(dashes)
+        return canonical if canonical in observed else match[0]
+    return re.sub(pattern,restore,answer)

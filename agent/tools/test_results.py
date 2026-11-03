@@ -177,7 +177,8 @@ def run_tests_and_parse(tools, command, relative_report_folder, timeout=300):
             reports.append(report)
         except (ValueError, OSError, ET.ParseError) as error:
             errors.append({"file": path, "error": str(error)})
-    return {
+    from agent.tools.execution_review import attach_review
+    return attach_review({
         **execution,
         "started_at": datetime.fromtimestamp(started_ns / 1e9, timezone.utc).isoformat(),
         "finished_at": datetime.fromtimestamp(finished_ns / 1e9, timezone.utc).isoformat(),
@@ -188,4 +189,4 @@ def run_tests_and_parse(tools, command, relative_report_folder, timeout=300):
         "outside_execution_window_ignored": outside_window,
         "report_status": "fresh_reports_found" if reports else "no_fresh_results",
         "note": "Reports may overlap; counts are not combined. Freshness uses file evidence, not a run ID. Avoid concurrent writers. A timeout or nonzero exit means execution was unsuccessful even if a report contains passed tests.",
-    }
+    }, tools.root)

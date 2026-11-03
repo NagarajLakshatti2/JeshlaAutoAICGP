@@ -1,9 +1,8 @@
 """One-time Local/Git setup, selected-project details and explicit sync."""
-from pathlib import Path
 import streamlit as st
 from agent.storage.projects import ProjectConfigurationError
 from agent.interfaces.dialogs import dismiss_dialog
-from agent.interfaces.projects import switch_project
+from agent.interfaces.projects import switch_project,render_saved_projects
 from agent.interfaces.folder_picker import open_folder_picker
 
 
@@ -12,10 +11,12 @@ def problem(error):
     else:st.error("Project setup could not complete. Check folder access and configuration.")
 
 
-@st.dialog("Add project",width="medium",on_dismiss=dismiss_dialog,icon=":material/create_new_folder:")
 def project_setup_dialog(manager):
-    mode=st.segmented_control("Project type",["Local","Git repositories"],default="Local",
-                              key="setup_project_type",width="stretch",label_visibility="collapsed")
+    mode=st.segmented_control("Project type",["Local","Git repositories","New project"],default="Local",
+                              key="setup_project_type",persist_state="session",width="stretch",label_visibility="collapsed")
+    if mode=="New project":
+        from agent.interfaces.project_creation import render_project_creation
+        render_project_creation(manager);return
     if mode!="Git repositories":
         name=st.text_input("Project name",max_chars=100,key="new_project_name",persist_state="session")
         folder=st.text_input("Project folder",key="new_project_folder",persist_state="session",placeholder="Choose an existing folder")
@@ -28,14 +29,14 @@ def project_setup_dialog(manager):
             except Exception as error:problem(error)
     else:
         st.caption("GitHub.com / GitLab.com · standard Git operations. No paid service is enabled.")
-        mode=st.selectbox("Working copy",["Clone repository","Use existing checkout"],key="git_setup_mode")
+        mode=st.selectbox("Working copy",["Clone repository","Use existing checkout"],key="git_setup_mode",persist_state="session")
         name=st.text_input("Project name",max_chars=100,key="git_project_name",persist_state="session")
         url=st.text_input("Repository URL",key="git_repository_url",persist_state="session",placeholder="https://github.com/owner/repository")
         accounts=[row for row in manager.connection_store().list() if row["kind"] in {"github","gitlab"}]
         by_id={row["id"]:row for row in accounts}
-        account=st.selectbox("Repository access",["",*by_id],format_func=lambda key:by_id[key]["label"] if key else "Public repository",key="git_project_account")
+        account=st.selectbox("Repository access",["",*by_id],format_func=lambda key:by_id[key]["label"] if key else "Public repository (no account)",key="git_project_account",persist_state="session")
         if not accounts:
-            st.caption("For private repositories, configure your GitHub/GitLab account in Settings → Connections.")
+            st.caption("Private repository? Add a GitHub/GitLab account in Settings → Connections, then select it here.")
         destination=st.text_input("Local destination" if mode=="Clone repository" else "Existing checkout folder",key="git_destination",persist_state="session",
                                   placeholder="A new folder for a clone" if mode=="Clone repository" else "Repository root folder")
         if st.button("Choose folder",icon=":material/folder_open:",key="choose_git_destination"):
@@ -50,7 +51,6 @@ def project_setup_dialog(manager):
             except Exception as error:problem(error)
 
 
-@st.dialog("Project details",width="medium",on_dismiss=dismiss_dialog,icon=":material/folder:")
 def project_settings_dialog(manager):
     row=manager.project_store().get(st.session_state.get("project_settings_id",""))
     if not row:st.warning("This project is no longer available.");return
@@ -67,13 +67,17 @@ def project_settings_dialog(manager):
         if st.button("Save repository account",key="save_project_repository_account"):
             try:manager.update_project_account(row["id"],account);st.success("Repository access updated.")
             except Exception as error:problem(error)
+    if row.get("source")=="git" and st.button("Review commit / push",key="open_git_review",icon=":material/commit:"):
+        switch_project(manager,row["id"])
+        st.session_state.project_settings_id=row["id"];st.session_state.ui_dialog="project_git";st.rerun()
+    from agent.interfaces.project_knowledge import render_project_knowledge
+    render_project_knowledge(manager.for_project(row["id"]))
     st.caption("Conversations, memory, approvals and generated downloads stay scoped to this project.")
     st.info("Jira/GitHub MCP is parked for the free-only plan. No new MCP connection or remote MCP action is enabled.")
     if st.button("Select this project",key="select_project_details"):
         switch_project(manager,row["id"]);st.session_state.ui_dialog=None;st.rerun()
 
 
-@st.dialog("Sync repository",width="medium",on_dismiss=dismiss_dialog,icon=":material/sync:")
 def project_sync_dialog(manager):
     row=manager.project_store().get(st.session_state.get("project_settings_id",""))
     if not row or row.get("source")!="git":st.warning("Choose a configured Git repository.");return
@@ -86,11 +90,44 @@ def project_sync_dialog(manager):
         except Exception as error:problem(error)
 
 
+@st.dialog("Saved projects",width="small",on_dismiss=dismiss_dialog,icon=":material/folder_open:")
+def project_panel_dialog(manager):
+    """All project views replace content inside this one dialog."""
+    view=st.session_state.get("ui_dialog")
+    st.html("""<style>
+    [role="dialog"]:has(.st-key-project_panel) {
+        max-height: calc(100dvh - 6rem); overflow-y: auto;
+    }
+    </style>""")
+    with st.container(key="project_panel"):
+        if view=="folder_picker":
+            from agent.interfaces.folder_picker import folder_dialog
+            st.subheader("Choose project folder",anchor=False)
+            folder_dialog()
+            return
+        if view!="projects":
+            if st.button("Back to saved projects",icon=":material/arrow_back:",key="back_saved_projects",type="tertiary"):
+                st.session_state.ui_dialog="projects";st.rerun()
+        if view=="project_setup":
+            st.subheader("Add project",anchor=False)
+            project_setup_dialog(manager)
+        elif view=="project_settings":
+            st.subheader("Project details",anchor=False)
+            project_settings_dialog(manager)
+        elif view=="project_git":
+            from agent.interfaces.git_panel import render_git_review
+            render_git_review(manager)
+        elif view=="project_sync":
+            st.subheader("Sync repository",anchor=False)
+            project_sync_dialog(manager)
+        else:
+            render_saved_projects(manager)
+
+
 def render_project_dialogs(manager):
-    dialog=st.session_state.get("ui_dialog")
-    if dialog=="project_setup":project_setup_dialog(manager)
-    elif dialog=="folder_picker":
-        from agent.interfaces.folder_picker import folder_dialog
-        folder_dialog()
-    elif dialog=="project_settings":project_settings_dialog(manager)
-    elif dialog=="project_sync":project_sync_dialog(manager)
+    if st.session_state.get("ui_dialog")=="project_files":
+        from agent.interfaces.project_files import render_project_files
+        render_project_files(manager)
+        return
+    if st.session_state.get("ui_dialog") in {"projects","project_setup","folder_picker","project_settings","project_sync","project_git"}:
+        project_panel_dialog(manager)

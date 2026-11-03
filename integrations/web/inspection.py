@@ -2,6 +2,7 @@
 import hashlib
 import ipaddress
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -10,6 +11,41 @@ from agent.config.paths import APPLICATION_ROOT
 from agent.tools.web_pages import url_location
 
 TIMEOUT_SECONDS = 55
+MAX_SCREENSHOT_BYTES = 5_000_000
+PNG_SIGNATURE = b'\x89PNG\r\n\x1a\n'
+
+
+def _screenshot_metadata(root, folder):
+    """Bind future download eligibility to the exact bounded PNG capture bytes."""
+    path = folder / 'inspection.png'
+    try:
+        for current in (path, *path.parents):
+            if current.is_symlink() or (hasattr(current, 'is_junction') and current.is_junction()):
+                return {}
+            if current == root:
+                break
+        else:
+            return {}
+        if not path.is_file():
+            return {}
+        before = path.stat()
+        if not 0 < before.st_size <= MAX_SCREENSHOT_BYTES:
+            return {}
+        with path.open('rb') as handle:
+            opened = os.fstat(handle.fileno())
+            raw = handle.read(MAX_SCREENSHOT_BYTES + 1)
+            finished = os.fstat(handle.fileno())
+        after = path.stat()
+        def signature(stat):
+            return (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
+        if (signature(before) != signature(opened) or signature(opened) != signature(finished)
+                or signature(finished) != signature(after) or len(raw) != before.st_size
+                or len(raw) > MAX_SCREENSHOT_BYTES or not raw.startswith(PNG_SIGNATURE)):
+            return {}
+        return {'screenshot_sha256': hashlib.sha256(raw).hexdigest(),
+                'screenshot_size_bytes': len(raw)}
+    except (OSError, ValueError):
+        return {}
 
 
 def evidence_directory(tools, relative_folder):
@@ -81,6 +117,10 @@ def inspect_browser_page(tools, url, evidence_folder='test-output/agent-web', li
             raise RuntimeError('Browser returned invalid discovery data.')
         result['inspection_file'] = (folder / 'inspection.json').relative_to(tools.root).as_posix()
         result['screenshot'] = (folder / 'inspection.png').relative_to(tools.root).as_posix()
+        # Worker output cannot supply capture provenance. Only the fixed local PNG can.
+        result.pop('screenshot_sha256', None)
+        result.pop('screenshot_size_bytes', None)
+        result.update(_screenshot_metadata(tools.root, folder))
         encoded = json.dumps(result, ensure_ascii=False, indent=2)
         (folder / 'inspection.json').write_text(encoded, encoding='utf-8')
         result['inspection_sha256'] = hashlib.sha256((folder / 'inspection.json').read_bytes()).hexdigest()

@@ -212,11 +212,17 @@ class ProjectTools:
 
         return {"matches": matches, "truncated": False}
 
-    def replace_text(
+    def replace_text(self, relative_path: str, old_text: str, new_text: str) -> dict:
+        """Legacy exact replacement; public arguments and receipt identity are unchanged."""
+        return self._replace_text(relative_path, old_text, new_text)
+
+    def _replace_text(
         self,
         relative_path: str,
         old_text: str,
         new_text: str,
+        *,
+        expected_sha256=None,
     ) -> dict:
         """Replace one exact match and display the applied diff."""
 
@@ -228,6 +234,10 @@ class ProjectTools:
 
         path = self._resolve_file(relative_path)
         original_bytes = path.read_bytes()
+        if expected_sha256 is not None:
+            import hashlib
+            if hashlib.sha256(original_bytes).hexdigest() != expected_sha256:
+                raise ValueError("Source revision changed before the reviewed replacement.")
 
         if len(original_bytes) > 1_000_000:
             raise ValueError("File exceeds the 1 MB editing limit.")
@@ -335,6 +345,16 @@ class ProjectTools:
                 "error": f"Script exceeded {timeout} seconds.",
             }
 
+    def prepare_project(self, folder_name: str, project_files: list[dict]) -> dict:
+        """Read-only exact new-folder/file review; no filesystem creation."""
+        from agent.tools.project_creation import prepare_project
+        return prepare_project(self, folder_name, project_files)
+
+    def create_project(self, plan: dict) -> dict:
+        """Controlled source-tree creation only; no installation/execution."""
+        from agent.tools.project_creation import create_project
+        return create_project(self, plan)
+
     def create_file(
         self,
         relative_path: str,
@@ -407,11 +427,11 @@ class ProjectTools:
 
 
 
-    def run_command(
+    def _command_argv(
         self,
         command: list[str],
         timeout: int = 60,
-    ) -> dict:
+    ) -> list[str] | str:
         if (
             not isinstance(command, list)
             or not command
@@ -424,6 +444,15 @@ class ProjectTools:
 
         allowed = {"python", "mvn", "mvnw", "gradle", "gradlew", "npm"}
         tool = command[0]
+        if os.name == "nt":
+            # Resolve only these exact aliases to the approved project's wrapper.
+            # Keep the submitted arguments unchanged for approval/receipt identity.
+            aliases = {"gradlew.bat": "gradlew", ".\\gradlew.bat": "gradlew",
+                       "./gradlew.bat": "gradlew", ".\\gradlew": "gradlew", "./gradlew": "gradlew"}
+            tool = aliases.get(tool.casefold(), tool)
+
+        if Path(tool.replace("\\", "/")).name.casefold() in {"git", "git.exe"}:
+            raise ValueError("Git commands require the project Git review panel. Select Commit or Push, prepare its review and request exact-action approval.")
 
         if tool not in allowed:
             raise ValueError(f"Supported commands: {sorted(allowed)}")
@@ -447,7 +476,6 @@ class ProjectTools:
                 raise ValueError(f"{tool} is not installed or not on PATH.")
 
         argv = [executable, *command[1:]]
-        print("\nRUNNING:", argv)
 
         # Windows batch wrappers require cmd.exe.
         if os.name == "nt" and executable.lower().endswith((".bat", ".cmd")):
@@ -467,6 +495,12 @@ class ProjectTools:
                     + command_text
                     + '"'
             )
+
+        return argv
+
+    def run_command(self, command: list[str], timeout: int = 60) -> dict:
+        argv = self._command_argv(command, timeout)
+        print("\nRUNNING:", argv)
 
         try:
             result = subprocess.run(
@@ -539,10 +573,35 @@ class ProjectTools:
                 raise ProjectConfigurationError("Choose saved evidence belonging to this project or a manifest in its local folder.")
         return report_for_agent(self.root, manifest_file, evidence_folder)
 
+    def prepare_test_report_export(self, manifest_file: str, relative_path: str, evidence_folder: str = "") -> dict:
+        """Read-only exact Markdown proposal; saving requires create_file approval."""
+        from integrations.reporting.exports import prepare_report_export
+        return prepare_report_export(self, manifest_file, relative_path, evidence_folder)
+
     def investigate_test_failure(self, relative_path: str, case_name: str, case_class: str = "", evidence_spans: list[dict] = None, run_file: str = "") -> dict:
         """Read one failed report case with bounded evidence; no repair or rerun executes."""
         from agent.tools.test_failures import investigate_test_failure
         return investigate_test_failure(self.root, relative_path, case_name, case_class, evidence_spans, run_file)
+
+    def prepare_test_repair(self, request: dict) -> dict:
+        """Read-only failed-case repair plan; no changes or execution."""
+        from agent.tools.test_repairs import prepare_test_repair
+        return prepare_test_repair(self, request)
+
+    def apply_test_repair(self, plan: dict) -> dict:
+        """Controlled exact source replacement; never rerun implicitly."""
+        from agent.tools.test_repairs import apply_test_repair
+        return apply_test_repair(self, plan)
+
+    def rerun_test_repair(self, plan: dict) -> dict:
+        """Controlled bounded rerun after revision checks; separate approval required."""
+        from agent.tools.test_repairs import rerun_test_repair
+        return rerun_test_repair(self, plan)
+
+    def compare_test_rerun(self, plan: dict, run_file: str) -> dict:
+        """Read saved rerun results; never execute to fill missing evidence."""
+        from agent.tools.test_repairs import compare_test_rerun
+        return compare_test_rerun(self, plan, run_file)
 
     def run_tests_and_parse(
         self,

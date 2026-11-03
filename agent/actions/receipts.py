@@ -7,7 +7,8 @@ import time
 import uuid
 from pathlib import Path
 
-from agent.policies.tool_registry import CONTROLLED_PROJECT_ACTIONS as ACTIONS
+from agent.policies.tool_registry import CONTROLLED_PROJECT_ACTIONS,WORKSPACE_CONTROLLED_ACTIONS
+ACTIONS=CONTROLLED_PROJECT_ACTIONS|WORKSPACE_CONTROLLED_ACTIONS
 
 class ActionBlocked(ValueError):
     pass
@@ -22,6 +23,27 @@ def canonical(value):
     return json.dumps(value,sort_keys=True,separators=(",",":"),ensure_ascii=False,allow_nan=False)
 
 def target_version(root,action,args):
+    if action == "create_project":
+        from agent.tools.project_creation import validate_creation
+        from agent.tools.project_tools import ProjectTools
+        try:
+            plan = validate_creation(ProjectTools(root), args.get("plan"))
+        except ValueError as error:
+            raise ActionBlocked("Project creation review is stale or invalid: " + str(error)) from None
+        return plan["id"] + ":destination-missing"
+    if action in {"apply_test_repair","rerun_test_repair"}:
+        from agent.tools.test_repairs import repair_version
+        try:return repair_version(root,action,args.get("plan"))
+        except (ValueError,KeyError,TypeError,OSError) as error:
+            raise ActionBlocked("Repair plan is stale, incomplete or outside its evidence scope: "+str(error)) from None
+    if action in WORKSPACE_CONTROLLED_ACTIONS:
+        from integrations.git.writes import version
+        review=args.get("review")
+        if not isinstance(review,dict) or review.get("kind")!=action:
+            raise ActionBlocked("Prepare a complete Git review first.")
+        observed=version(root,action,review)
+        if observed!=review.get("version"):raise ActionBlocked("Git review is stale. Prepare a new review.")
+        return observed
     if action not in {"create_file","replace_text","run_python_file"}:return None
     from agent.tools.project_tools import SKIP_DIRS,SKIP_FILES
     requested=Path(args.get("relative_path",""))
@@ -87,6 +109,12 @@ class LocalActionReceipts:
         # The durable running claim is committed before any side effect occurs.
         try:
             result=handler(**snapshot)
+            # Review is local/read-only and cannot approve, replay or change effects.
+            # Native test collection already attaches its bounded source review.
+            if action in {"run_command","run_python_file","run_tests_and_parse"} and isinstance(result,dict):
+                if not isinstance(result.get("post_run_review"),dict):
+                    from agent.tools.execution_review import attach_review
+                    result=attach_review(result,root if action=="run_tests_and_parse" else None)
             encoded=canonical(result)
             uncertain=isinstance(result,dict) and bool(result.get("timed_out"))
             with self.connect() as db:

@@ -15,7 +15,8 @@ def check_office_archive(data):
 
 
 def is_control_message(question):
-    return bool(re.match(r"^(REMEMBER|FORGET|SHOW MEMORY|MEMORY HISTORY|SUGGEST MEMORY|SHOW SUGGESTIONS|ACCEPT MEMORY|REJECT MEMORY|SESSION|NEW CHAT|NEW SESSION|OPEN CHAT|LIST CHATS)(?:\s|$)",question.strip(),re.I))
+    from agent.runtime.chat_shortcuts import is_shortcut
+    return is_shortcut(question) or bool(re.match(r"^(REMEMBER|FORGET|SHOW MEMORY|MEMORY HISTORY|SUGGEST MEMORY|SHOW SUGGESTIONS|ACCEPT MEMORY|REJECT MEMORY|SESSION|NEW CHAT|NEW SESSION|OPEN CHAT|LIST CHATS)(?:\s|$)",question.strip(),re.I))
 
 
 def extract_attachment(name,data):
@@ -130,13 +131,18 @@ def chat_attachments(session):
     return [legacy] if legacy else []
 
 
-def render_upload_menu(session):
+def render_upload_menu(session,project_selected=False):
     import hashlib
     import streamlit as st
     with st.popover(":material/add:",help="Add to chat",key="add_to_chat"):
         for label,mode,icon in [("Upload documents","documents","description"),("Upload files","files","upload_file"),("Upload folder","folder","folder_open")]:
             if st.button(label,icon=":material/"+icon+":",type="tertiary",key="choose_upload_"+mode,width="stretch"):
                 st.session_state.upload_kind=mode
+        if st.button("Browse project files",icon=":material/folder_open:",type="tertiary",
+                     key="browse_project_files",width="stretch",disabled=not project_selected):
+            st.session_state.ui_dialog="project_files"
+        from agent.interfaces.chat_shortcuts import render_shortcut_menu
+        render_shortcut_menu(session,project_selected=project_selected)
         mode=st.session_state.get("upload_kind")
         if mode:
             st.caption("Supported text documents only; 1 MB per file, up to five files per chat. Folder selection reads supported files; it does not connect a project.")

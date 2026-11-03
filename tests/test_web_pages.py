@@ -66,6 +66,46 @@ class WebPageTests(unittest.TestCase):
 
 
 class DocumentationFragmentTests(unittest.TestCase):
+    def test_redirect_preserves_target_section_without_sending_fragment(self):
+        body=("<p>Old preamble " + "padding "*800 + "</p><h3 id='rules'>Target rule</h3><p>Required behavior.</p>").encode()
+        responses=iter([Response(status=301,headers={"Location":"/canonical"}),Response(body)])
+        requests=[];connections=[]
+        def factory(*args):
+            connection=Connection(next(responses))
+            connection.request=lambda method,path,**kwargs:requests.append((method,path))
+            connections.append(connection)
+            return connection
+        result=fetch_web_page("https://host.test/old#rules",resolver=lambda *a:["8.8.8.8"],connection_factory=factory)
+        self.assertEqual(result["url"],"https://host.test/canonical#rules")
+        self.assertTrue(result["fragment_found"])
+        self.assertTrue(result["text"].startswith("Target rule"))
+        self.assertNotIn("Old preamble",result["text"])
+        self.assertEqual(requests,[("GET","/old"),("GET","/canonical")])
+        self.assertTrue(all(connection.closed for connection in connections))
+
+    def test_redirect_chain_keeps_inherited_section(self):
+        responses=iter([Response(status=302,headers={"Location":"/middle"}),
+                        Response(status=307,headers={"Location":"/final"}),
+                        Response(b"<p>Introduction</p><h3 id='rules'>Final section</h3>")])
+        result=fetch_web_page("https://host.test/old#rules",resolver=lambda *a:["8.8.8.8"],
+                              connection_factory=lambda *a:Connection(next(responses)))
+        self.assertEqual(result["url"],"https://host.test/final#rules")
+        self.assertTrue(result["fragment_found"])
+        self.assertEqual(result["text"],"Final section")
+
+    def test_redirect_replacement_and_explicit_empty_section_are_respected(self):
+        for location,expected_url,expected_found,expected_text in [
+            ("/canonical#replacement","https://host.test/canonical#replacement",True,"Replacement rule"),
+            ("/canonical#","https://host.test/canonical#",None,"Introduction Original rule Replacement rule")]:
+            with self.subTest(location=location):
+                responses=iter([Response(status=302,headers={"Location":location}),
+                    Response(b"<p>Introduction</p><h3 id='rules'>Original rule</h3><h3 id='replacement'>Replacement rule</h3>")])
+                result=fetch_web_page("https://host.test/old#rules",resolver=lambda *a:["8.8.8.8"],
+                                      connection_factory=lambda *a:Connection(next(responses)))
+                self.assertEqual(result["url"],expected_url)
+                self.assertEqual(result["fragment_found"],expected_found)
+                self.assertEqual(result["text"],expected_text)
+
     def test_requested_section_is_visible_after_a_long_page_preamble(self):
         body=("<title>Language rules</title><p>"+"Old preamble "*600+"</p><h3 id='rules'>Target rule</h3><p>Explicit implementation is required.</p>").encode()
         result=fetch_web_page("https://host.test/spec#rules",resolver=lambda *a:["8.8.8.8"],connection_factory=lambda *a:Connection(Response(body)))

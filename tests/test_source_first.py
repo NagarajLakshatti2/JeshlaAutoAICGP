@@ -120,15 +120,113 @@ class SourceFirstTests(unittest.TestCase):
         result = self.run_flow()
         self.assertEqual(result["execution_outcome"], "blocked")
 
+    def test_targeted_section_requires_positive_reader_metadata(self):
+        self.plan["candidate_urls"] = [self.url + "#missing"]
+        for metadata in ({"fragment_found": False}, {"fragment_found": None}, {}, {"fragment_found": 1}):
+            with self.subTest(metadata=metadata):
+                self.fetch.return_value = {**self.page, **metadata}
+                model = self.model()
+                result = self.run_flow(model)
+                self.assertEqual(result["execution_outcome"], "blocked")
+                self.assertFalse(result["answer_available"])
+                self.assertEqual(model.call_count, 1)
+
+    def test_missing_targeted_section_can_use_next_available_section(self):
+        self.plan["candidate_urls"] = [self.url + "#missing", self.url + "#rules"]
+        self.fetch.side_effect = [
+            {**self.page, "url": self.url + "#missing", "fragment_found": False},
+            {**self.page, "url": self.url + "#rules", "fragment_found": True}]
+        model = self.model()
+        result = self.run_flow(model)
+        self.assertEqual(result["execution_outcome"], "completed")
+        sources = json.loads(model.call_args_list[1].args[0][1]["content"])["sources"]
+        self.assertEqual([source["url"] for source in sources], [self.url + "#rules"])
+        self.assertEqual(sources[0]["source_id"], "S1")
+        self.assertEqual(self.fetch.call_count, 2)
+
     def test_search_and_page_attempt_budgets_are_bounded_and_deduplicated(self):
         self.plan["search_queries"] = ["first public query", "second public query"]
         self.plan["candidate_urls"] = [self.url, self.url, self.url + "#part-2", self.url + "#part-3"]
         self.web.return_value = {"results": [{"url": self.url + "#part-4"}, {"url": self.url + "#part-5"}]}
-        self.fetch.side_effect = lambda url: {"url": url, "text": self.page["text"]}
+        self.fetch.side_effect = lambda url: {"url": url, "text": self.page["text"], "fragment_found": True if "#" in url else None}
         self.run_flow()
         self.assertEqual(self.web.call_count, 2)
         self.assertEqual(self.fetch.call_count, 4)
         self.assertEqual(len({call.args[0] for call in self.fetch.call_args_list}), 4)
+
+    def test_four_stale_planner_urls_do_not_starve_ranked_discovered_sections(self):
+        self.plan["candidate_urls"] = [self.url + "/stale-" + str(number) for number in range(4)]
+        ranked = [self.url + "/z#rules", self.url + "/a#rules"]
+        self.web.return_value = {"results": [{"url": ranked[0]}, {"url": "https://foreign.test/rules"},
+                                                {"url": ranked[1]}, {"url": ranked[0]}]}
+        self.fetch.side_effect = lambda url: ({**self.page, "url": url, "fragment_found": True}
+                                              if url in ranked else {"error": "Stale candidate"})
+        model = self.model()
+        result = self.run_flow(model)
+        self.assertEqual(result["execution_outcome"], "completed")
+        self.assertEqual([call.args[0] for call in self.fetch.call_args_list[:2]], ranked)
+        self.assertEqual(self.fetch.call_count, 4)
+        sources = json.loads(model.call_args_list[1].args[0][1]["content"])["sources"]
+        self.assertEqual([source["url"] for source in sources], ranked)
+
+    def test_compact_draft_keeps_all_six_topics_and_one_complete_example(self):
+        self.plan["topics"] = ["Rule group " + str(number) for number in range(1, 7)]
+        self.draft["sections"] = [self.section(number, "Rule " + str(number) + " is supported by this excerpt.", self.quote)
+                                  for number in range(1, 7)]
+        result = self.run_flow()
+        self.assertEqual(result["execution_outcome"], "completed")
+        for topic in self.plan["topics"]: self.assertIn("### " + topic, result["answer"])
+        self.assertEqual(result["answer"].count("### Complete example"), 1)
+        self.assertIn(self.draft["example"]["code"], result["answer"])
+
+    def test_malformed_search_rows_do_not_hide_later_valid_sections(self):
+        found = self.url + "#rules"
+        self.plan["candidate_urls"] = []
+        self.web.return_value = {"results": [{"url": []}, {"url": {}}, {"url": None},
+                                                {"url": found}]}
+        self.fetch.return_value = {**self.page, "url": found, "fragment_found": True}
+        result = self.run_flow()
+        self.assertEqual(result["execution_outcome"], "completed")
+        self.fetch.assert_called_once_with(found)
+
+    def test_evaluation_checkpoints_public_sources_before_interrupted_draft(self):
+        from pathlib import Path
+        import tempfile
+        from evaluations.answer_quality_acceptance import main
+        with tempfile.TemporaryDirectory(prefix="source-first-evaluation-") as directory:
+            argv = ["answer_quality_acceptance.py", "--provider", "groq", "--case", "inheritance",
+                    "--source-first", "--production-budget", "--output-dir", directory]
+            with patch("sys.argv", argv), patch("dotenv.load_dotenv", return_value=False), \
+                    patch("agent.providers.tools.call_tool_messages", side_effect=[
+                        self.reply("submit_documentation_plan", self.plan), KeyboardInterrupt]) as adapter, \
+                    patch("agent.runtime.conversation.web_search", return_value={"results": []}), \
+                    patch("agent.tools.web_pages.fetch_web_page", return_value=self.page):
+                with self.assertRaises(KeyboardInterrupt): main()
+            progress = json.loads((Path(directory) / "live-progress-groq.json").read_text(encoding="utf-8"))
+            self.assertEqual(progress["status"], "in_progress")
+            self.assertFalse(progress["factual_quality_accepted"])
+            self.assertEqual(progress["output_budget_mode"], "provider_defaults")
+            self.assertTrue(all(not call.kwargs for call in adapter.call_args_list))
+            self.assertEqual(progress["request_trace"][0]["returned_data"], self.plan)
+            self.assertEqual(progress["request_trace"][-1]["offered"], ["submit_grounded_sections"])
+            pages = [source for source in progress["sources"] if source["tool"] == "fetch_web_page"]
+            self.assertEqual(pages[0]["text"], self.page["text"])
+            self.assertFalse((Path(directory) / "live-final-groq.json").exists())
+
+    def test_overlong_draft_is_corrected_whole_or_withheld_never_truncated(self):
+        oversized = deepcopy(self.draft)
+        oversized["sections"][0]["explanation"] = "x" * 801
+        for corrected in (True, False):
+            with self.subTest(corrected=corrected):
+                model = Mock(side_effect=[self.reply("submit_documentation_plan", self.plan),
+                    self.reply("submit_grounded_sections", oversized),
+                    self.reply("submit_grounded_sections", self.draft if corrected else oversized),
+                    self.reply("submit_grounding_findings", self.check)])
+                result = self.run_flow(model)
+                self.assertNotIn("x" * 800, result["answer"])
+                self.assertEqual(model.call_count, 4 if corrected else 3)
+                self.assertEqual(result["execution_outcome"], "completed" if corrected else "blocked")
+                if corrected: self.assertIn(self.draft["example"]["code"], result["answer"])
 
     def test_foreign_data_action_never_runs_and_format_retry_is_bounded(self):
         model = Mock(return_value=self.reply("delete_project", {"path": "unsafe"}))

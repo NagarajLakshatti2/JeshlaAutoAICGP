@@ -84,6 +84,14 @@ def run_turn(graph,config,catalog,session,question,root,*,continuation_model=Non
         control=command(question)
         ledger=None
         manual=False
+        from agent.runtime.chat_shortcuts import local_shortcut_reply, parse_shortcut
+        shortcut_result=local_shortcut_reply(question,state)
+        if shortcut_result is not None:
+            result=shortcut_result
+            manual=True
+        elif parse_shortcut(question)=={"name":"memory"}:
+            # Reuse the deterministic memory route with the validated owner/project.
+            state["question"]="SHOW MEMORY"
         if control:
             try:
                 ledger=store.load(scope)
@@ -114,6 +122,12 @@ def run_turn(graph,config,catalog,session,question,root,*,continuation_model=Non
                             "execution_outcome":"completed" if prior["status"]=="complete" else "partial","answer_available":True}
                 store.discard(scope)
             except Exception:notices.append("Older answer progress could not be cleared. It cannot authorize any action.")
+        if not manual and not control:
+            from agent.runtime.file_references import approved_file_reference
+            file_reply=approved_file_reference(question,root,catalog,session,request_scope=request_scope)
+            if file_reply is not None:
+                result=file_reply
+                manual=True
         if not manual:
             with progress_scope(ledger["origin_question"] if ledger else question,persist_progress):
                 if control=="cancel":
@@ -132,7 +146,7 @@ def run_turn(graph,config,catalog,session,question,root,*,continuation_model=Non
                     result={"answer":"There is no saved text answer to resume or consolidate in this chat.","route":"direct","task_status":"completed","execution_outcome":"completed"}
                     manual=True
                 else:result=graph.invoke(state,config=config)
-        amended=False
+        amended=state["question"]!=question
         pending_text=False
         try:
             active=store.load(scope)

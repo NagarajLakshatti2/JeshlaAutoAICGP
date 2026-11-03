@@ -49,14 +49,14 @@ PLAN = _spec("submit_documentation_plan", {
     "publisher_domains": _array(_string(253), 3, 1),
     "candidate_urls": _array(_string(1500), MAX_PAGES),
     "example_required": {"type": "boolean"}})
-EVIDENCE = {"type": "object", "properties": {"source_id": _string(4), "quote": _string(600, 20)},
+EVIDENCE = {"type": "object", "properties": {"source_id": _string(4), "quote": _string(240, 20)},
             "required": ["source_id", "quote"], "additionalProperties": False}
 SECTION = {"type": "object", "properties": {
     "topic": {"type": "integer", "minimum": 1, "maximum": MAX_TOPICS},
-    "explanation": _string(2200), "evidence": _array(EVIDENCE, 3, 1)},
+    "explanation": _string(800), "evidence": _array(EVIDENCE, 3, 1)},
     "required": ["topic", "explanation", "evidence"], "additionalProperties": False}
 EXAMPLE = {"type": "object", "properties": {
-    "language": _string(30, 0), "code": _string(6000, 0), "expected_output": _string(1500, 0),
+    "language": _string(30, 0), "code": _string(2200, 0), "expected_output": _string(300, 0),
     "topics": _array({"type": "integer", "minimum": 1, "maximum": MAX_TOPICS}, MAX_TOPICS)},
     "required": ["language", "code", "expected_output", "topics"], "additionalProperties": False}
 DRAFT = _spec("submit_grounded_sections", {"sections": _array(SECTION, MAX_TOPICS), "example": EXAMPLE})
@@ -141,7 +141,7 @@ def _candidate(url, domains):
 def _retrieve(plan, web, page_fetch):
     from agent.policies.citations import visible_web_urls
     from agent.tools.web_pages import fetch_web_page
-    candidates = list(plan["candidate_urls"])
+    candidates = []
     for query in dict.fromkeys(plan["search_queries"]):
         if not re.search(r"(?:^|\s)site:", query, re.I):
             query = "site:" + plan["publisher_domains"][0] + " " + query
@@ -149,9 +149,15 @@ def _retrieve(plan, web, page_fetch):
             result = web(query=query)
             visible = json.dumps(result, ensure_ascii=False, default=str)
             # Only URLs actually exposed by the search tool enter this list.
-            candidates.extend(sorted(visible_web_urls(result, visible)))
+            visible_urls = visible_web_urls(result, visible)
+            for row in result.get("results", []) if visible_urls else []:
+                url = row.get("url") if isinstance(row, dict) else None
+                if isinstance(url, str) and url in visible_urls: candidates.append(url)
         except Exception:
             continue  # A failed index does not prevent a secured direct read.
+    # Search-ranked publisher links precede speculative URLs, so four stale
+    # planner candidates cannot consume every page attempt before discovery.
+    candidates.extend(plan["candidate_urls"])
     pages = []; attempted = set()
     for url in candidates:
         if len(attempted) >= MAX_PAGES: break
@@ -162,6 +168,10 @@ def _retrieve(plan, web, page_fetch):
         if (not isinstance(page, dict) or page.get("error") or not isinstance(page.get("text"), str)
                 or not page["text"].strip() or len(page["text"]) > 4500
                 or not _candidate(page.get("url"), plan["publisher_domains"])): continue
+        # A page introduction is not the requested section. Require the reader's
+        # positive match before offering a targeted excerpt as model evidence.
+        targeted = url_location(url)[0].fragment or url_location(page["url"])[0].fragment
+        if targeted and page.get("fragment_found") is not True: continue
         if any(item["url"] == page["url"] for item in pages): continue
         pages.append({"source_id": "S" + str(len(pages) + 1), "url": page["url"],
             "requested_url": url, "title": str(page.get("title", ""))[:200],
@@ -231,11 +241,14 @@ def answer_from_sources(question, *, model, web, page_fetch=None):
             return _incomplete("I could not retrieve usable documentation from the planned publisher sources. No source-grounded explanation was produced. Supply a relevant official URL or retry when retrieval is available.")
         draft = _request(model, DRAFT,
             "Write an evidence-scoped answer to the user's question. Each numbered topic maps to the supplied plan (1-based); omit topics not supported by the excerpts. "
+            "Target at most 2500 output tokens: compact registered JSON arguments only, with no repeated introductions, headings, commentary or code comments. "
+            "Preserve every named rule and pitfall within each planned topic; if its whole scope cannot be supported, omit that topic rather than silently dropping a subrule. "
             "For EACH explanation provide 1-3 exact continuous short quotations from actual source text with its source_id. Do not paraphrase quotations or use ellipses. "
+            "Prefer one short quotation per topic; add quotations only when distinct rules require them. Follow each schema length bound. "
             "Explain only rules established by those quotations/excerpts; never use one introductory section to justify unrelated rules or version history. "
             "Treat the publisher domains as candidates: verify authority and requested-version scope from actual sources, and omit claims whose authority/version is not established. "
             "Use normal Markdown prose in explanations, no code fences or invented links. Citations will be added by the application. "
-            "If requested, provide ONE internally consistent complete example in the separate example object, linked to its topic numbers; code does not count as evidence. "
+            "If requested, provide ONE minimal internally consistent complete example in the separate example object, linked to its topic numbers; code does not count as evidence. "
             "Use empty language/code/output/topics when a supported complete example cannot be supplied. Expected output is a prediction; no compilation/execution was performed. "
             "Do not fill coverage gaps from memory, repeat points, claim exhaustive verification or claim execution. Broad requests may produce a clearly partial answer.",
             {"question": question, "topics": plan["topics"], "example_required": plan["example_required"], "sources": pages},

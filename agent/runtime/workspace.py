@@ -4,6 +4,48 @@ from agent.storage.projects import ProjectConfigurationError
 
 
 class WorkspaceSupport:
+    def prepare_new_project(self, name, parent, template, package):
+        import re
+        from agent.storage.projects import validate_local_folder
+        from agent.tools.project_tools import ProjectTools
+        from agent.tools.project_creation import starter_files
+        if not isinstance(name, str) or not 1 <= len(name.strip()) <= 100:
+            raise ProjectConfigurationError("Enter a project name of 1–100 characters.")
+        folder_name = re.sub(r"[^A-Za-z0-9_.-]+", "-", name.strip()).strip("-")
+        root = validate_local_folder(parent)
+        tools = ProjectTools(root)
+        plan = tools.prepare_project(folder_name, starter_files(folder_name, template, package))["plan"]
+        proposal = {"project_root": root, "action": "create_project", "arguments": {"plan": plan}}
+        actions = self.actions()
+        for old in actions.pending(self.user, self.space, "project-setup"):
+            actions.decline(self.user, self.space, "project-setup", old["id"])
+        token = actions.propose(self.user, self.space, "project-setup", "create_project", proposal)
+        return {"token": token, "proposal": proposal, "name": name.strip()}
+
+    def new_project_status(self, token):
+        actions = self.actions()
+        row = actions._row(self.user, self.space, "project-setup", token)
+        import json
+        if json.loads(row["proposal"])["action"] != "create_project":
+            raise ProjectConfigurationError("This is not a new-project review.")
+        receipt = actions.receipts.get(token)
+        return {"proposal": row["status"], "receipt": receipt["status"] if receipt else None}
+
+    def cancel_new_project(self, token):
+        self.actions().decline(self.user, self.space, "project-setup", token)
+
+    def create_new_project(self, token, name):
+        if not isinstance(name, str) or not 1 <= len(name.strip()) <= 100:
+            raise ProjectConfigurationError("Enter a project name of 1–100 characters.")
+        actions = self.actions()
+        row = actions._row(self.user, self.space, "project-setup", token)
+        import json
+        if json.loads(row["proposal"])["action"] != "create_project":
+            raise ProjectConfigurationError("Prepare a new-project review first.")
+        result, replayed = actions.execute(self.user, self.space, "project-setup", token)
+        project = self.project_store().add_local(name.strip(), result["project_root"])
+        return {"project": project, "creation": result, "replayed": replayed, "receipt": token}
+
     def connection_store(self):
         from agent.storage.connections import ConnectionCatalog
         return ConnectionCatalog(self.project_store().path.with_name("connections.sqlite3"),
@@ -83,3 +125,32 @@ class WorkspaceSupport:
         if not project or project.get("source")!="git":raise ProjectConfigurationError("Choose a Git project.")
         self.repository_credential(project["remote_url"],account_id)
         return self.project_store().configure_git(project_id,project["remote_url"],account_id)
+
+    def git_changes(self):
+        from agent.runtime.git_workspace import selected_git_project
+        from integrations.git.writes import changes
+        return changes(selected_git_project(self))
+
+    def review_git_commit(self,paths,message,author_name,author_email):
+        from agent.runtime.git_workspace import selected_git_project
+        from integrations.git.writes import prepare_commit
+        return prepare_commit(selected_git_project(self),paths,message,author_name,author_email)
+
+    def review_git_push(self):
+        from agent.runtime.git_workspace import selected_git_project
+        from integrations.git.writes import prepare_push
+        project=selected_git_project(self)
+        token=self.repository_credential(project["remote_url"],project.get("account_id",""))
+        review=prepare_push(project,token)
+        self.actions().reconcile_git_push_review(self.user,self.space,review,credential=token)
+        return review
+
+    def queue_git_review(self,session,review):
+        from agent.runtime.git_workspace import selected_git_project
+        from integrations.git.writes import project_data
+        if not self.catalog.get(session):raise ProjectConfigurationError("Open a chat in this project first.")
+        project=selected_git_project(self)
+        if review.get("project")!=project_data(project) or review.get("kind") not in {"git_commit","git_push"}:
+            raise ProjectConfigurationError("Prepare a review for this selected project.")
+        proposal={"project_root":project["root"],"action":review["kind"],"arguments":{"review":review}}
+        return self.actions().propose(self.user,self.space,session,review["kind"],proposal)

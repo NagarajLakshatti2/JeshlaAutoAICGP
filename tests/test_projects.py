@@ -170,28 +170,36 @@ class ProjectUITests(unittest.TestCase):
         log=patch('agent.browser_activity.log_browser_event');log.start();self.addCleanup(log.stop)
         self.app=AppTest.from_file(str(Path(__file__).resolve().parents[1]/'streamlit_app.py'),default_timeout=30)
 
+    def open_projects(self):
+        self.app.button(key="projects_menu").click().run()
+        self.assertFalse(self.app.exception)
+
     def test_switch_restores_project_chat_and_resets_memory_dialog_data(self):
         self.app.run();self.assertFalse(self.app.exception)
+        self.open_projects()
         self.app.button(key='choose_project_'+self.pa['id']).click().run()
         self.app.chat_input[0].set_value('First A conversation').run();ca=self.app.session_state['active_chat']
         self.app.session_state['saved_facts']=[{'key':'secret','value':'A'}]
+        self.open_projects()
         self.app.button(key='choose_project_'+self.pb['id']).click().run()
         self.assertFalse(self.app.exception);self.assertNotIn('saved_facts',self.app.session_state)
         self.assertNotEqual(self.app.session_state['active_chat'],ca)
         self.app.chat_input[0].set_value('First B conversation').run();cb=self.app.session_state['active_chat']
         self.assertNotEqual(ca,cb)
+        self.open_projects()
         self.app.button(key='choose_project_'+self.pa['id']).click().run()
         self.assertFalse(self.app.exception);self.assertFalse(self.app.session_state['chat_opened'])
         self.app.button(key='open_chat_'+ca).click().run()
         self.assertEqual(self.app.session_state['active_chat'],ca)
         self.assertTrue(any('First A conversation'==r.value for r in self.app.markdown))
         self.assertFalse(any('First B conversation'==r.value for r in self.app.markdown))
+        self.open_projects()
         self.app.button(key='clear_project_selection').click().run();self.assertFalse(self.app.exception)
         self.assertFalse(self.app.session_state['chat_opened'])
 
     def test_add_project_form_registers_without_touching_source(self):
         c=self.root/'source-c';c.mkdir();(c/'keep.txt').write_text('keep')
-        self.app.run();self.app.button(key='add_project_menu').click().run();self.app.text_input(key='new_project_name').set_value('Project C')
+        self.app.run();self.open_projects();self.app.button(key='add_project_menu').click().run();self.app.text_input(key='new_project_name').set_value('Project C')
         self.app.text_input(key='new_project_folder').set_value(str(c))
         self.app.button(key='save_local_project').click().run()
         self.assertFalse(self.app.exception)

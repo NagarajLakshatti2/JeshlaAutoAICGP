@@ -34,7 +34,29 @@ def native_project_specs(actions):
 def decode_native_project_reply(reply,actions):
     import json
     calls=reply.get("tool_calls") or []
-    if len(calls)!=1:raise ValueError("Return exactly one registered native project proposal.")
+    if not calls and isinstance(reply.get("content"),str) and reply["content"].strip():
+        # Providers may answer with text after evidence was read, even during a
+        # native correction. Accept only terminal decisions in this encoding;
+        # text can never recover or execute a rejected tool proposal.
+        from agent.runtime.project_decisions import decode_project_reply
+        content=reply["content"].strip()
+        if content.startswith("```json"):
+            if not content.endswith("```"):
+                raise ValueError("Incomplete JSON fence is not a final native response.")
+            content=content[7:-3].strip()
+        if content.startswith(("{","[")):
+            try:value=json.loads(content)
+            except ValueError:raise ValueError("Incomplete JSON is not a final native response.") from None
+            if isinstance(value,list) and any(isinstance(item,dict) and set(item)&{"action","name","function","arguments","tool_calls","result"} for item in value):
+                raise ValueError("Multiple textual proposals are not a terminal native response.")
+            if isinstance(value,dict) and set(value) in ({"answer"},{"question"}):
+                field="answer" if "answer" in value else "question"
+                content=json.dumps({"action":"finish" if field=="answer" else "ask",field:value[field]})
+            elif isinstance(value,dict) and "action" not in value and set(value)&{"name","function","arguments","tool_calls","result"}:
+                raise ValueError("Textual tool proposals/results are not terminal native responses.")
+        return decode_project_reply({**reply,"content":content},{"ask","finish"})
+    if len(calls)!=1:
+        raise ValueError(f"Return exactly one registered native project proposal. Received {len(calls)} calls.")
     fn=calls[0].get("function",{});name=fn.get("name")
     if name not in set(actions)|{"ask","finish"}:raise ValueError("Unknown native project proposal function.")
     try:args=json.loads(fn["arguments"])
