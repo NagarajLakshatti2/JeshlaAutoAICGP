@@ -62,6 +62,23 @@ class SourceFirstTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unknown or stale"):
             flow._resolve_passages(draft, changed_lookup)
 
+    def test_draft_schema_restricts_selections_to_current_source_ids(self):
+        seen = []
+        def model(messages, specs):
+            name = specs[0]["function"]["name"]
+            if name == "submit_documentation_plan": return self.reply(name, self.plan)
+            if name == "submit_grounding_findings": return self.reply(name, self.check)
+            payload = json.loads(messages[1]["content"])
+            ids = [p["passage_id"] for source in payload["sources"] for p in source["passages"]]
+            alternatives = specs[0]["function"]["parameters"]["properties"]["sections"]["items"]["properties"]["evidence"]["items"]["anyOf"]
+            self.assertEqual(alternatives[1]["properties"]["passage_id"]["enum"], ids)
+            draft = deepcopy(self.draft)
+            for section in draft["sections"]: section["evidence"] = [{"passage_id": ids[0]}]
+            seen.append(True)
+            return self.reply(name, draft)
+        self.assertEqual(self.run_flow(model)["execution_outcome"], "completed")
+        self.assertEqual(seen, [True])
+
     def test_unknown_passage_id_stops_after_one_correction(self):
         draft = deepcopy(self.draft)
         draft["sections"][0]["evidence"] = [{"passage_id": "invented"}]
@@ -70,7 +87,7 @@ class SourceFirstTests(unittest.TestCase):
         result = self.run_flow(model)
         self.assertEqual(result["task_status"], "incomplete")
         self.assertEqual(model.call_count, 3)
-        self.assertIn("unknown or stale", model.call_args_list[-1].args[0][-1]["content"])
+        self.assertIn("registered enum value", model.call_args_list[-1].args[0][-1]["content"])
 
     def test_evidence_is_collected_before_drafting_and_used_by_checks(self):
         order = []; captured = []

@@ -5,6 +5,7 @@ write files, accept approvals or access conversation/memory/project state.
 """
 import json
 import hashlib
+from copy import deepcopy
 import os
 import re
 
@@ -300,7 +301,7 @@ def answer_from_sources(question, *, model, web, page_fetch=None):
     try:
         plan = _request(model, PLAN,
             "Plan coverage BEFORE drafting an explanation. Return 1-6 distinct essential rule groups in the user's requested order and version. "
-            "Include the important requested rules, pitfalls and the basis needed by the example. A language/version label alone is not a rule group. No factual answer yet. "
+            "Name concrete rule groups, not broad labels such as language inheritance or common pitfalls. Include requested rules and exceptions plus the semantics needed to predict the complete example output. Plan an official execution-semantics section when the example will demonstrate runtime dispatch. No factual answer yet. "
             "Supply 1-2 short public search queries targeting official publisher documentation/version, 1-3 official publisher domain candidates, "
             "and up to four precise official section URLs for COMPLEMENTARY rule groups. Prefer requested-version specifications over old tutorials. "
             "For language semantics, use language-specification/reference sections, not API pages for individual library classes that merely use the language feature. "
@@ -312,7 +313,10 @@ def answer_from_sources(question, *, model, web, page_fetch=None):
         if not pages:
             return _incomplete("I could not retrieve usable documentation from the planned publisher sources. No source-grounded explanation was produced. Supply a relevant official URL or retry when retrieval is available.")
         catalogue, by_id = _passage_catalogue(pages)
-        draft = _request(model, DRAFT,
+        draft_spec = deepcopy(DRAFT)
+        selector = draft_spec["function"]["parameters"]["properties"]["sections"]["items"]["properties"]["evidence"]["items"]["anyOf"][1]["properties"]["passage_id"]
+        if by_id: selector["enum"] = list(by_id)
+        draft = _request(model, draft_spec,
             "Write an evidence-scoped answer to the user's question. Each numbered topic maps to the supplied plan (1-based); omit topics not supported by the excerpts. "
             "Target at most 2500 output tokens: compact registered JSON arguments only, with no repeated introductions, headings, commentary or code comments. "
             "Preserve every named rule and pitfall within each planned topic; if its whole scope cannot be supported, omit that topic rather than silently dropping a subrule. "
@@ -323,7 +327,7 @@ def answer_from_sources(question, *, model, web, page_fetch=None):
             "Use normal Markdown prose in explanations, no code fences or invented links. Citations will be added by the application. "
             "If requested, provide ONE minimal internally consistent complete example in the separate example object, linked to its topic numbers; code does not count as evidence. "
             "Use empty language/code/output/topics when a supported complete example cannot be supplied. Expected output is a prediction; no compilation/execution was performed. "
-            "Preserve source limitations and exceptions; never broaden a rule about a subset into a claim about every or any case. "
+            "Preserve source limitations and exceptions; never broaden a rule about a subset into a claim about every or any case. When a source gives multiple necessary conditions, preserve all material conditions or state explicitly that the explanation covers only some conditions. Do not present one necessary condition as sufficient. Only demonstrate runtime behavior in the example when a cited source establishes that behavior; declaration legality alone does not establish dispatch or output. "
             "Do not add version histories, best-practice judgments or API rules absent from the excerpts. "
             "Do not fill coverage gaps from memory, repeat points, claim exhaustive verification or claim execution. Broad requests may produce a clearly partial answer.",
             {"question": question, "topics": plan["topics"], "example_required": plan["example_required"], "sources": catalogue},
@@ -336,7 +340,7 @@ def answer_from_sources(question, *, model, web, page_fetch=None):
             "Check each proposed section ONLY against its own evidence quotations and named source pages. Another retrieved but uncited page cannot support that section. Preserve qualifiers and exceptions. No overall verdict/status is requested. "
             "blocking contains ONLY concrete unsupported/contradictory claims, demonstrable code defects or unestablished official-publisher/version scope. "
             "Each blocking finding must target topic-N or example and copy the exact affected claim from that explanation/code/output, then state the precise reason. "
-            "Missing evidence for an important claimed rule is blocking; a source title/link alone is not evidence. Check that examples demonstrate only covered rules, declarations are consistent, "
+            "Missing evidence for an important claimed rule is blocking; a source title/link alone is not evidence. Specifically compare conditional claims with ALL material conditions in the source: an omitted access/scope restriction or treating a necessary condition as sufficient is blocking. Check runtime behavior/output against execution semantics, not merely declaration rules. Check that examples demonstrate only covered rules, declarations are consistent, "
             "and the predicted output follows from the code. No generated code was compiled or executed. "
             "Confirmations, optional additional topics, style preferences and speculative confusion are advisory ONLY. "
             "Return blocking=[] when no actual defect is established; do not invent a defect to fill the list. Advisory notes do not veto supported content. "
