@@ -34,3 +34,7 @@ dist/
 
 # Retained learning chat memory is local user state.
 /chat_history.json
+/rag/chat_history.json
+/agent/memory/agent_memory.json
+/agent/memory/long_term_memory.json
+/docs/session-handoff.md
