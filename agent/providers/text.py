@@ -224,6 +224,19 @@ def call_llm_messages(messages: list[dict], *, json_mode=False, max_tokens=None)
     if max_tokens is not None and (type(max_tokens) is not int or not 64 <= max_tokens <= 16384):
         raise ValueError("Requested output budget must be an integer between 64 and 16384.")
     validated = validate_messages(messages)
+    # Keep ordinary text and JSON-mode generations on the selected agent runtime.
+    from integrations.autogen.selection import current_agent_mode
+    if current_agent_mode() == "autogen":
+        from agent.providers.tools import call_tool_messages
+        result = call_tool_messages(validated, [], max_tokens=max_tokens, json_mode=json_mode)
+        if result.get("tool_calls"):
+            raise ProviderError("autogen", "INVALID_RESPONSE",
+                "AutoGen returned a tool proposal when no tools were available.", attempts=1)
+        answer = result.get("content")
+        if not isinstance(answer, str) or not answer.strip():
+            raise ProviderError("autogen", "INVALID_RESPONSE",
+                "AutoGen returned no complete text response.", attempts=1)
+        return answer
     options = {"json_mode": json_mode}
     if max_tokens is not None:
         options["max_tokens"] = max_tokens

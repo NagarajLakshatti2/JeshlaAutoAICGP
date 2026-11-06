@@ -207,7 +207,7 @@ def render_sidebar(backend,project_manager=None):
                 if st.button("Memory",icon=":material/memory:",key="open_memory",type="tertiary",width="stretch"):
                     st.session_state.ui_dialog="memory"
                 if st.button("Settings",icon=":material/settings:",key="open_settings",type="tertiary",width="stretch"):
-                    st.session_state.ui_dialog="settings"
+                    st.session_state.ui_dialog="settings";st.session_state.settings_section="Providers"
     if st.session_state.get("ui_dialog")=="memory":
         from agent.interfaces.dialogs import memory_dialog
         memory_dialog(backend)

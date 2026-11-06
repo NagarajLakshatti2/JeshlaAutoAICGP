@@ -75,6 +75,29 @@ def answer_question(state, *, model, project_root, document_search, web=web_sear
     if tools is None:
         from agent.tools.project_tools import ProjectTools
         tools = ProjectTools(os.getenv("AI_PROJECT_ROOT", str(project_root)))
+    project_dispatch_control = None
+    project_dispatch_task_id = None
+    project_evidence_refs = []
+    if state.get("project_id"):
+        from agent.orchestration.controls import RunControl
+        from uuid import uuid4
+        project_dispatch_control = RunControl({"delegations": 5, "tool_calls": 10,
+                                               "provider_calls": 8, "tokens": 32768,
+                                               "time_seconds": 60}, max_depth=1)
+        project_dispatch_task_id = uuid4().hex
+
+    def budgeted_model(messages, offered):
+        if project_dispatch_control is None:
+            return model(messages, offered)
+        request_bytes = len(json.dumps({"messages": messages, "tools": offered},
+                                       ensure_ascii=False, separators=(",", ":")).encode("utf-8"))
+        input_estimate = max(1, (request_bytes + 2) // 3)
+        project_dispatch_control.charge(provider_calls=1, tokens=input_estimate)
+        reply = model(messages, offered)
+        response_bytes = len(json.dumps(reply, ensure_ascii=False, separators=(",", ":")).encode("utf-8"))
+        project_dispatch_control.charge(tokens=max(1, (response_bytes + 2) // 3))
+        project_dispatch_control.check(0)
+        return reply
     def tables():
         nonlocal table_tools
         if table_tools is None:
@@ -93,10 +116,39 @@ def answer_question(state, *, model, project_root, document_search, web=web_sear
         if page_fetch is not None:return page_fetch(url)
         from agent.tools.web_pages import fetch_web_page
         return fetch_web_page(url)
+    def coordinated_project_read(tool_name, **arguments):
+        """Route selected-project reads through the matching read-only role."""
+        if not state.get("project_id"):
+            return getattr(tools, tool_name)(**arguments)
+        api_request = bool(re.search(r"\b(?:api|rest|endpoint|openapi|swagger)\b", state.get("question", ""), re.I))
+        if tool_name == "search_text" and not api_request:
+            return tools.search_text(**arguments)
+        capability = "API" if api_request else "File System"
+        from agent.orchestration.runtime import dispatch_project_api, dispatch_project_filesystem
+        scope_keys = ("memory_user_id", "memory_namespace", "project_id", "bound_project_root")
+        request_scope = {key: state[key] for key in scope_keys if key in state}
+        if "jira_scope" in state:
+            request_scope["jira_scope"] = state["jira_scope"]
+
+        def execute(_goal, scoped_tools):
+            return scoped_tools[tool_name](**arguments)
+
+        dispatch = dispatch_project_api if capability == "API" else dispatch_project_filesystem
+        outcome = dispatch(
+            request_scope=request_scope,
+            chat_id=state.get("conversation_session", "default"),
+            goal=state.get("question", ""), executor=execute,
+            budget=dict(project_dispatch_control.remaining),
+            task_id=project_dispatch_task_id, control=project_dispatch_control)
+        if outcome.get("status") != "completed":
+            return {"error": outcome.get("message", "Project specialist did not complete.")}
+        project_evidence_refs.extend(outcome.get("evidence_refs", ()))
+        return {"result": outcome["result"], "evidence_refs": list(outcome.get("evidence_refs", ()))}
+
     handlers={"fetch_web_page":fetch_source,"review_memory":memory_review or (lambda **kwargs:{"error":"Memory review unavailable."}),"suggest_memory":memory_propose or (lambda **kwargs:{"error":"Memory suggestions unavailable."}),"search_chats":chat_search or (lambda **kwargs: {"error":"Archived-chat search is unavailable in this context."}),"search_memory":memory_search or (lambda **kwargs: {"error":"Saved-memory search is unavailable in this context."}),
               "list_tables":lambda **args: tables().list_tables(**args),
-              "search_table":lambda **args: tables().search_table(**args),"web_search":web,"search_documents":document_search,"list_files":tools.list_files,
-              "read_file":tools.read_file,"search_text":tools.search_text,
+              "search_table":lambda **args: tables().search_table(**args),"web_search":web,"search_documents":document_search,"list_files":lambda **args: coordinated_project_read("list_files", **args),
+              "read_file":lambda **args: coordinated_project_read("read_file", **args),"search_text":lambda **args: coordinated_project_read("search_text", **args),
               "validate_test_plan":lambda **args: tools.validate_test_plan(**args),
               "draft_test_observations":lambda **args: tools.draft_test_observations(**args)}
     system=(
@@ -272,7 +324,13 @@ def answer_question(state, *, model, project_root, document_search, web=web_sear
         composing=not saved_result_only and not (automatic_quality and quality_started) and not long_answer_attempted and long_answers_enabled() and (not quality_started or bool(read_page_urls)) and (not required or required in observed or (required=="search_documents" and "search_table" in observed))
         try:
             with output_limit_passthrough() if composing else nullcontext():
-                reply=model(messages,offered)
+                reply=budgeted_model(messages,offered)
+        except RuntimeError as error:
+            if project_dispatch_control is None:
+                raise
+            return {"answer":"The shared specialist turn budget was exhausted before the answer completed. No complete result is claimed.",
+                    "task_status":"incomplete","answer_available":False,"execution_outcome":"partial",
+                    "budget_note":str(error)}
         except ProviderError as error:
             if quality_started and error.category=="TOOL_OUTPUT" and not source_format_corrections and not final_step:
                 # Only this confined read-only registry can receive a changed
@@ -285,13 +343,13 @@ def answer_question(state, *, model, project_root, document_search, web=web_sear
             long_answer_attempted=True
             from agent.runtime.continuations import plain_context
             can_continue=knowledge_request and not quality_started and not observed and not has_upload and plain_context(messages)
-            reply=compose_long_answer(messages,model,failed_provider=error.provider,allow_partial=can_continue)
+            reply=compose_long_answer(messages,budgeted_model,failed_provider=error.provider,allow_partial=can_continue)
             if reply is None:
                 from agent.providers.fallback import configured_order
                 order=configured_order()
                 if error.provider not in order or order.index(error.provider)+1>=len(order):raise error
                 with provider_selection(order[order.index(error.provider)+1]):
-                    reply=model(messages,offered)
+                    reply=budgeted_model(messages,offered)
         partial_composition=bool(reply.get("composition",{}).get("partial"))
         composition_available=bool(reply.get("composition",{}).get("new_sections"))
         calls=reply.get("tool_calls") or []
@@ -411,6 +469,14 @@ def answer_question(state, *, model, project_root, document_search, web=web_sear
             if partial_composition:
                 return {"answer":content,"task_status":"incomplete","answer_available":composition_available,
                         "execution_outcome":"partial" if composition_available else "blocked"}
+            if project_evidence_refs:
+                from agent.orchestration.results import consolidate
+                consolidated = consolidate(
+                    [{"status": "completed", "capability": "File System", "claims": [content]}],
+                    evidence_by_capability={"File System": project_evidence_refs})
+                return {"answer":consolidated["answer"], "claims":consolidated["claims"],
+                        "incomplete_branches":consolidated["incomplete_branches"],
+                        "execution_outcome":"completed"}
             return {"answer":content,"execution_outcome":"completed"}
         ids=[call.get("id") for call in calls]
         if len(calls)>8 or any(not isinstance(value,str) or not value for value in ids) or len(set(ids))!=len(ids) or set(ids)&seen_ids:

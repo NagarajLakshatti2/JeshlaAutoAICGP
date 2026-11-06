@@ -164,3 +164,19 @@ A second fresh exact-commit rehearsal explicitly deferred that executable, did n
 No private working configuration, saved chats/memories or user indexes were copied; no hosted provider/model request or model download ran. Git clone was the only required network operation in the fresh-install test; dependency installation used cached public wheels and runtime probes blocked external calls. No commit/push, remote rerun, history rewrite or visibility change was performed by the assistant. This does not resolve historical public-data/privacy findings, optional/full-learning setup, semantic/hybrid/model-quality gates or full release-scope agreement. Current trusted local-user preview remains accepted; full WS8 and general release remain P.
 
 Evidence: outputs/acceptance/ws8-github-clone-ead9aa8-20261023/{result.json,launcher-policy-events.json} and ws8-github-module-route-ead9aa8-20261023/{summary.json,result.json,startup/console.json,startup/browser.json}. Older reports remain historical and do not override these new scoped results. Word synchronization is separate.
+
+## T12 active scope — 6 November 2026
+
+The next implementation covers reviewed local branch creation followed by pull-request preparation. Existing saved-project ownership, exact repository/head/index binding and persistent action receipts are the integration foundation. Branch creation needs an explicit reviewed branch name and base commit, rejection of existing/invalid refs, stale-review checks and refresh-safe execution. PR preparation needs explicit base/head/title/body and a reviewable draft. Publication requires its own exact-action approval. T11 GitHub push retains its parked status. T12 is P with implementation pending.
+
+### T12 branch implementation — 6 November 2026
+
+Local branch review is exposed in the Git review panel and queues git_branch through the existing owned action receipts. Review binds the selected project, origin, HEAD and index. Creation uses update-ref with an empty expected old value, rejects existing/invalid branch names and preserves the current checkout. The focused temporary-repository regression passed. Python compilation passed. The broader Git suite was stopped after it stalled. T12 remains P pending complete approval-path acceptance and PR preparation.
+
+### T12 local workflow acceptance — 6 November 2026
+
+The Git review panel supports branch review and a downloadable PR draft with explicit base/head branches, commit IDs, title, description and bounded source diff. Branch creation uses owned persistent approvals with replay-safe receipts. Three focused temporary-repository tests passed, covering checkout preservation, duplicate rejection, wrong-owner rejection, receipt replay, local PR diff preparation and same-branch rejection. Python compilation passed. Hosted PR publication remains outstanding, so T12 overall stays P. The next independent optional task is T13 SSH project connections.
+
+## T13 SSH projects — 6 November 2026
+
+Clone and sync accept canonical ssh://git URLs and git@host:path syntax for GitHub.com and GitLab.com. Transport uses local SSH keys/agent, strict known-host verification, batch mode and a bounded connection timeout. Token accounts are rejected for SSH projects. Two mocked URL/transport regressions passed and syntax compilation passed. An authorized live SSH repository round trip is still pending, so T13 remains P. SSH publication requires a separate reviewed implementation.

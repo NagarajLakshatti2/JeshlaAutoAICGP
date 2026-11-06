@@ -14,6 +14,32 @@ class BrowserActions:
         self.receipts=LocalActionReceipts(path);self.clock=clock
         with self.receipts.connect() as db:
             db.execute("CREATE TABLE IF NOT EXISTS browser_proposals (id TEXT PRIMARY KEY, user TEXT, space TEXT, session TEXT, proposal TEXT, digest TEXT, version TEXT, status TEXT, expires REAL, result TEXT)")
+    def cancel_command(self, user, space, session, token, project_root):
+        row = self._row(user, space, session, token)
+        proposal = json.loads(row["proposal"])
+        if proposal.get("action") != "run_command" or proposal["project_root"] != str(Path(project_root).resolve()):
+            raise ActionBlocked("This command belongs to another project.")
+        with self.receipts.connect() as db:
+            db.execute("UPDATE browser_proposals SET status='cancelling' WHERE id=? AND status='running'", (token,))
+
+    def command_history(self, user, space, session, project_root):
+        root = str(Path(project_root).resolve())
+        with self.receipts.connect() as db:
+            rows = db.execute(
+                "SELECT id,proposal,status,result FROM browser_proposals "
+                "WHERE user=? AND space=? AND session=? ORDER BY rowid DESC LIMIT 200",
+                (user, space, session)).fetchall()
+        history = []
+        for token, encoded, status, result in rows:
+            proposal = json.loads(encoded)
+            if proposal.get("action") != "run_command" or proposal.get("project_root") != root:
+                continue
+            history.append({"id": token, "command": proposal["arguments"]["command"],
+                            "status": status, "result": json.loads(result) if result else None})
+            if len(history) == 20:
+                break
+        return list(reversed(history))
+
     @staticmethod
     def _validate_command(tools,action,args):
         if action in {"run_command","run_tests_and_parse"}:
@@ -24,6 +50,8 @@ class BrowserActions:
         value=json.loads(canonical(proposal))
         if action not in ACTIONS or value.get("action")!=action or set(value)!={"project_root","action","arguments"}:
             raise ActionBlocked("Unsupported browser action proposal.")
+        if action.startswith("terminal_") and value["arguments"].get("chat_id") != session:
+            raise ActionBlocked("Terminal action belongs to another chat.")
         root=Path(value["project_root"]).resolve();tools=self.tools_factory(root)
         if not callable(getattr(tools,action,None)):raise ActionBlocked("This action requires a selected Git workspace.")
         bound=inspect.signature(getattr(tools,action)).bind(**value["arguments"]);bound.apply_defaults()
@@ -177,6 +205,11 @@ class BrowserActions:
         with self.receipts.connect() as db:
             changed=db.execute("UPDATE browser_proposals SET status='running' WHERE id=? AND user=? AND space=? AND session=? AND status='pending' AND expires>?",(token,user,space,session,self.clock())).rowcount
         if not changed:raise ActionBlocked("Another request already consumed this proposal; no replay.")
+        if action == "run_command":
+            from agent.actions.command_process import run_command
+            handler = lambda **kwargs: run_command(
+                tools, cancelled=lambda: self._row(user, space, session, token)["status"] == "cancelling",
+                **kwargs)
         try:
             result=self.receipts.run(root,action,args,handler,lambda name,shown:name==action and canonical(shown)==canonical(value) and target_version(root,action,args)==row["version"],receipt_id=token)
             encoded=canonical(result)

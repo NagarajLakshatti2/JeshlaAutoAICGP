@@ -31,7 +31,9 @@ def prepare(root):
 class PolicyMatrixTests(unittest.TestCase):
  def test_every_core_project_tool_is_classified_and_implemented(self):
   self.assertFalse(CONTROLLED_PROJECT_ACTIONS&READ_ONLY_PROJECT_ACTIONS)
-  self.assertEqual(len(PROJECT_ACTIONS),23)
+  self.assertEqual(len(PROJECT_ACTIONS),24)
+  self.assertIn("inspect_browser_page",CONTROLLED_PROJECT_ACTIONS)
+  self.assertIn("discover_jira_traceability",READ_ONLY_PROJECT_ACTIONS)
   for name in PROJECT_ACTIONS:self.assertTrue(callable(getattr(ProjectTools,name)))
   from agent.conversation import TOOL_SPECS
   exposed={item['function']['name'] for item in TOOL_SPECS}

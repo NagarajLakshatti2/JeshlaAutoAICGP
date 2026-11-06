@@ -106,6 +106,51 @@ class SourceFirstTests(unittest.TestCase):
         self.assertIn("Expected output (not executed)", result["answer"])
         self.assertIn("No compilation or execution was performed", result["answer"])
 
+    def test_one_targeted_continuation_fills_only_omitted_planned_topic(self):
+        plan = deepcopy(self.plan)
+        plan["topics"].append("Access modifiers")
+        draft = deepcopy(self.draft)
+        continuation = {"sections": [self.section(3, "An overriding method cannot reduce access.", self.other)],
+            "example": {"language": "", "code": "", "expected_output": "", "topics": []}}
+        calls = []
+        def model(messages, specs):
+            name = specs[0]["function"]["name"]
+            calls.append((name, deepcopy(messages)))
+            if name == "submit_documentation_plan": return self.reply(name, plan)
+            if name == "submit_grounded_sections" and len(calls) == 2: return self.reply(name, draft)
+            if name == "submit_grounded_sections":
+                payload = json.loads(messages[1]["content"])
+                self.assertEqual(payload["topics"], [{"topic": 3, "name": "Access modifiers"}])
+                self.assertEqual(payload["already_accepted_topics"], [1, 2])
+                self.assertFalse(payload["example_required"])
+                return self.reply(name, continuation)
+            return self.reply(name, self.check)
+        result = self.run_flow(model)
+        self.assertEqual(result["execution_outcome"], "completed")
+        self.assertIn("### Access modifiers", result["answer"])
+        self.assertEqual([name for name, _ in calls], ["submit_documentation_plan", "submit_grounded_sections",
+                         "submit_grounded_sections", "submit_grounding_findings"])
+
+    def test_unavailable_missing_topic_continuation_preserves_partial_grounded_answer(self):
+        plan = deepcopy(self.plan)
+        plan["topics"].append("Access modifiers")
+        draft = deepcopy(self.draft)
+        calls = []
+        def model(messages, specs):
+            name = specs[0]["function"]["name"]
+            calls.append(name)
+            if name == "submit_documentation_plan": return self.reply(name, plan)
+            if name == "submit_grounded_sections" and calls.count(name) == 1: return self.reply(name, draft)
+            if name == "submit_grounded_sections":
+                raise ProviderError("gemini", "PROVIDER_TEMPORARY", "fixture outage")
+            return self.reply(name, self.check)
+        result = self.run_flow(model)
+        self.assertEqual(result["execution_outcome"], "partial")
+        self.assertIn("Superclass relationship", result["answer"])
+        self.assertIn("Access modifiers", result["answer"])
+        self.assertEqual(calls.count("submit_grounded_sections"), 2)
+        self.assertEqual(calls[-1], "submit_grounding_findings")
+
     def test_advisory_confirmations_do_not_veto_supported_sections(self):
         self.check["advisory"] = ["The claims agree with the excerpts; headings could be shorter."]
         result = self.run_flow()

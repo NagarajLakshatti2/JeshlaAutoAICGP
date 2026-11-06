@@ -25,10 +25,16 @@ TEXT_EXTENSIONS = {
 
 
 class ProjectTools:
-    def __init__(self, project_root: str, *, project_id=None, evidence_root=None):
+    def __init__(self, project_root: str, *, project_id=None, evidence_root=None,
+                 jira_scope=None, jira_user=None, jira_connection_namespace=None,
+                 jira_catalog_path=None):
         self.root = Path(project_root).expanduser().resolve()
         self.project_id=project_id
         self.evidence_root=Path(evidence_root).resolve() if evidence_root is not None else None
+        self.jira_scope=jira_scope
+        self.jira_user=jira_user
+        self.jira_connection_namespace=jira_connection_namespace
+        self.jira_catalog_path=Path(jira_catalog_path).resolve() if jira_catalog_path else None
 
         if not self.root.is_dir():
             raise ValueError(f"Project folder does not exist: {self.root}")
@@ -615,3 +621,46 @@ class ProjectTools:
     def discover_feature_mappings(self, limit: int = 500) -> dict:
         from agent.tools.feature_mapping import discover_feature_mappings
         return discover_feature_mappings(self.root, limit=limit)
+
+    def discover_jira_traceability(self) -> dict:
+        """Read-only Jira mapping for this selected project and assigned profile."""
+        from agent.storage.projects import ProjectConfigurationError
+        if not self.project_id or not isinstance(self.jira_scope, dict):
+            raise ProjectConfigurationError(
+                "Select a project with an assigned Jira profile before requesting Jira traceability."
+            )
+        if not self.jira_scope.get("connected"):
+            raise ProjectConfigurationError(
+                "The selected project's Jira profile is not connected. No Jira request was made."
+            )
+        if not self.jira_user or not self.jira_connection_namespace or not self.jira_catalog_path:
+            raise ProjectConfigurationError(
+                "The selected project's Jira profile scope is incomplete. No Jira request was made."
+            )
+
+        from agent.storage.connections import ConnectionCatalog
+        from integrations.jira.jira_mcp_client import CatalogOAuthTokenStorage
+
+        scope = self.jira_scope
+        catalog = ConnectionCatalog(
+            self.jira_catalog_path, self.jira_user, self.jira_connection_namespace
+        )
+        profile = catalog.get(scope.get("connection_id", ""))
+        if (not profile or profile.get("kind") != "jira_mcp"
+                or profile.get("status") != "verified"
+                or profile.get("details", {}).get("jira_site_url") != scope.get("site_url")):
+            raise ProjectConfigurationError(
+                "The assigned Jira profile could not be verified for this project. No Jira request was made."
+            )
+        token_storage = CatalogOAuthTokenStorage(catalog, scope["connection_id"])
+        if token_storage.tokens is None or token_storage.client_info is None:
+            raise ProjectConfigurationError(
+                "The assigned Jira profile has no saved browser authorization. No Jira request was made."
+            )
+
+        import asyncio
+        from integrations.jira.feature_jira_mapping import discover_jira_mappings
+        return asyncio.run(discover_jira_mappings(
+            str(self.root), scope["project_key"], max_pages=20,
+            token_storage=token_storage, jira_site_url=scope["site_url"], work_status="",
+        ))

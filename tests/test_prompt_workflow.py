@@ -90,6 +90,24 @@ class WorkflowTests(unittest.TestCase):
         error = ExceptionGroup("MCP", [RuntimeError("secret-callback-code")])
         self.assertNotIn("secret-callback-code", module.explain_error(error))
 
+    def test_project_jira_workflow_never_falls_back_to_global_credentials(self):
+        state={"question":"Read DEMO-1 from Jira", "project_id":"project-"+"a"*32}
+        with patch.object(module,"handle",side_effect=AssertionError("must not start Jira")) as handle:
+            result=module.jira_workflow_node(state)
+        self.assertEqual(result["task_status"],"incomplete")
+        self.assertIn("No Jira profile is assigned",result["answer"])
+        handle.assert_not_called()
+
+    def test_unconnected_project_jira_profile_never_starts_oauth(self):
+        state={"question":"Read DEMO-1 from Jira", "project_id":"project-"+"a"*32,
+               "jira_scope":{"connection_id":"connection-"+"b"*32,"site_url":"https://example.atlassian.net",
+                             "project_key":"DEMO","connected":False}}
+        with patch.object(module,"handle",side_effect=AssertionError("must not start OAuth")) as handle:
+            result=module.jira_workflow_node(state)
+        self.assertEqual(result["task_status"],"incomplete")
+        self.assertIn("saved but not connected",result["answer"])
+        handle.assert_not_called()
+
     def test_import_draft_cannot_enable_creation_permissions(self):
         request = self.request()
         request["allow_create_epic"] = True

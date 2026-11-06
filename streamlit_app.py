@@ -80,7 +80,7 @@ with st.container(horizontal=True,horizontal_alignment="center"):
             prompt=st.chat_input("Message JeshlaAutoAI…",key="message",height=100,submit_mode="disable",disabled=False)
             with st.container(horizontal=True,horizontal_alignment="distribute",vertical_alignment="center"):
                 with st.container(horizontal=True,width="content",vertical_alignment="center"):
-                    render_upload_menu(session,project_selected=bool(project))
+                    render_upload_menu(session,project_selected=bool(project),backend=backend)
                     from agent.interfaces.projects import render_chat_mode,render_projects
                     render_chat_mode(project_manager)
                     render_projects(project_manager)
@@ -98,6 +98,7 @@ with st.container(horizontal=True,horizontal_alignment="center"):
 
         if prompt and prompt.strip():
             selected=st.session_state.browser_provider
+            agent_mode=st.session_state.get("browser_agent_mode","autogen")
             start=time.perf_counter()
             try:
                 session=ensure_message_chat(backend,prompt)
@@ -107,7 +108,7 @@ with st.container(horizontal=True,horizontal_alignment="center"):
                 log_browser_event("message_started",session=session,provider=selected)
                 with st.spinner("Working on your request…"):
                     question=attachment_question(prompt,chat_attachments(session))
-                    result=backend.submit_selected(session,question,selected) if hasattr(backend,"submit_selected") else backend.submit(session,question)
+                    result=backend.submit_selected(session,question,selected,agent_mode=agent_mode) if hasattr(backend,"submit_selected") else backend.submit(session,question)
                 log_browser_event("message_finished",session=session,provider=selected,duration=time.perf_counter()-start,route=result.get("route"))
                 remember_status(session,status_label(result),time.perf_counter()-start,result.get("persistence_status"))
                 st.session_state.setdefault("answer_downloads",{})[session]=result["answer"]

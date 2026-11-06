@@ -11,6 +11,7 @@ def run_console(*, graph, project_root, provider, session_config, restore_sessio
     parser = argparse.ArgumentParser(description="JeshlaAutoAI conversational agent")
     parser.add_argument("--input-mode", choices=["editor", "end"], default="editor", help="Editable Enter-to-send input, or legacy END submission")
     parser.add_argument("--session", default=None, help="Resume a named conversation without a startup question")
+    parser.add_argument("--agent-mode", choices=["autogen","langgraph"], default="autogen", help="Select AutoGen (default) or LangGraph for this console session.")
     parser.add_argument("--user", default=os.getenv("AI_MEMORY_USER_ID", "local-user"))
     parser.add_argument("--memory-space", default=os.getenv("AI_MEMORY_NAMESPACE", "project"),
                         help="Shared long-term fact namespace, for example JeshlaAutoAI")
@@ -30,6 +31,7 @@ def run_console(*, graph, project_root, provider, session_config, restore_sessio
     print("LANGGRAPH AI AGENT")
     print("================================")
     print("Model provider:", provider)
+    print("Agent mode:", args.agent_mode.title())
     print("Legacy input: END submits, EXIT quits." if args.input_mode == "end" else "Enter sends; Alt+Enter/Ctrl+J/F2 adds a line. Ctrl+C clears. Ctrl+D exits an empty draft. EXIT quits.")
     print("REMEMBER key = fact saves; FORGET key removes; SHOW MEMORY lists facts. WORKFLOW HELP explains Jira prompts.")
 
@@ -105,7 +107,9 @@ def run_console(*, graph, project_root, provider, session_config, restore_sessio
         try:
             from agent.chat_runtime import run_turn
             with timer_factory("Complete agent workflow") as outcome:
-                result = run_turn(graph, config, catalog, session_name, question, project_root)
+                from integrations.autogen.selection import agent_mode_selection
+                with agent_mode_selection(args.agent_mode):
+                    result = run_turn(graph, config, catalog, session_name, question, project_root)
                 outcome.observe(result)
             print("\n========== FINAL ANSWER ==========\n")
             print(result["final_answer"])

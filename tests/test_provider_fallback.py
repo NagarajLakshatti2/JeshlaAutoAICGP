@@ -81,6 +81,59 @@ class FallbackTests(unittest.TestCase):
             fallback.call_with_fallback("openrouter", lambda p: calls.append(p) or "ok")
         self.assertEqual(calls, ["gemini"])
 
+    def test_opt_in_transient_fallback_from_gemini_uses_hosted_priority_and_no_partial(self):
+        calls = []
+        def invoke(provider):
+            calls.append(provider)
+            if provider == "gemini":
+                raise ProviderError(provider, "RESPONSE_TIMEOUT", "fixture timeout")
+            return {"content": "complete proposal", "tool_calls": []}
+        with provider_selection("gemini"):
+            result = fallback.call_with_fallback("openrouter", invoke, allow_transient_fallback=True)
+        self.assertEqual(calls, ["gemini", "openrouter"])
+        self.assertEqual(result["content"], "complete proposal")
+        self.assertEqual(fallback.last_provider("gemini"), "openrouter")
+        self.assertTrue(any("gemini was temporarily unavailable" in item for item in self.notices))
+
+    def test_transient_fallback_is_opt_in_and_does_not_cover_authentication(self):
+        calls = []
+        with provider_selection("gemini"), self.assertRaises(ProviderError) as caught:
+            fallback.call_with_fallback("openrouter", lambda provider: calls.append(provider) or
+                                        (_ for _ in ()).throw(ProviderError(provider, "AUTHENTICATION", "fixture")),
+                                        allow_transient_fallback=True)
+        self.assertEqual(caught.exception.category, "AUTHENTICATION")
+        self.assertEqual(calls, ["gemini"])
+
+    def test_autogen_tool_timeout_falls_back_without_executing_captured_proposal(self):
+        from integrations.autogen import bridge
+        from agent.providers.selection import provider_selection
+        proposal = {"content": "", "tool_calls": [{"id": "autogen_0", "type": "function",
+                    "function": {"name": "create_file", "arguments": '{"relative_path":"review-only.txt"}'}}]}
+        calls = []
+        def worker(provider, *args, **kwargs):
+            calls.append(provider)
+            if provider == "gemini":
+                raise ProviderError(provider, "RESPONSE_TIMEOUT", "fixture timeout")
+            return proposal
+        specs = [{"type": "function", "function": {"name": "create_file", "parameters": {"type": "object"}}}]
+        with provider_selection("gemini"), patch.object(bridge, "_call_worker", side_effect=worker):
+            result = bridge.call_tool_messages([{"role": "user", "content": "Propose a file"}], specs)
+        self.assertEqual(calls, ["gemini", "openrouter"])
+        self.assertEqual(result, proposal)
+        # The adapter returns the proposal; only the separate host approval flow executes it.
+
+    def test_autogen_tool_call_ids_are_unique_across_worker_responses(self):
+        from integrations.autogen import bridge
+        raw = {"tool_calls": [{"name": "read_file", "arguments": {"relative_path": "README.md"}}]}
+        with patch.object(bridge._worker, "request", return_value=raw):
+            first = bridge._call_worker("groq", [], [], max_tokens=128)
+            second = bridge._call_worker("groq", [], [], max_tokens=128)
+        first_id = first["tool_calls"][0]["id"]
+        second_id = second["tool_calls"][0]["id"]
+        self.assertNotEqual(first_id, second_id)
+        self.assertTrue(first_id.startswith("autogen_"))
+        self.assertTrue(second_id.startswith("autogen_"))
+
     def test_non_quota_errors_never_switch(self):
         for category in ("AUTHENTICATION", "TLS_CERTIFICATE", "PROXY", "RESPONSE_TIMEOUT",
                          "TOOL_OUTPUT", "INVALID_RESPONSE", "CONTEXT_LIMIT", "BILLING"):

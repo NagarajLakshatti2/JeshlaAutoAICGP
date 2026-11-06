@@ -42,14 +42,80 @@ class ConnectionTests(unittest.TestCase):
             self.assertNotIn(b"fixture-very-private-token",path.read_bytes())
             self.assertNotIn("sealed",str(store.list()))
 
-    def test_mcp_parked_before_any_network_or_secret_lookup(self):
-        support=WorkspaceSupport()
-        with patch("requests.get") as request:
-            for kind in ("jira_mcp","github_mcp","custom_mcp"):
+    def test_jira_profile_is_local_only_and_other_mcp_stays_parked(self):
+        with tempfile.TemporaryDirectory() as folder,patch("requests.get") as request:
+            support=WorkspaceSupport();support.user="u";support.space="s"
+            database=Path(folder)/"workspace.sqlite3"
+            support.connection_store=lambda:ConnectionCatalog(database,"u","s")
+            jira=support.save_connection("jira_mcp","Work Jira","https://example.atlassian.net")
+            self.assertEqual(jira["kind"],"jira_mcp")
+            self.assertEqual(jira["endpoint"],"https://mcp.atlassian.com/v2/mcp")
+            self.assertEqual(jira["details"]["jira_site_url"],"https://example.atlassian.net")
+            self.assertFalse(jira["credential_present"])
+            for kind in ("github_mcp","custom_mcp"):
                 with self.assertRaisesRegex(ProjectConfigurationError,"parked"):support.save_connection(kind,"MCP")
+            for bad_url in ("","http://example.atlassian.net","https://example.com","https://user:pw@example.atlassian.net","https://example.atlassian.net:bad"):
+                with self.subTest(jira_url=bad_url),self.assertRaisesRegex(ProjectConfigurationError,"Jira site URL"):
+                    support.save_connection("jira_mcp","Bad URL",bad_url)
+            with self.assertRaisesRegex(ProjectConfigurationError,"do not accept API tokens"):
+                support.save_connection("jira_mcp","Bad profile",token="not-stored")
             from integrations.mcp.connections import discover
             with self.assertRaisesRegex(ProjectConfigurationError,"parked"):discover("https://example.org/mcp")
             request.assert_not_called()
+
+    def test_jira_profile_connect_test_is_explicit_and_site_scoped(self):
+        from contextlib import asynccontextmanager
+        from integrations.jira import jira_mcp_client
+        from tests.test_jira_mcp_storage import run_storage_coroutine
+        with tempfile.TemporaryDirectory() as folder:
+            support=WorkspaceSupport();support.user="u";support.space="s"
+            database=Path(folder)/"connections.sqlite3"
+            support.connection_store=lambda:ConnectionCatalog(database,"u","s")
+            profile=support.save_connection("jira_mcp","Work Jira","https://example.atlassian.net")
+            captured={}
+            @asynccontextmanager
+            async def session(*,token_storage=None,jira_site_url=None):
+                captured.update(storage=token_storage,site=jira_site_url)
+                yield object()
+            async def accessible(session,*,jira_site_url=None):
+                captured["verified_site"]=jira_site_url
+                return "fixture-cloud-id"
+            with patch.object(jira_mcp_client,"jira_session",side_effect=session), \
+                 patch.object(jira_mcp_client,"get_cloud_id",side_effect=accessible), \
+                 patch("asyncio.run",side_effect=run_storage_coroutine):
+                checked=support.test_connection(profile["id"])
+            self.assertEqual(checked["status"],"verified")
+            self.assertEqual(checked["details"],{"jira_site_url":"https://example.atlassian.net","cloud_id":"fixture-cloud-id"})
+            self.assertEqual(captured["site"],"https://example.atlassian.net")
+            self.assertEqual(captured["verified_site"],"https://example.atlassian.net")
+            self.assertIsInstance(captured["storage"],jira_mcp_client.CatalogOAuthTokenStorage)
+
+    def test_jira_project_binding_is_project_scoped_and_validated(self):
+        with tempfile.TemporaryDirectory() as folder:
+            support=WorkspaceSupport();support.user="u";support.space="s"
+            database=Path(folder)/"workspace.sqlite3"
+            catalog=ProjectCatalog(database,"u","s")
+            connections=ConnectionCatalog(database,"u","s")
+            support.project_store=lambda:catalog
+            support.connection_store=lambda:connections
+            first_root=Path(folder)/"first";second_root=Path(folder)/"second"
+            first_root.mkdir();second_root.mkdir()
+            first=catalog.add_local("First",str(first_root));second=catalog.add_local("Second",str(second_root))
+            profile=support.save_connection("jira_mcp","Work Jira","https://example.atlassian.net")
+            second_profile=support.save_connection("jira_mcp","Personal Jira","https://personal.atlassian.net")
+            support.assign_connection(first["id"],"jira_mcp",profile["id"],{"project_key":"DEMO"})
+            support.assign_connection(second["id"],"jira_mcp",second_profile["id"],{"project_key":"OTHER"})
+            self.assertEqual(catalog.bindings(first["id"])["jira_mcp"],
+                             {"connection_id":profile["id"],"options":{"project_key":"DEMO"}})
+            self.assertEqual(catalog.bindings(second["id"])["jira_mcp"],
+                             {"connection_id":second_profile["id"],"options":{"project_key":"OTHER"}})
+            for invalid in ("demo","A-B","",None):
+                with self.subTest(project_key=invalid),self.assertRaises(ProjectConfigurationError):
+                    support.assign_connection(first["id"],"jira_mcp",profile["id"],{"project_key":invalid})
+            with self.assertRaisesRegex(ProjectConfigurationError,"saved Jira MCP profile"):
+                support.assign_connection(first["id"],"jira_mcp","connection-other-workspace",{"project_key":"DEMO"})
+            support.remove_connection_assignment(first["id"],"jira_mcp")
+            self.assertNotIn("jira_mcp",catalog.bindings(first["id"]))
 
     def test_account_check_is_explicit_and_does_not_echo_remote_errors(self):
         from integrations.git.accounts import check_account
@@ -338,11 +404,17 @@ class SmartProjectUITests(fixtures.ProjectUITests):
             self.assertNotIn("fixture-private-token",str([m.value for m in self.app.markdown]))
             self.assertEqual(self.invocations,[])
 
-    def test_connections_mcp_controls_are_disabled_and_no_requests_are_made(self):
+    def test_jira_profile_setup_is_local_and_other_mcp_controls_are_disabled(self):
         with patch("requests.get") as request:
             self.app.run();self.app.button(key="open_settings").click().run()
             self.assertFalse(self.app.exception)
-            for label in ("Jira MCP","GitHub MCP","Custom MCP server"):
+            self.assertTrue(any(f.key=="save_jira_mcp_profile" for f in self.app.get("form")))
+            for label in ("GitHub MCP","Custom MCP server"):
                 self.assertTrue(self.app.button(key="parked_"+label).disabled)
+            self.app.text_input(key="jira_mcp_label").set_value("Work Jira")
+            self.app.text_input(key="jira_mcp_url").set_value("https://example.atlassian.net")
+            self.app.button(key="save_jira_mcp_profile-Submit").click().run()
+            self.assertFalse(self.app.exception)
+            self.assertTrue(any(m.value=="Jira profile saved locally. No Jira request was made." for m in self.app.success))
             request.assert_not_called()
         self.assertEqual(self.invocations,[])

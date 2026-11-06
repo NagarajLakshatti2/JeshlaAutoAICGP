@@ -4,7 +4,6 @@ import asyncio
 import json
 import os
 import re
-import webbrowser
 from contextlib import asynccontextmanager
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
@@ -13,15 +12,15 @@ import httpx2
 from dotenv import load_dotenv
 from pydantic import AnyUrl
 from mcp import ClientSession
-from mcp.client.auth import AuthorizationCodeResult, OAuthClientProvider
+from mcp.client.auth import OAuthClientProvider
 from mcp.client.streamable_http import streamable_http_client
 from mcp.shared.auth import OAuthClientInformationFull, OAuthClientMetadata, OAuthToken
 
 from agent.config.paths import DATA_ROOT
+from integrations.jira.oauth_browser import BrowserOAuthFlow, CALLBACK_URL
 load_dotenv(DATA_ROOT / '.env')
 MCP_URL = os.getenv('ATLASSIAN_MCP_URL', 'https://mcp.atlassian.com/v2/mcp').strip()
 JIRA_URL = os.getenv('JIRA_SITE_URL', os.getenv('JIRA_URL', '')).strip()
-CALLBACK_URL = 'http://localhost:3000/callback'
 READ_TOOLS = {'getAccessibleAtlassianResources', 'getJiraIssue', 'searchJiraIssuesUsingJql'}
 
 
@@ -29,6 +28,24 @@ def validate_issue_key(value):
     if not isinstance(value, str) or not re.fullmatch(r'[A-Z][A-Z0-9_]*-\d+', value):
         raise ValueError('Expected a Jira issue key.')
     return value
+
+
+def validate_site_url(value):
+    """Accept a Jira Cloud site URL, never an MCP endpoint or credential URL."""
+    from urllib.parse import urlsplit
+    try:
+        parsed=urlsplit(value.strip() if isinstance(value,str) else "")
+        port=parsed.port
+    except ValueError:
+        raise ValueError("Expected a Jira Cloud site URL such as https://example.atlassian.net.") from None
+    host=(parsed.hostname or "").lower()
+    labels=host.split(".")
+    valid_host=(len(labels)>=3 and labels[-2:]==["atlassian","net"] and
+                all(re.fullmatch(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?",label) for label in labels))
+    if (parsed.scheme!="https" or not valid_host or parsed.username or parsed.password or
+        port not in (None,443) or parsed.path not in ("","/") or parsed.query or parsed.fragment):
+        raise ValueError("Expected a Jira Cloud site URL such as https://example.atlassian.net.")
+    return f"https://{host}"
 
 
 def extract_issue_key(value):
@@ -153,54 +170,37 @@ async def read_tool(session, name, arguments):
     return decoded
 
 
-async def handle_callback() -> AuthorizationCodeResult:
-    print('Complete browser consent. A localhost connection error is expected in this manual flow.')
-    print('Paste the full localhost callback URL here. Input will be visible; do not share it.')
-    callback = urlparse(input('Callback URL: ').strip())
-    expected = urlparse(CALLBACK_URL)
-    if (callback.scheme, callback.hostname, callback.port, callback.path) != (
-        expected.scheme, expected.hostname, expected.port, expected.path
-    ):
-        raise ValueError('Callback must match the configured localhost redirect.')
-    params = parse_qs(callback.query)
-    if params.get('error'):
-        raise ValueError('Browser authorization was denied or failed; start again.')
-    if not params.get('code') or not params.get('state'):
-        raise ValueError('Callback has no authorization code or state; complete login first.')
-    # The SDK validates the returned state and performs the PKCE token exchange.
-    return AuthorizationCodeResult(code=params['code'][0], state=params['state'][0], iss=params.get('iss', [None])[0])
-
-
 @asynccontextmanager
-async def jira_session():
-    if urlparse(JIRA_URL).scheme != 'https' or not urlparse(JIRA_URL).hostname:
-        raise ValueError('Set JIRA_SITE_URL to your https://site.atlassian.net URL in .env.')
+async def jira_session(token_storage=None, jira_site_url=None):
+    site_url=validate_site_url(jira_site_url if jira_site_url is not None else JIRA_URL)
+    server_url = getattr(token_storage, 'endpoint', MCP_URL)
+    browser_flow = BrowserOAuthFlow()
     oauth = OAuthClientProvider(
-        server_url=MCP_URL,
+        server_url=server_url,
         client_metadata=OAuthClientMetadata(
             client_name='AI-SDET Jira MCP Client',
             redirect_uris=[AnyUrl(CALLBACK_URL)],
             grant_types=['authorization_code', 'refresh_token'],
             response_types=['code'],
         ),
-        storage=InMemoryTokenStorage(),
-        redirect_handler=handle_redirect,
-        callback_handler=handle_callback,
+        storage=token_storage or InMemoryTokenStorage(),
+        redirect_handler=browser_flow.redirect_handler,
+        callback_handler=browser_flow.callback_handler,
     )
     async with httpx2.AsyncClient(auth=oauth) as http_client:
-        async with streamable_http_client(MCP_URL, http_client=http_client) as (read, write):
+        async with streamable_http_client(server_url, http_client=http_client) as (read, write):
             async with ClientSession(read, write) as session:
                 print('Connecting to Atlassian MCP...')
                 await session.initialize()
                 yield session
 
 
-async def get_cloud_id(session):
+async def get_cloud_id(session, jira_site_url=None):
     data = await read_tool(session, 'getAccessibleAtlassianResources', {})
     resources = data.get('resources') if isinstance(data, dict) else data
     if not isinstance(resources, list):
         raise RuntimeError('Unexpected Atlassian resource response.')
-    host = urlparse(JIRA_URL).hostname
+    host = urlparse(validate_site_url(jira_site_url if jira_site_url is not None else JIRA_URL)).hostname
     matches = [r for r in resources if isinstance(r, dict) and urlparse(r.get('url', '')).hostname == host]
     ids = {r.get('cloudId') or r.get('id') for r in matches}
     ids.discard(None)
@@ -258,16 +258,60 @@ async def search_jira_issues(session, cloud_id, jql, page_size=50, max_pages=100
     raise RuntimeError('Search page limit reached; results are incomplete.')
 
 
+async def search_jira_project_issues(project_key, *, token_storage, jira_site_url, limit=5):
+    """Return a bounded, read-only summary of recent issues in one assigned project."""
+    if not isinstance(project_key, str) or not re.fullmatch(r"[A-Z][A-Z0-9_]{0,63}", project_key):
+        raise ValueError("Expected a Jira project key.")
+    if type(limit) is not int or not 1 <= limit <= 5:
+        raise ValueError("Project search limit must be between 1 and 5.")
+    site_url = validate_site_url(jira_site_url)
+    jql = f"project = {project_key} ORDER BY created DESC"
+    async with jira_session(token_storage=token_storage, jira_site_url=site_url) as session:
+        cloud_id = await get_cloud_id(session, jira_site_url=site_url)
+        data = await read_tool(session, "searchJiraIssuesUsingJql", {
+            "cloudId": cloud_id,
+            "jql": jql,
+            "searchResultMode": "issues",
+            "maxResults": limit,
+            "fields": ["summary", "status"],
+        })
+    issues = data.get("issues") if isinstance(data, dict) else None
+    if not isinstance(issues, list):
+        raise RuntimeError("Jira project search did not return an issues list.")
+    result = []
+    for issue in issues[:limit]:
+        if not isinstance(issue, dict):
+            raise RuntimeError("Jira project search returned an invalid issue.")
+        key = validate_issue_key(issue.get("key"))
+        if not key.startswith(project_key + "-"):
+            raise RuntimeError("Jira project search returned an issue outside the assigned project.")
+        fields = issue.get("fields")
+        if not isinstance(fields, dict) or not isinstance(fields.get("summary"), str):
+            raise RuntimeError("Jira project search omitted an issue summary.")
+        status = fields.get("status")
+        status_name = status.get("name") if isinstance(status, dict) else None
+        if not isinstance(status_name, str):
+            raise RuntimeError("Jira project search omitted an issue status.")
+        result.append({"key": key, "summary": fields["summary"], "status": status_name})
+    return result
+
+
 async def get_child_issues(session, cloud_id, parent_key, page_size=50, max_pages=100):
     validate_issue_key(parent_key)
     return await search_jira_issues(session, cloud_id,
         f'parent = "{parent_key}" ORDER BY created ASC, key ASC', page_size, max_pages)
 
 
-async def fetch_jira_issue(issue_key, include_children=False):
+async def fetch_jira_issue(issue_key, include_children=False, *, token_storage=None, jira_site_url=None):
     validate_issue_key(issue_key)
-    async with jira_session() as session:
-        cloud_id = await get_cloud_id(session)
+    if token_storage is not None:
+        if jira_site_url is None:
+            raise ValueError("A saved Jira MCP profile must supply its own site URL.")
+        if include_children:
+            raise ValueError("Profile-scoped reads currently allow only one Jira issue; hierarchy reads are disabled.")
+    site_url=validate_site_url(jira_site_url if jira_site_url is not None else JIRA_URL)
+    async with jira_session(token_storage=token_storage,jira_site_url=site_url) as session:
+        cloud_id = await get_cloud_id(session,jira_site_url=site_url)
         issue = await get_jira_issue(session, cloud_id, issue_key)
         if include_children:
             return await read_issue_hierarchy(session, cloud_id, issue)
@@ -308,18 +352,62 @@ class InMemoryTokenStorage:
     ) -> None:
         self.client_info = client_info
 
-async def handle_redirect(
-    auth_url: str
-) -> None:
 
-    print()
-    print("Opening Atlassian login...")
+class CatalogOAuthTokenStorage:
+    """Persist one Atlassian OAuth client/token pair in the encrypted connection catalog."""
 
-    webbrowser.open(auth_url)
+    def __init__(self, catalog, connection_id):
+        from agent.storage.projects import ProjectConfigurationError
 
-    print(
-        "Complete login/consent in the browser."
-    )
+        row = catalog.get(connection_id)
+        if not row or row.get('kind') != 'jira_mcp':
+            raise ProjectConfigurationError('Choose a Jira MCP connection in this workspace.')
+        parsed = urlparse(row.get('endpoint', ''))
+        if (parsed.scheme, parsed.hostname, parsed.port, parsed.path, parsed.query, parsed.fragment) != (
+            'https', 'mcp.atlassian.com', None, '/v2/mcp', '', ''
+        ) or parsed.username or parsed.password:
+            raise ProjectConfigurationError('Jira MCP connections must use the official Atlassian endpoint.')
+        if row.get('env_name'):
+            raise ProjectConfigurationError('This connection uses a different credential source. Reconfigure it for browser OAuth.')
+        self.catalog = catalog
+        self.connection_id = connection_id
+        self.endpoint = row['endpoint']
+        self.tokens = None
+        self.client_info = None
+        if row.get('credential_present'):
+            try:
+                saved = json.loads(catalog.credential(connection_id))
+                if not isinstance(saved, dict):
+                    raise ValueError
+                if saved.get('tokens') is not None:
+                    self.tokens = OAuthToken.model_validate(saved['tokens'])
+                if saved.get('client_info') is not None:
+                    self.client_info = OAuthClientInformationFull.model_validate(saved['client_info'])
+            except Exception:
+                raise ProjectConfigurationError('Saved Jira OAuth data is invalid. Disconnect and reconnect the account.') from None
+
+    async def get_tokens(self):
+        return self.tokens
+
+    async def set_tokens(self, tokens):
+        self.tokens = tokens
+        self._persist()
+
+    async def get_client_info(self):
+        return self.client_info
+
+    async def set_client_info(self, client_info):
+        self.client_info = client_info
+        self._persist()
+
+    def _persist(self):
+        if self.tokens is None and self.client_info is None:
+            return
+        payload = {
+            'tokens': self.tokens.model_dump(mode='json') if self.tokens is not None else None,
+            'client_info': self.client_info.model_dump(mode='json') if self.client_info is not None else None,
+        }
+        self.catalog.update_jira_oauth_data(self.connection_id, json.dumps(payload, separators=(',', ':')))
 
 async def read_issue_hierarchy(
     session: ClientSession,

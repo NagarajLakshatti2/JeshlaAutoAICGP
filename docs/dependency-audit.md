@@ -69,3 +69,21 @@ Workstream 8 remains I. Setup is no longer the unresolved core/RAG installation 
 ## Follow-up on 21 October 2026
 
 OpenRouter synthetic connectivity verified; one-model baseline 7/8, then live follow-up blocked by exact-source formatting and HTTP 429 quota exhaustion. Generic scope guidance passed 61 focused and 246 fresh offline tests; its targeted live role acceptance is unfinished. Cached real MiniLM sample passed 8/8 locally. Fresh RAG runtime still has a 60-second cold sentence-transformers import timeout; its 246 tests, other imports, parser/index smoke and UI startup passed. Working packages and .env stayed unchanged. Workstream 8 remains I; details and evidence are in workstream-8-release.md and workstream-3-memory.md. Word is not synchronized by this update.
+
+## T34 full-profile offline resolution — 6 November 2026
+
+Core wheel acceptance is recorded in the 23 October fresh-wheel report. A Windows Python 3.14 pip dry run with installed packages ignored, the index disabled, and only binary wheels allowed checked requirements.txt together with requirements-integrations.txt against the existing WS8 wheelhouse. Resolution stopped at langchain, the first missing distribution. Full-profile offline reproducibility remains P. The next acceptance step is to prepare a complete compatible wheelhouse and repeat resolution in isolation.
+
+## T34 fresh full-profile acceptance — 6 November 2026
+
+Packaging and non-ML runtime acceptance are Y. A separate Windows Python 3.14 environment installed the full learning and integration requirements offline from 159 cached wheels. Pip check passed. A platform-specific lock with SHA-256 hashes replayed successfully with installed packages ignored and the index disabled. All ten selected optional imports passed, including Chroma, LangChain, Ollama adapter, FAISS and MCP.
+
+The source wheel built and installed successfully. Its first console-help stage exceeded 40 seconds. After an isolated application dependency import completed, the recorded recheck passed all six stages in 14.24 seconds, including default and explicit application-data locations, console memory operations, browser-backend archive/settings behavior and package-directory integrity.
+
+The changed native runtime qualified for one bounded ML recheck. Torch 2.15.0 and Sentence Transformers 6.2.0 replaced the earlier tested 2.14.1/6.1.0 combination in this disposable acceptance environment. The offline import still reached its 45-second cap and the child was stopped after 50.96 seconds total. That subgate remains B and T34 overall remains P. A further retry requires a changed supported runtime or policy prerequisite.
+
+Evidence, install report, hashed lock, wheel manifest, both wheel-runtime reports and import outcomes are under outputs/acceptance/t34-full-20261106. The cache and isolated environment are retained for reproducibility.
+
+### T34 ML blocker diagnosis — 6 November 2026
+
+A separate Torch-only diagnostic timed out after 27.29 seconds under a 25-second child cap. Its stack snapshot locates the wait in torch.__init__._load_dll_libraries at kernel32.LoadLibraryExW. This narrows the unresolved gate to Windows native-library loading before Sentence Transformers completes its import. The recent CodeIntegrity query returned no events, so a device-policy block is unproven. Evidence is torch-diagnostic.json in the T34 acceptance folder. Further ML acceptance needs a supported native-runtime fix or a diagnosed Windows DLL prerequisite.

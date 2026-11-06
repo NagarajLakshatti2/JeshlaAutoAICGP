@@ -100,13 +100,23 @@ def messages_for_provider(messages, provider, *, imported_history=False):
     return result
 
 
-def call_with_fallback(default, invoke, *, allow_tool_output_fallback=False):
+def call_with_fallback(default, invoke, *, allow_tool_output_fallback=False,
+                       allow_transient_fallback=False):
     requested = current_provider(default)
     if requested not in ORDER:
         raise ProviderError("model", "CONFIGURATION", "Set LLM_PROVIDER to openrouter, groq, gemini or ollama.", attempts=0)
     active = enabled()
     order = configured_order() if active else (requested,)
     candidates = order[order.index(requested):] if requested in order else (requested,)
+    if active and allow_transient_fallback and requested in order:
+        # AutoGen can time out on one provider's tool-call endpoint while the
+        # same captured proposal can be requested from another provider. Keep
+        # the configured hosted-provider priority, starting with the selected
+        # provider, then place explicitly permitted local Ollama last.
+        hosted = [provider for provider in order if provider != "ollama"]
+        candidates = (requested,) + tuple(provider for provider in hosted if provider != requested)
+        if "ollama" in order:
+            candidates += ("ollama",)
     state = _turn.get() or {"exhausted": set(), "notices": [], "last_error": None, "failures": {}}
     last_error = state["last_error"]
     for provider in candidates:
@@ -139,7 +149,8 @@ def call_with_fallback(default, invoke, *, allow_tool_output_fallback=False):
             # Only the native adapter may opt in for its confined read-only
             # registry. Never fail over arbitrary action/JSON-format errors.
             read_only_format = allow_tool_output_fallback and error.category == "TOOL_OUTPUT"
-            if not active or (error.category not in QUOTA_ERRORS and not output_limit and not read_only_format):
+            transient = allow_transient_fallback and error.category in {"PROVIDER_TEMPORARY", "RESPONSE_TIMEOUT"}
+            if not active or (error.category not in QUOTA_ERRORS and not output_limit and not read_only_format and not transient):
                 raise
             last_error = error
             state["last_error"] = error
@@ -147,6 +158,8 @@ def call_with_fallback(default, invoke, *, allow_tool_output_fallback=False):
             state["failures"][provider] = error.category
             if read_only_format:
                 reason = "rejected read-only tool output; invalid response discarded"
+            elif transient:
+                reason = "was temporarily unavailable; incomplete response discarded"
             else:
                 reason = "reached its output-token limit; partial reply discarded" if output_limit else "reached its rate/quota limit"
             notice = f"Provider fallback: {provider} {reason}; trying the next configured provider."

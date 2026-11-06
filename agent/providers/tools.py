@@ -42,15 +42,21 @@ def ollama_text_tool_call(content, tools):
 
 
 @timed("LLM tool request")
-def call_tool_messages(messages, tools, *, max_tokens=None, forced_function=None, require_tool=False):
+def call_tool_messages(messages, tools, *, max_tokens=None, forced_function=None, require_tool=False, json_mode=False):
     if max_tokens is not None and (type(max_tokens) is not int or not 64 <= max_tokens <= 16384):
         raise ValueError("Output budget must be an integer from 64 to 16384.")
+    if type(json_mode) is not bool or (json_mode and tools):
+        raise ValueError("JSON output mode is only supported for text-only AutoGen requests.")
     if type(require_tool) is not bool or (require_tool and (not tools or forced_function is not None)):
         raise ValueError("Required tool selection needs registered tools and no conflicting forced function.")
     if forced_function is not None:
         registered={item.get("function",{}).get("name") for item in tools if isinstance(item,dict)}
         if not isinstance(forced_function,str) or forced_function not in registered:
             raise ValueError("Forced function must be registered in this request.")
+    from integrations.autogen.selection import current_agent_mode
+    if current_agent_mode()=="autogen":
+        from integrations.autogen.bridge import call_tool_messages as autogen_call
+        return autogen_call(messages,tools,max_tokens=max_tokens,forced_function=forced_function,require_tool=require_tool,json_mode=json_mode)
     if (max_tokens is None and _read_only_fallback_registry(tools) and len(tools) == 1
             and tools[0]["function"]["name"] == "submit_grounded_sections"):
         # Structured sections plus quotations/code need a draft-specific budget.

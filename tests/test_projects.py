@@ -12,6 +12,7 @@ import unittest
 from unittest.mock import patch
 
 from agent.storage.projects import ProjectCatalog,ProjectConfigurationError,project_namespace
+from agent.storage.connections import ConnectionCatalog
 from agent.storage.chats import ChatCatalog
 from agent.runtime.project_context import resolve_project_root
 from agent.runtime.project_scope import validate_request_scope
@@ -52,6 +53,24 @@ class ProjectRegistryTests(unittest.TestCase):
             self.assertNotEqual(project_namespace('other',project['id']),scope['memory_namespace'])
             a.rmdir()
             with self.assertRaises(ProjectConfigurationError):validate_request_scope(scope)
+
+    def test_scope_accepts_only_valid_project_jira_binding(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder);project_root=root/'project';project_root.mkdir()
+            project=ProjectCatalog(root/'p.sqlite3','u','general').add_local('A',str(project_root))
+            scope={'memory_user_id':'u','memory_namespace':project_namespace('general',project['id']),
+                   'project_id':project['id'],'bound_project_root':str(project_root.resolve()),
+                   'jira_scope':{'connection_id':'connection-'+'a'*32,'site_url':'https://example.atlassian.net',
+                                 'project_key':'DEMO','connected':False}}
+            self.assertEqual(validate_request_scope(scope)['jira_scope'],scope['jira_scope'])
+            scoped={**scope,'jira_scope':{**scope['jira_scope'],'connection_namespace':'general'}}
+            self.assertEqual(validate_request_scope(scoped)['jira_scope'],scoped['jira_scope'])
+            for change in ({'project_key':'demo'},{'site_url':'https://example.com'},
+                           {'connection_id':'connection-invalid'},{'connected':'false'},
+                           {'connection_namespace':' '},{'connection_namespace':'x'*129}):
+                invalid={**scope,'jira_scope':{**scope['jira_scope'],**change}}
+                with self.subTest(change=change),self.assertRaises(ProjectConfigurationError):
+                    validate_request_scope(invalid)
 
 
 class ProjectBackendTests(unittest.TestCase):
@@ -119,6 +138,59 @@ class ProjectBackendTests(unittest.TestCase):
         self.assertEqual(current['memory_namespace'],self.view_a.space)
         self.assertEqual(before,{key:os.environ.get(key) for key in before})
         with self.assertRaises(ValueError):self.view_b.submit(ca,'Use A chat')
+
+    def test_project_jira_profile_scope_carries_only_its_connection_namespace(self):
+        profile=self.view_a.save_connection('jira_mcp','Work Jira','https://example.atlassian.net')
+        self.view_a.assign_connection(self.pa['id'],'jira_mcp',profile['id'],{'project_key':'DEMO'})
+        scope=self.view_a.request_scope()['jira_scope']
+        self.assertEqual(scope['connection_id'],profile['id'])
+        self.assertEqual(scope['site_url'],'https://example.atlassian.net')
+        self.assertEqual(scope['project_key'],'DEMO')
+        self.assertEqual(scope['connection_namespace'],'general')
+        self.assertFalse(scope['connected'])
+
+    def test_project_jira_read_uses_bound_profile_and_rejects_other_project_keys(self):
+        from agent.langgraph import langgraph_agent as module
+        from integrations.jira import jira_mcp_client
+        from contextlib import redirect_stdout
+        import io
+
+        site='https://example.atlassian.net'
+        connections=ConnectionCatalog(self.root/'outputs/memory/connections.sqlite3','u','general')
+        profile=connections.save('jira_mcp','Work Jira',jira_mcp_client.MCP_URL,
+                                 details={'jira_site_url':site})
+        connections.checked(profile['id'],{'jira_site_url':site})
+        scope={'connection_id':profile['id'],'site_url':site,'project_key':'DEMO',
+               'connection_namespace':'general','connected':True}
+        fake_storage=type('FakeStorage',(),{'tokens':object(),'client_info':object()})()
+        captured={}
+        async def fake_fetch(issue_key,**kwargs):
+            captured.update(issue_key=issue_key,kwargs=kwargs)
+            return {'key':issue_key,'fields':{'summary':'Fixture issue'}}
+        def run_immediate(coroutine):
+            try:coroutine.send(None)
+            except StopIteration as result:return result.value
+            finally:coroutine.close()
+            raise AssertionError('The mocked Jira read unexpectedly suspended.')
+
+        with patch.object(module,'PROJECT_ROOT',self.root), \
+             patch.object(module,'asyncio',SimpleNamespace(run=run_immediate)), \
+             patch.object(module,'call_llm',return_value='Fixture summary'), \
+             patch.object(jira_mcp_client,'CatalogOAuthTokenStorage',return_value=fake_storage), \
+             patch.object(jira_mcp_client,'fetch_jira_issue',side_effect=fake_fetch) as fetch, \
+             redirect_stdout(io.StringIO()):
+            wrong=module.jira_node({'question':'Read OTHER-1 from Jira','project_id':self.pa['id'],
+                                    'memory_user_id':'u','jira_scope':scope})
+            self.assertEqual(wrong['task_status'],'incomplete')
+            fetch.assert_not_called()
+            result=module.jira_node({'question':'Read DEMO-1 from Jira','project_id':self.pa['id'],
+                                     'memory_user_id':'u','jira_scope':scope})
+
+        self.assertEqual(result['answer'],'Fixture summary')
+        self.assertEqual(captured['issue_key'],'DEMO-1')
+        self.assertIs(captured['kwargs']['token_storage'],fake_storage)
+        self.assertEqual(captured['kwargs']['jira_site_url'],site)
+        self.assertNotIn('include_children',captured['kwargs'])
 
     def test_actions_and_downloads_are_project_bound(self):
         ca=self.view_a.create_chat('A');cb=self.view_b.create_chat('B')

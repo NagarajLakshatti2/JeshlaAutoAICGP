@@ -114,7 +114,7 @@ def classify_issues(issues, work_status, query_verified_keys=()):
         reason = None
         if not isinstance(status, str) or not status.strip():
             reason = "Status metadata missing or unsupported"
-        elif normalize_title(status) != normalize_title(work_status):
+        elif work_status and normalize_title(status) != normalize_title(work_status):
             excluded.append({"key": issue["key"], "reason": "Outside configured work status", "status": status})
             continue
         elif flag is False and issue["key"] in query_verified_keys:
@@ -139,28 +139,46 @@ def classify_issues(issues, work_status, query_verified_keys=()):
     return eligible, excluded, blocked, summaries
 
 
-async def discover_jira_mappings(project_root, project_key, max_pages=100):
+async def discover_jira_mappings(project_root, project_key, max_pages=100, *,
+                                 token_storage=None, jira_site_url=None, work_status=None):
+    """Build a read-only feature-to-subtask mapping report.
+
+    Browser/project callers pass the selected profile's token storage and site
+    explicitly; the legacy CLI keeps its environment-based configuration.
+    Passing an empty work_status intentionally includes every status in scope.
+    """
     from integrations.jira.jira_mcp_client import (
         jira_session, get_cloud_id, search_jira_issues, get_jira_issue,
     )
     if not re.fullmatch(r"[A-Z][A-Z0-9_]*", project_key or ""):
         raise ValueError("JIRA_PROJECT_KEY must be a project key, not a URL or issue key.")
-    work_status = os.getenv("JIRA_WORK_STATUS", "").strip()
-    if not work_status:
-        raise ValueError("Set JIRA_WORK_STATUS in .env to the exact Jira status name.")
+    if type(max_pages) is not int or not 1 <= max_pages <= 100:
+        raise ValueError("max_pages must be between 1 and 100.")
+    if work_status is None:
+        work_status = os.getenv("JIRA_WORK_STATUS", "").strip()
+        if not work_status:
+            raise ValueError("Set JIRA_WORK_STATUS or pass an explicit work_status.")
+    elif not isinstance(work_status,str):
+        raise ValueError("work_status must be text.")
+    else:
+        work_status = work_status.strip()
+    if work_status and len(work_status)>100:
+        raise ValueError("work_status is too long.")
+    if jira_site_url is not None and token_storage is None:
+        raise ValueError("A selected Jira profile token store is required with jira_site_url.")
+    if token_storage is not None and not jira_site_url:
+        raise ValueError("A canonical Jira site URL is required with the selected profile.")
     inventory = discover_feature_mappings(project_root, limit=5000)
     if inventory["errors"] or inventory["details_truncated"]:
         raise ValueError("Feature inventory is incomplete: " + json.dumps(inventory["errors"]))
-    jql = (
-        f'project = "{project_key}" '
-        f'AND status = {json.dumps(work_status, ensure_ascii=False)} '
-        f'AND workType IN subtaskWorkTypes() '
-        f'ORDER BY key ASC'
-    )
+    clauses=[f'project = "{project_key}"']
+    if work_status:clauses.append(f'status = {json.dumps(work_status, ensure_ascii=False)}')
+    clauses.append('workType IN subtaskWorkTypes()')
+    jql=' AND '.join(clauses)+' ORDER BY key ASC'
     print("Subtask verification: Jira JQL subtaskWorkTypes()")
     requested_fields = ["summary", "issuetype", "parent", "status"]
-    async with jira_session() as session:
-        cloud_id = await get_cloud_id(session)
+    async with jira_session(token_storage=token_storage,jira_site_url=jira_site_url) as session:
+        cloud_id = await get_cloud_id(session,jira_site_url=jira_site_url)
         issues = await search_jira_issues(
             session, cloud_id, jql, max_pages=max_pages, fields=requested_fields,
         )

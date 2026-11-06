@@ -18,9 +18,34 @@ def render_git_review(manager):
     st.subheader("Review Git changes",anchor=False)
     st.caption(project["name"]+" · "+listing["branch"])
     st.text(project["root"])
+    with st.expander("Prepare pull-request draft"):
+        base = st.text_input("Base branch", value="main", key="git_pr_base")
+        head = st.text_input("Head branch", value=listing["branch"], key="git_pr_head")
+        title = st.text_input("PR title", max_chars=200, key="git_pr_title")
+        body = st.text_area("PR description", max_chars=12000, key="git_pr_body")
+        if st.button("Review PR draft", key="git_pr_prepare"):
+            try:
+                draft = backend.prepare_git_pr(base, head, title, body)
+                st.text(draft["title"])
+                st.text("Base " + draft["base_commit"] + " → head " + draft["head_commit"])
+                st.markdown(draft["body"])
+                st.code(draft["diff"], language="diff")
+                import json
+                st.download_button("Download reviewed draft", json.dumps(draft, indent=2),
+                                   file_name="pull-request-draft.json", mime="application/json")
+            except ProjectConfigurationError as error:
+                st.warning(str(error))
     st.session_state.setdefault("git_review_mode","Commit")
-    mode=st.segmented_control("Action",["Commit","Push"],key="git_review_mode")
-    if mode=="Push":
+    mode=st.segmented_control("Action",["Commit","Push","Branch"],key="git_review_mode")
+    if mode=="Branch":
+        name = st.text_input("New branch name", key="git_new_branch")
+        st.caption("Create a local branch at the reviewed commit. The current checkout stays selected.")
+        if st.button("Prepare branch review", key="prepare_git_branch"):
+            try:
+                st.session_state.git_write_review = backend.review_git_branch(name)
+            except ProjectConfigurationError as error:
+                st.warning(str(error))
+    elif mode=="Push":
         st.caption("Review every pending commit before publication. A configured account with write access is required.")
         from urllib.parse import urlsplit
         kind="github" if urlsplit(project["remote_url"]).hostname=="github.com" else "gitlab"
@@ -57,14 +82,14 @@ def render_git_review(manager):
                 st.session_state.git_write_review=review
             except ProjectConfigurationError as error:st.warning(str(error))
     review=st.session_state.get("git_write_review")
-    expected="git_push" if mode=="Push" else "git_commit"
+    expected={"Push":"git_push","Commit":"git_commit","Branch":"git_branch"}[mode]
     if review and review.get("kind")==expected and review.get("project",{}).get("id")==project_id:
-        st.markdown("**"+("Publish these commits" if mode=="Push" else "Commit these selected changes")+"**")
+        st.markdown("**"+{"Push":"Publish these commits","Commit":"Commit these selected changes","Branch":"Create this local branch"}[mode]+"**")
         st.text("Branch: "+review["state"]["branch"])
         if mode=="Push":
             st.text("Remote: "+review["project"]["remote_url"])
             st.caption(str(len(review["commits"]))+" commit(s) will be published.")
-        else:
+        elif mode=="Commit":
             st.text("Message: "+review["message"])
             st.text("Author: "+review["author_name"]+" <"+review["author_email"]+">")
         st.code(review["diff"],language="diff")

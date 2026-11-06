@@ -172,6 +172,8 @@ def prepare_push(project,token):
         raise ProjectConfigurationError("Select a GitHub/GitLab account with repository write access in Project details before push.")
     root=project["root"];state=local_state(root);url=repository_url(project["remote_url"])
     if state["remote_url"]!=url:raise ProjectConfigurationError("Repository origin changed.")
+    if url.startswith("ssh:"):
+        raise ProjectConfigurationError("SSH publication requires a separate reviewed workflow.")
     branch=state["branch"]
     remote=git_command(["ls-remote","--refs",url,"refs/heads/"+branch],host=url.split("/")[2],token=token,cwd=root)
     parts=remote.split()
@@ -219,3 +221,58 @@ def push(project,review,token):
     if not observed or observed[0]!=state["head"]:
         raise ProjectConfigurationError("Push confirmation is uncertain. Inspect the remote before another attempt.")
     return {"pushed":True,"commit":state["head"],"branch":state["branch"],"remote_url":url,"commits":review["commits"]}
+
+
+def prepare_branch(project, name):
+    state = local_state(project["root"])
+    if state["remote_url"] != repository_url(project["remote_url"]):
+        raise ProjectConfigurationError("Repository origin changed.")
+    if not isinstance(name, str) or not name or name.startswith("-") or len(name) > 200:
+        raise ProjectConfigurationError("Enter a valid branch name.")
+    git_command(["check-ref-format", "refs/heads/" + name], cwd=project["root"])
+    refs = git_command(["for-each-ref", "--format=%(refname)", "refs/heads/"], cwd=project["root"])
+    if "refs/heads/" + name in refs.splitlines():
+        raise ProjectConfigurationError("That branch already exists.")
+    review = {"kind": "git_branch", "project": project_data(project), "state": state,
+              "name": name, "diff": "Create branch " + name + " at " + state["head"]}
+    review["version"] = version(project["root"], "git_branch", review)
+    return review
+
+
+def create_branch(project, review):
+    if review != prepare_branch(project, review.get("name")):
+        raise ProjectConfigurationError("Branch review changed. Prepare a fresh approval.")
+    git_command(["update-ref", "refs/heads/" + review["name"], review["state"]["head"], ""],
+                cwd=project["root"])
+    return {"created": True, "branch": review["name"], "commit": review["state"]["head"],
+            "checked_out": False}
+
+
+def prepare_pull_request(project, base, head, title, body):
+    state = local_state(project["root"])
+    if state["remote_url"] != repository_url(project["remote_url"]):
+        raise ProjectConfigurationError("Repository origin changed.")
+    for name in (base, head):
+        if not isinstance(name, str) or not name or len(name) > 200:
+            raise ProjectConfigurationError("Choose explicit local base and head branches.")
+        git_command(["check-ref-format", "refs/heads/" + name], cwd=project["root"])
+    if base == head:
+        raise ProjectConfigurationError("Choose different base and head branches.")
+    if not isinstance(title, str) or not title.strip() or len(title) > 200:
+        raise ProjectConfigurationError("Enter a PR title of 1–200 characters.")
+    if not isinstance(body, str) or len(body) > 12000:
+        raise ProjectConfigurationError("Keep the PR body within 12000 characters.")
+    check_text(title + body)
+    base_sha = git_command(["rev-parse", "--verify", "refs/heads/" + base], cwd=project["root"])
+    head_sha = git_command(["rev-parse", "--verify", "refs/heads/" + head], cwd=project["root"])
+    span = base_sha + "..." + head_sha
+    names = git_command(["diff", "--name-only", "-z", span], cwd=project["root"], raw=True)
+    for name in filter(None, names.split("\0")):
+        safe_path(project["root"], name)
+    diff = git_command(["diff", "--no-ext-diff", "--no-textconv", span], cwd=project["root"], raw=True)
+    check_text(diff)
+    if not diff:
+        raise ProjectConfigurationError("The selected branches have no PR changes.")
+    return {"title": title.strip(), "body": body, "base": base, "head": head,
+            "base_commit": base_sha, "head_commit": head_sha, "diff": diff,
+            "remote_url": state["remote_url"]}

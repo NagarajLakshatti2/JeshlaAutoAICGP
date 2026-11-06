@@ -36,6 +36,17 @@ def target_version(root,action,args):
         try:return repair_version(root,action,args.get("plan"))
         except (ValueError,KeyError,TypeError,OSError) as error:
             raise ActionBlocked("Repair plan is stale, incomplete or outside its evidence scope: "+str(error)) from None
+    if action.startswith("terminal_"):
+        if action == "terminal_start":
+            return None
+        from agent.actions.terminal_sessions import _sessions, _lock
+        with _lock:
+            entry = _sessions.get(args.get("terminal_id"))
+            if not entry or entry["identity"][2] != args.get("chat_id") or entry["identity"][3] != str(root.resolve()):
+                raise ActionBlocked("Terminal session expired or scope changed.")
+            if entry["revision"] != args.get("revision"):
+                raise ActionBlocked("Terminal review is stale.")
+            return str(entry["revision"])
     if action in WORKSPACE_CONTROLLED_ACTIONS:
         from integrations.git.writes import version
         review=args.get("review")

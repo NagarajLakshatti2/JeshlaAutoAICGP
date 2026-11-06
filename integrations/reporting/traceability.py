@@ -11,7 +11,7 @@ from agent.tools.test_results import parse_test_results
 from integrations.reporting.evidence import EvidenceStore, resolve_evidence
 
 ACCEPTANCE_ROOT = Path(__file__).resolve().parents[2] / "outputs" / "acceptance"
-CASE_KEYS = {"id", "test_name", "test_class", "requirement_refs", "generated_ref", "run_ref", "report_ref", "artifact_refs", "scope_state", "note"}
+CASE_KEYS = {"id", "test_name", "test_class", "requirement_refs", "generated_ref", "run_ref", "report_ref", "artifact_refs", "scope_state", "note", "jira_key", "jira_scenario"}
 COUNTS = ("total", "passed", "failed", "skipped", "incomplete", "configuration_failure_count")
 
 
@@ -50,14 +50,31 @@ def _safe_text(value):
 
 
 def render_markdown(report):
-    lines = ["# " + _safe_text(report["title"]), "", "Historical selected-scope evidence report; no new test execution or release certification.", "",
-             "| Case | Native report | Effective outcome | Scope | Evidence | Notes and gaps |", "| --- | --- | --- | --- | --- | --- |"]
+    lines = ["# " + _safe_text(report["title"]), "", "Historical selected-scope evidence report; no new test execution or release certification.", ""]
+    if report.get("jira_links_enabled"):
+        lines += ["Jira links below require an exact case-to-scenario declaration and a hash-checked saved mapping report. Title suggestions are never treated as links.", "",
+                  "| Case | Jira link | Native report | Effective outcome | Scope | Evidence | Notes and gaps |",
+                  "| --- | --- | --- | --- | --- | --- | --- |"]
+    else:
+        lines += ["| Case | Native report | Effective outcome | Scope | Evidence | Notes and gaps |", "| --- | --- | --- | --- | --- | --- |"]
     for case in report["cases"]:
         req = ",".join(r["evidence_id"] + ":" + str(r["start_line"]) + "-" + str(r["end_line"]) for r in case["requirement_links"]) or "missing"
         refs = f'req={req}; source={case["generated_evidence_id"] or "missing"}; run={(case["execution"] or {}).get("evidence_id", "missing")}; report={case["report_evidence_id"] or "missing"}'
         if case["artifacts"]:
             refs += "; " + ",".join(a["kind"]+"="+a["evidence_id"] for a in case["artifacts"])
-        lines.append("| " + " | ".join(_safe_text(v) for v in (case["id"], case["native_status"], case["outcome"], case["scope_state"], refs, "; ".join(case["gaps"] + ([case["note"]] if case["note"] else [])))) + " |")
+        jira_link = case.get("jira_link") or {}
+        if jira_link.get("mapping_evidence_id"):
+            refs += "; jira_mapping=" + jira_link["mapping_evidence_id"]
+        fields = [case["id"]]
+        if report.get("jira_links_enabled"):
+            link = case.get("jira_link") or {}
+            issue = link.get("issue") or {}
+            jira = (f'{link.get("jira_key")} — {issue.get("summary", "")} ({issue.get("status", "")})'
+                    if link.get("status") == "verified_explicit_tag" else f'{link.get("status", "missing")}: {link.get("jira_key") or "no declared key"}')
+            fields.append(jira)
+        fields += [case["native_status"], case["outcome"], case["scope_state"], refs,
+                   "; ".join(case["gaps"] + ([case["note"]] if case["note"] else []))]
+        lines.append("| " + " | ".join(_safe_text(v) for v in fields) + " |")
     lines += ["", "Native observations: " + _safe_text(json.dumps(report["summary"]["native_counts"], sort_keys=True)),
               "", "Effective outcomes: " + _safe_text(json.dumps(report["summary"]["outcome_counts"], sort_keys=True)),
               "", "## Evidence references", ""]
@@ -95,13 +112,22 @@ def build_test_report(project_root, manifest_file, evidence_folder=""):
     store = EvidenceStore(project_root, evidence_root)
     manifest_ref = {"scope":"evidence", "file":str(path.relative_to(evidence_root)), "sha256":hashlib.sha256(raw).hexdigest()}
     _, manifest = store.json(manifest_ref)
-    if not isinstance(manifest, dict) or set(manifest) != {"version", "title", "cases"} or type(manifest["version"]) is not int or manifest["version"] != 1:
-        raise ValueError("Manifest requires version 1, title and cases only.")
+    if not isinstance(manifest, dict) or set(manifest) - {"version", "title", "cases", "jira_mapping_ref"} or not {"version", "title", "cases"} <= set(manifest) or type(manifest["version"]) is not int or manifest["version"] != 1:
+        raise ValueError("Manifest requires version 1, title and cases; jira_mapping_ref is optional.")
     if not isinstance(manifest["title"], str) or not 1 <= len(manifest["title"]) <= 120:
         raise ValueError("Report title must be 1–120 characters.")
     cases = manifest["cases"]
     if not isinstance(cases, list) or not 1 <= len(cases) <= 24:
         raise ValueError("Select 1–24 cases, with each logical case represented once.")
+    jira_mapping = None
+    jira_mapping_evidence_id = None
+    if "jira_mapping_ref" in manifest:
+        mapping_record, jira_mapping = store.json(manifest["jira_mapping_ref"])
+        if (not isinstance(jira_mapping, dict) or not isinstance(jira_mapping.get("scenarios"), list)
+                or len(jira_mapping["scenarios"]) > 5000
+                or any(not isinstance(row, dict) for row in jira_mapping["scenarios"])):
+            raise ValueError("Jira mapping evidence must contain a bounded scenarios list.")
+        jira_mapping_evidence_id = mapping_record["id"]
     ids, methods, rows = set(), set(), []
     reports_cache = {}
     for case in cases:
@@ -117,6 +143,20 @@ def build_test_report(project_root, manifest_file, evidence_folder=""):
         if not isinstance(note, str) or len(note) > 500:
             raise ValueError("Case notes must be bounded text, never instructions.")
         gaps, evidence_ids, requirement_links = [], [], []
+        jira_link = None
+        if "jira_key" in case or "jira_scenario" in case:
+            if jira_mapping is None:
+                raise ValueError("Case Jira links require a hash-checked manifest jira_mapping_ref.")
+            from integrations.reporting.jira_links import resolve_case_jira_link
+            jira_link = resolve_case_jira_link(case, jira_mapping, jira_mapping_evidence_id)
+            if jira_link["status"] != "verified_explicit_tag":
+                gaps.append("Jira case link is missing or unverified")
+        elif jira_mapping is not None:
+            from integrations.reporting.jira_links import resolve_case_jira_link
+            jira_link = resolve_case_jira_link(case, jira_mapping, jira_mapping_evidence_id)
+            gaps.append("Jira case link missing")
+        if jira_mapping_evidence_id:
+            evidence_ids.append(jira_mapping_evidence_id)
         refs = case.get("requirement_refs", [])
         if not isinstance(refs, list) or len(refs) > 3:
             raise ValueError("Use up to three requirement spans per case.")
@@ -212,13 +252,17 @@ def build_test_report(project_root, manifest_file, evidence_folder=""):
         rows.append({"id":case["id"], "scope_state":scope_state, "note":note, "native_status":native,
                      "outcome":outcome, "source_execution_identity":"unverified", "requirement_links":requirement_links, "generated_evidence_id":generated,
                      "execution":run_info, "report_evidence_id":report_id, "report_run_association":association,
-                     "artifacts":artifact_links, "evidence_ids":list(dict.fromkeys(evidence_ids)), "gaps":gaps})
+                     "jira_link":jira_link, "artifacts":artifact_links, "evidence_ids":list(dict.fromkeys(evidence_ids)), "gaps":gaps})
     store.verify_unchanged()
     return {"version":1, "build_status":"Y", "status":"P" if any(row["gaps"] or row["outcome"] != "passed" for row in rows) else "Y",
             "title":manifest["title"], "roots":{k:str(v) for k,v in store.roots.items()},
             "summary":{"selected_cases":len(rows), "native_counts":dict(Counter(r["native_status"] for r in rows)),
                        "outcome_counts":dict(Counter(r["outcome"] for r in rows)),
-                       "cases_with_trace_gaps":sum(bool(r["gaps"]) for r in rows)},
+                       "cases_with_trace_gaps":sum(bool(r["gaps"]) for r in rows),
+                       **({"verified_jira_links":sum(r.get("jira_link", {}).get("status") == "verified_explicit_tag" for r in rows),
+                           "missing_or_unverified_jira_links":sum(r.get("jira_link", {}).get("status") != "verified_explicit_tag" for r in rows)}
+                          if jira_mapping is not None else {})},
+            "jira_links_enabled":jira_mapping is not None,
             "cases":rows, "evidence":store.records,
             "limits":["Counts cover selected unique cases, not all application requirements or overlapping reports.",
                       "Saved run/report metadata association is evidence, not cryptographic proof of execution or executed source identity.",

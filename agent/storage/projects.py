@@ -51,6 +51,7 @@ class ProjectCatalog:
             columns={row[1] for row in db.execute("PRAGMA table_info(local_projects)")}
             for name in ("source","remote_url","account_id"):
                 if name not in columns:db.execute("ALTER TABLE local_projects ADD COLUMN "+name+" TEXT NOT NULL DEFAULT '"+("local" if name=="source" else "")+"'")
+            if "archived" not in columns:db.execute("ALTER TABLE local_projects ADD COLUMN archived INTEGER NOT NULL DEFAULT 0")
             db.execute("""CREATE TABLE IF NOT EXISTS project_connections(
                 user TEXT,space TEXT,project_id TEXT,kind TEXT,connection_id TEXT,options TEXT,
                 PRIMARY KEY(user,space,project_id,kind))""")
@@ -63,20 +64,38 @@ class ProjectCatalog:
         now=datetime.now(timezone.utc).isoformat();token="project-"+uuid.uuid4().hex
         with closing(sqlite3.connect(self.path)) as db,db:
             db.execute("INSERT OR IGNORE INTO local_projects(id,user,space,name,root,root_key,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?)",(token,self.user,self.space,name,root,key,now,now))
+            db.execute("UPDATE local_projects SET name=?,archived=0,updated_at=? WHERE user=? AND space=? AND root_key=?",(name,now,self.user,self.space,key))
             row=db.execute("SELECT id FROM local_projects WHERE user=? AND space=? AND root_key=?",(self.user,self.space,key)).fetchone()
         return self.get(row[0])
 
-    def get(self,project_id):
+    def get(self,project_id,*,include_archived=False):
         with closing(sqlite3.connect(self.path)) as db:
             db.row_factory=sqlite3.Row
-            row=db.execute("SELECT id,name,root,created_at,updated_at,source,remote_url,account_id FROM local_projects WHERE user=? AND space=? AND id=?",(self.user,self.space,project_id)).fetchone()
+            query="SELECT id,name,root,created_at,updated_at,source,remote_url,account_id FROM local_projects WHERE user=? AND space=? AND id=?"
+            if not include_archived:query+=" AND archived=0"
+            row=db.execute(query,(self.user,self.space,project_id)).fetchone()
         return dict(row) if row else None
 
-    def list(self):
+    def list(self,*,include_archived=False):
         with closing(sqlite3.connect(self.path)) as db:
             db.row_factory=sqlite3.Row
-            rows=db.execute("SELECT id,name,root,created_at,updated_at,source,remote_url,account_id FROM local_projects WHERE user=? AND space=? ORDER BY name COLLATE NOCASE,id",(self.user,self.space)).fetchall()
+            query="SELECT id,name,root,created_at,updated_at,source,remote_url,account_id FROM local_projects WHERE user=? AND space=?"
+            if not include_archived:query+=" AND archived=0"
+            query+=" ORDER BY name COLLATE NOCASE,id"
+            rows=db.execute(query,(self.user,self.space)).fetchall()
         return [dict(row) for row in rows]
+
+    def archive(self,project_id):
+        if not self.get(project_id):raise ProjectConfigurationError("Project not found.")
+        with closing(sqlite3.connect(self.path)) as db,db:
+            db.execute("UPDATE local_projects SET archived=1,updated_at=? WHERE user=? AND space=? AND id=?",
+                       (datetime.now(timezone.utc).isoformat(),self.user,self.space,project_id))
+
+    def restore(self,project_id):
+        if not self.get(project_id,include_archived=True):raise ProjectConfigurationError("Project not found.")
+        with closing(sqlite3.connect(self.path)) as db,db:
+            db.execute("UPDATE local_projects SET archived=0,updated_at=? WHERE user=? AND space=? AND id=?",
+                       (datetime.now(timezone.utc).isoformat(),self.user,self.space,project_id))
 
     def configure_git(self,project_id,url,account_id=""):
         if not self.get(project_id):raise ProjectConfigurationError("Project not found.")
@@ -100,3 +119,10 @@ class ProjectCatalog:
             rows=db.execute("SELECT kind,connection_id,options FROM project_connections WHERE user=? AND space=? AND project_id=?",
                             (self.user,self.space,project_id)).fetchall()
         return {kind:{"connection_id":key,"options":json.loads(options)} for kind,key,options in rows}
+
+    def remove_binding(self,project_id,kind):
+        if not self.get(project_id):raise ProjectConfigurationError("Project not found.")
+        if kind not in {"jira_mcp","github_mcp","custom_mcp"}:raise ProjectConfigurationError("Unsupported project connection.")
+        with closing(sqlite3.connect(self.path)) as db,db:
+            db.execute("DELETE FROM project_connections WHERE user=? AND space=? AND project_id=? AND kind=?",
+                       (self.user,self.space,project_id,kind))

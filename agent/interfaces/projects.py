@@ -90,8 +90,26 @@ def render_saved_projects(manager):
                     if row["name"].casefold() in duplicate_names:st.caption(row["root"])
                 if is_git and st.button(":material/sync:",key="sync_project_"+key,help="Pull fast-forward updates. Local changes prevent syncing."):
                     st.session_state.project_settings_id=key;st.session_state.ui_dialog="project_sync";st.rerun()
-                if st.button(":material/more_vert:",key="project_settings_"+key,help="Project details and connections"):
-                    st.session_state.project_settings_id=key;st.session_state.ui_dialog="project_settings";st.rerun()
+                with st.popover(":material/more_vert:",key="project_menu_"+key,help="Project actions"):
+                    if st.button("Project details",key="project_details_"+key,icon=":material/settings:",width="stretch"):
+                        st.session_state.project_settings_id=key;st.session_state.ui_dialog="project_settings";st.rerun()
+                    if st.button("Remove project",key="remove_project_"+key,icon=":material/archive:",width="stretch"):
+                        st.session_state.project_remove_id=key;st.session_state.ui_dialog="project_remove";st.rerun()
+    archived=[row for row in manager.project_store().list(include_archived=True)
+              if row["id"] not in {item["id"] for item in rows}]
+    with st.expander("Removed projects"+(f" · {len(archived)}" if archived else ""),expanded=False):
+        st.caption("Removed projects are hidden from the active list. Their folders, repositories, chats and settings are preserved.")
+        if not archived:st.caption("No removed projects.")
+        for row in archived:
+            key=row["id"]
+            with st.container(horizontal=True,vertical_alignment="center",wrap=False,gap="xsmall"):
+                st.text(row["name"])
+                if st.button("Restore",key="restore_project_"+key,icon=":material/restore:"):
+                    try:
+                        manager.project_store().restore(key)
+                        st.session_state.project_created_notice=row["name"]+" restored to saved projects."
+                        st.rerun()
+                    except Exception as error:st.error(str(error))
     st.divider()
     st.button("Add project",key="add_project_menu",icon=":material/create_new_folder:",width="stretch",on_click=begin_project_setup)
     if active:

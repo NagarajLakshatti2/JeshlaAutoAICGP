@@ -17,6 +17,7 @@ jeshla-auto-ai = "agent.langgraph.langgraph_agent:main"
 rag = ["openpyxl", "pypdf", "python-docx", "langchain-community", "langchain-huggingface", "langchain-core", "langchain-text-splitters", "sentence-transformers", "faiss-cpu", "rank-bm25"]
 learning = ["langchain", "langchain-ollama", "chromadb"]
 integrations = ["mcp", "httpx2", "pydantic"]
+multi-agent = ["autogen-agentchat==0.7.5", "autogen-ext[openai]==0.7.5"]
 
 [tool.setuptools]
 include-package-data = false

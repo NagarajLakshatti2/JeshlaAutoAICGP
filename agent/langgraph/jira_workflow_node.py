@@ -593,6 +593,13 @@ def jira_workflow_node(state):
     question,documents,has_upload=split_uploaded_input(state["question"])
     if has_upload and not explicit_jira_request(question):
         return {"answer":"Jira was not requested. No Jira authentication or action was started.","task_status":"incomplete"}
+    if state.get("project_id"):
+        jira=state.get("jira_scope")
+        if not jira:
+            return {"answer":"No Jira profile is assigned to this project. Add a Jira profile and project key in Project details. No Jira authentication or action was started.","task_status":"incomplete"}
+        if not jira.get("connected"):
+            return {"answer":"This project's Jira profile is saved but not connected. Jira calls remain disabled until a no-cost access path is confirmed. No Jira authentication or action was started.","task_status":"incomplete"}
+        return {"answer":"Jira actions for selected projects are still disabled pending confirmation of a no-cost Jira MCP access path. No Jira authentication or action was started.","task_status":"incomplete"}
     try:
         return {"answer": handle(question)}
     except Blocked as error:

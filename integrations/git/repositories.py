@@ -12,7 +12,20 @@ from agent.storage.projects import ProjectConfigurationError,validate_local_fold
 
 def repository_url(value):
     if not isinstance(value,str) or len(value)>1000:raise ProjectConfigurationError("Enter a repository HTTPS URL.")
-    parsed=urlsplit(value.strip())
+    value = value.strip()
+    if value.startswith("git@"):
+        match = re.fullmatch(r"git@(github\.com|gitlab\.com):(.+)", value)
+        if not match:
+            raise ProjectConfigurationError("Use a supported GitHub or GitLab SSH repository.")
+        value = "ssh://git@" + match[1] + "/" + match[2]
+    parsed=urlsplit(value)
+    if parsed.scheme == "ssh":
+        if parsed.hostname not in {"github.com", "gitlab.com"} or parsed.username != "git" or parsed.password or parsed.port is not None or parsed.query or parsed.fragment:
+            raise ProjectConfigurationError("Use SSH with user git and a standard GitHub or GitLab host.")
+        parts = parsed.path.strip("/").removesuffix(".git").split("/")
+        if len(parts) < 2 or (parsed.hostname == "github.com" and len(parts) != 2) or any(not re.fullmatch(r"[A-Za-z0-9_.-]+", part) or part in {".", ".."} for part in parts):
+            raise ProjectConfigurationError("Use a valid SSH repository path.")
+        return "ssh://git@" + parsed.hostname + "/" + "/".join(parts) + ".git"
     if parsed.scheme!="https" or parsed.hostname not in {"github.com","gitlab.com"} or parsed.port not in {None,443} or parsed.username or parsed.password or parsed.query or parsed.fragment:
         raise ProjectConfigurationError("Use a GitHub.com or GitLab.com HTTPS repository URL without credentials.")
     path=parsed.path.strip("/").removesuffix(".git")
@@ -49,6 +62,8 @@ def git_command(arguments,*,cwd=None,token="",host="",timeout=180,index_file=Non
     for name in list(env):
         if name.startswith("GIT_CONFIG_") or name in {"GIT_DIR","GIT_WORK_TREE","GIT_INDEX_FILE","GIT_OBJECT_DIRECTORY","GIT_ALTERNATE_OBJECT_DIRECTORIES","GIT_ASKPASS","SSH_ASKPASS","GIT_COMMON_DIR","GIT_REPLACE_REF_BASE"} or name.startswith(("GIT_AUTHOR_","GIT_COMMITTER_")):env.pop(name,None)
     env.update({"GIT_TERMINAL_PROMPT":"0","GCM_INTERACTIVE":"never","GIT_LFS_SKIP_SMUDGE":"1","GIT_CONFIG_GLOBAL":os.devnull,"GIT_CONFIG_NOSYSTEM":"1"})
+    env.pop("GIT_SSH", None)
+    env["GIT_SSH_COMMAND"] = "ssh -F none -o BatchMode=yes -o StrictHostKeyChecking=yes -o ConnectTimeout=15"
     env["GIT_NO_REPLACE_OBJECTS"]="1"
     env["GIT_OPTIONAL_LOCKS"]="0"
     if index_file is not None:

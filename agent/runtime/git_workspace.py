@@ -22,6 +22,32 @@ class WorkspaceActionTools(ProjectTools):
         super().__init__(root)
         self.backend=backend
 
+    def _terminal_identity(self, chat_id):
+        scope = self.backend.request_scope()
+        if not scope or Path(scope["bound_project_root"]).resolve() != self.root:
+            raise ProjectConfigurationError("Select the terminal's project.")
+        if not self.backend.catalog.get(chat_id):
+            raise ProjectConfigurationError("Terminal chat is unavailable.")
+        return (self.backend.user, self.backend.space, chat_id, str(self.root))
+
+    def terminal_start(self, chat_id: str, command: list, lifetime: int = 300):
+        from agent.actions.terminal_sessions import start
+        return start(self._terminal_identity(chat_id), self, command, lifetime)
+
+    def terminal_input(self, chat_id: str, terminal_id: str, revision: int, text: str):
+        from agent.actions.terminal_sessions import send
+        return send(self._terminal_identity(chat_id), terminal_id, revision, text)
+
+    def terminal_stop(self, chat_id: str, terminal_id: str, revision: int):
+        from agent.actions.terminal_sessions import stop
+        return stop(self._terminal_identity(chat_id), terminal_id, revision)
+
+    def git_branch(self, review: dict):
+        project = selected_git_project(self.backend, self.root)
+        if review.get("project") != writes.project_data(project):
+            raise ProjectConfigurationError("Project settings changed. Prepare a fresh review.")
+        return writes.create_branch(project, review)
+
     def git_commit(self,review:dict):
         project=selected_git_project(self.backend,self.root)
         if review.get("project")!=writes.project_data(project):

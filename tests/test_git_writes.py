@@ -24,6 +24,38 @@ def seed(root):
 
 
 class GitWriteTests(unittest.TestCase):
+    def test_branch_review_creates_once_and_preserves_checkout(self):
+        review = writes.prepare_branch(self.project, "codex/fixture")
+        result = writes.create_branch(self.project, review)
+        self.assertTrue(result["created"])
+        self.assertEqual(git_command(["symbolic-ref", "--short", "HEAD"], cwd=self.root), "main")
+        self.assertEqual(git_command(["rev-parse", "refs/heads/codex/fixture"], cwd=self.root), self.before)
+        with self.assertRaises(ProjectConfigurationError):
+            writes.create_branch(self.project, review)
+
+    def test_branch_approval_is_owned_and_replay_safe(self):
+        review = writes.prepare_branch(self.project, "codex/reviewed")
+        token = self.queue(review)
+        with self.assertRaises(ActionBlocked):
+            self.store.execute("other", "space", "chat", token)
+        self.assertFalse(git_command(["for-each-ref", "--format=%(refname)", "refs/heads/codex/reviewed"], cwd=self.root))
+        first, replayed = self.store.execute("u", "space", "chat", token)
+        self.assertTrue(first["created"])
+        second, replayed = self.store.execute("u", "space", "chat", token)
+        self.assertTrue(replayed)
+        self.assertEqual(first, second)
+
+    def test_pr_preparation_binds_commits_and_diff(self):
+        git_command(["checkout", "-b", "codex/pr-fixture"], cwd=self.root)
+        git_command(["add", "new.py"], cwd=self.root)
+        git_command(["commit", "-m", "Fixture change"], cwd=self.root)
+        draft = writes.prepare_pull_request(self.project, "main", "codex/pr-fixture", "Fixture PR", "Reviewed description")
+        self.assertIn("new.py", draft["diff"])
+        self.assertEqual(draft["base_commit"], self.before)
+        self.assertEqual(self.network_calls, [])
+        with self.assertRaises(ProjectConfigurationError):
+            writes.prepare_pull_request(self.project, "main", "main", "Invalid", "")
+
     def setUp(self):
         self.folder=temporary_git_workspace();self.base=Path(self.folder.__enter__())
         self.addCleanup(lambda:self.folder.__exit__(None,None,None))
@@ -49,6 +81,7 @@ class GitWriteTests(unittest.TestCase):
         self.transport=patch.object(writes,"git_command",side_effect=transport);self.transport.start();self.addCleanup(self.transport.stop)
         project=self.project
         class Tools(ProjectTools):
+            def git_branch(inner,review:dict):return writes.create_branch(project,review)
             def git_commit(inner,review:dict):return writes.commit(project,review)
             def git_push(inner,review:dict):return writes.push(project,review,"fixture-token")
         self.store=BrowserActions(self.base/"receipts.sqlite3",tools_factory=Tools)

@@ -66,6 +66,44 @@ class TraceReportingTests(unittest.TestCase):
         self.assertTrue(row["requirement_links"] and row["execution"] and row["report_evidence_id"])
         self.assertEqual(result["actions_executed"],[])
 
+    def _jira_mapping_ref(self, *, verified=True, title_only=False):
+        row={"scenario":"Text input entry", "jira_keys":["QAP-5"],
+             "verification":"verified_subtask" if verified else "suggestion_needs_review",
+             "jira_subtask_verified":verified,
+             "jira_issue":{"key":"QAP-5", "summary":"Text Input", "status":"Done"} if verified else None}
+        if title_only:
+            row["jira_keys"]=[];row["jira_subtask_verified"]=False
+            row["verification"]="suggestion_needs_review"
+        self.put("jira-mapping.json",json.dumps({"scenarios":[row]}))
+        return self.ref("jira-mapping.json")
+
+    def test_explicit_case_scenario_and_verified_mapping_join(self):
+        case=self.case();case.update(jira_key="QAP-5",jira_scenario="Text input entry")
+        self.manifest["cases"]=[case]
+        self.manifest["jira_mapping_ref"]=self._jira_mapping_ref()
+        result=self.build();row=result["cases"][0]
+        self.assertEqual(row["jira_link"]["status"],"verified_explicit_tag")
+        self.assertEqual(row["jira_link"]["issue"],{"key":"QAP-5","summary":"Text Input","status":"Done"})
+        self.assertIn(row["jira_link"]["mapping_evidence_id"],row["evidence_ids"])
+        self.assertEqual(result["summary"]["verified_jira_links"],1)
+        self.assertIn("jira-mapping.json",render_markdown(result))
+
+    def test_title_suggestion_never_becomes_a_case_jira_link(self):
+        case=self.case();case.update(jira_key="QAP-5",jira_scenario="Text input entry")
+        self.manifest["cases"]=[case]
+        self.manifest["jira_mapping_ref"]=self._jira_mapping_ref(verified=False,title_only=True)
+        result=self.build();row=result["cases"][0]
+        self.assertEqual(row["jira_link"]["status"],"unverified")
+        self.assertEqual(result["summary"]["verified_jira_links"],0)
+        self.assertEqual(result["summary"]["missing_or_unverified_jira_links"],1)
+        self.assertIn("Jira case link is missing or unverified",row["gaps"])
+
+    def test_mapping_requested_but_missing_case_link_is_reported_as_gap(self):
+        self.manifest["jira_mapping_ref"]=self._jira_mapping_ref()
+        result=self.build();row=result["cases"][0]
+        self.assertEqual(row["jira_link"]["status"],"missing")
+        self.assertIn("Jira case link missing",row["gaps"])
+
     def test_timeout_retains_native_pass_but_never_effective_pass(self):
         self.refresh_run(exit_code=None,timed_out=True);self.manifest["cases"]=[self.case()]
         result=self.build();row=result["cases"][0]

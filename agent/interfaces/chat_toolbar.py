@@ -2,6 +2,7 @@
 import streamlit as st
 
 LABELS={"ollama":"Ollama","openrouter":"OpenRouter","groq":"Groq","gemini":"Gemini"}
+AGENT_MODES={"autogen":"AutoGen","langgraph":"LangGraph"}
 
 
 def provider_options(backend):
@@ -30,4 +31,8 @@ def render_provider_info(backend):
 
 
 def render_provider_picker(backend):
-    st.selectbox("Provider",provider_options(backend),format_func=lambda value:LABELS.get(value,value),key="browser_provider",label_visibility="collapsed",width=165)
+    st.session_state.setdefault("browser_agent_mode", "autogen")
+    with st.container(horizontal=True,vertical_alignment="center"):
+        st.selectbox("Agent mode",list(AGENT_MODES),format_func=lambda value:AGENT_MODES[value],key="browser_agent_mode",label_visibility="collapsed",width=130,
+                     help="AutoGen runs the assistant through the isolated AutoGen AgentChat runtime. LangGraph uses the existing workflow directly.")
+        st.selectbox("Provider",provider_options(backend),format_func=lambda value:LABELS.get(value,value),key="browser_provider",label_visibility="collapsed",width=165)

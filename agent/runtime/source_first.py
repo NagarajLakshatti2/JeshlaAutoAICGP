@@ -170,6 +170,24 @@ def _validate_plan(plan):
     for url in plan["candidate_urls"]: url_location(url)
 
 
+def _complete_known_spec_plan(question, plan):
+    """Ensure Java 17 inheritance answers can retrieve the rules they explain."""
+    normalized = _normal(question).casefold()
+    if "java 17" not in normalized or "inheritance" not in normalized:
+        return plan
+    # The broad class/overriding sections alone do not establish all override
+    # conditions or the runtime method selected by the example. Use the four
+    # directly relevant JLS 17 sections, within the existing four-page cap.
+    plan["publisher_domains"] = list(dict.fromkeys(["oracle.com", *plan["publisher_domains"]]))
+    plan["candidate_urls"] = [
+        "https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.1.4",
+        "https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.4.3.3",
+        "https://docs.oracle.com/javase/specs/jls/se17/html/jls-8.html#jls-8.4.8.1",
+        "https://docs.oracle.com/javase/specs/jls/se17/html/jls-15.html#jls-15.12.4.4",
+    ]
+    return plan
+
+
 def _candidate(url, domains):
     try:
         _, host, _ = url_location(url)
@@ -297,7 +315,7 @@ def _incomplete(message):
 
 @timed("Source-first documentation")
 def answer_from_sources(question, *, model, web, page_fetch=None):
-    """At most six model attempts, two searches and four secured page attempts."""
+    """At most eight model attempts, two searches and four secured page attempts."""
     try:
         plan = _request(model, PLAN,
             "Plan coverage BEFORE drafting an explanation. Return 1-6 distinct essential rule groups in the user's requested order and version. "
@@ -308,6 +326,7 @@ def answer_from_sources(question, *, model, web, page_fetch=None):
             "Domains/URLs are candidates, not verified sources. Do not invent exact section addresses you do not know. "
             "Set example_required from the user's actual request. Do not include private context or action names.",
             {"question": question}, "Source coverage planning", validate=_validate_plan)
+        plan = _complete_known_spec_plan(question, plan)
         with timer("Documentation retrieval"):
             pages = _retrieve(plan, web, page_fetch)
         if not pages:
@@ -333,9 +352,43 @@ def answer_from_sources(question, *, model, web, page_fetch=None):
             {"question": question, "topics": plan["topics"], "example_required": plan["example_required"], "sources": catalogue},
             "Grounded answer drafting", validate=lambda value: _resolve_passages(value, by_id))
         sections = _valid_sections(draft, plan, pages)
-        example = draft["example"] if _example_ok(draft["example"], sections) else None
+        example_candidate = draft["example"]
+        # Give the model one bounded chance to fill topics it omitted entirely.
+        # A topic it attempted but whose evidence/structure failed is not retried;
+        # this avoids repeatedly asking it to repackage the same invalid claim.
+        drafted_topics = {item.get("topic") for item in draft["sections"]
+                          if isinstance(item, dict) and type(item.get("topic")) is int}
+        omitted_topics = [number for number in range(1, len(plan["topics"]) + 1)
+                          if number not in drafted_topics]
+        continuation_error = None
+        if omitted_topics:
+            requested_topics = [{"topic": number, "name": plan["topics"][number - 1]}
+                                for number in omitted_topics]
+            continuation_payload = {"question": question, "topics": requested_topics,
+                "already_accepted_topics": [item["topic"] for item in sections],
+                "example_required": False, "sources": catalogue}
+            try:
+                continuation = _request(model, DRAFT,
+                    "Complete ONLY the listed omitted planned topics using the already retrieved evidence. "
+                    "Keep each original 1-based topic number exactly. Return concise sections only for those listed topics; "
+                    "do not repeat accepted topics, add new topics, or add a code example. "
+                    "For each section select supplied passage IDs that support every claim and preserve all material conditions. "
+                    "If a listed topic is not fully supported by these excerpts, omit it rather than filling the gap from memory. "
+                    "Keep the example object empty. This is the single targeted continuation; no further drafting retry follows.",
+                    continuation_payload, "Missing-topic continuation",
+                    validate=lambda value: _resolve_passages(value, by_id))
+                additions = _valid_sections(continuation, plan, pages)
+                accepted_topics = {item["topic"] for item in sections}
+                sections.extend(item for item in additions
+                                if item["topic"] in omitted_topics and item["topic"] not in accepted_topics)
+                sections.sort(key=lambda item: item["topic"])
+            except ProviderError as error:
+                # Preserve the already grounded sections if the optional
+                # continuation cannot complete; final status remains partial.
+                continuation_error = error.category
         if not sections:
-            return _incomplete("The draft supplied no sections with valid quotations from the retrieved documentation. No ungrounded explanation or executed example is claimed.")
+            return _incomplete("The draft and its one targeted continuation supplied no sections with valid quotations from the retrieved documentation. No ungrounded explanation or executed example is claimed.")
+        example = example_candidate if _example_ok(example_candidate, sections) else None
         check = _request(model, CHECK,
             "Check each proposed section ONLY against its own evidence quotations and named source pages. Another retrieved but uncited page cannot support that section. Preserve qualifiers and exceptions. No overall verdict/status is requested. "
             "blocking contains ONLY concrete unsupported/contradictory claims, demonstrable code defects or unestablished official-publisher/version scope. "
@@ -368,6 +421,8 @@ def answer_from_sources(question, *, model, web, page_fetch=None):
     covered = {section["topic"] for section in sections}
     missing = [topic for number, topic in enumerate(plan["topics"], 1) if number not in covered]
     if plan["example_required"] and example is None: missing.append("A complete source-grounded code example")
+    if continuation_error:
+        missing.append("A missing planned topic (continuation unavailable: " + continuation_error + ")")
     partial = bool(missing)
     if partial:
         parts.insert(0, "**Partial answer — documentation coverage is incomplete.**")

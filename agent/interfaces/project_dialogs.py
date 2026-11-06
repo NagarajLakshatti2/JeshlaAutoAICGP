@@ -73,9 +73,55 @@ def project_settings_dialog(manager):
     from agent.interfaces.project_knowledge import render_project_knowledge
     render_project_knowledge(manager.for_project(row["id"]))
     st.caption("Conversations, memory, approvals and generated downloads stay scoped to this project.")
-    st.info("Jira/GitHub MCP is parked for the free-only plan. No new MCP connection or remote MCP action is enabled.")
+    st.markdown("**Jira project connection**")
+    st.caption("Assign the verified Jira profile and its Jira project key here. Jira reads use this project-specific assignment; no issue changes are enabled.")
+    profiles={x["id"]:x for x in manager.connection_store().list() if x["kind"]=="jira_mcp"}
+    binding=manager.project_store().bindings(row["id"]).get("jira_mcp",{})
+    if profiles:
+        choices=["",*profiles]
+        current=binding.get("connection_id","")
+        selected=st.selectbox("Jira account profile",choices,index=choices.index(current) if current in choices else 0,
+                              format_func=lambda key:profiles[key]["label"] if key else "Choose a saved Jira profile",
+                              key="jira_profile_"+row["id"])
+        project_key=st.text_input("Jira project key",value=binding.get("options",{}).get("project_key",""),
+                                  placeholder="For example, DEMO",max_chars=64,key="jira_project_key_"+row["id"])
+        if st.button("Save Jira project assignment",key="save_jira_assignment_"+row["id"]):
+            try:
+                manager.assign_connection(row["id"],"jira_mcp",selected,{"project_key":project_key.strip()})
+                st.success("Jira project assignment saved locally. No Jira request was made.");st.rerun()
+            except Exception as error:problem(error)
+        if binding and st.button("Remove Jira project assignment",key="remove_jira_assignment_"+row["id"]):
+            try:manager.remove_connection_assignment(row["id"],"jira_mcp");st.success("Jira assignment removed.");st.rerun()
+            except Exception as error:problem(error)
+    else:
+        st.caption("Add a Jira profile in Settings → Connections first.")
     if st.button("Select this project",key="select_project_details"):
         switch_project(manager,row["id"]);st.session_state.ui_dialog=None;st.rerun()
+
+
+def project_remove_dialog(manager):
+    project_id=st.session_state.get("project_remove_id","")
+    row=manager.project_store().get(project_id)
+    if not row:
+        st.warning("This project is no longer available.")
+        return
+    st.markdown("Remove **"+row["name"]+"** from your saved projects?")
+    st.caption("This hides it from the active project list. Its folder or Git repository, project chats, memory and settings are preserved. You can restore it later under Removed projects.")
+    st.caption(row["root"])
+    col_remove,col_cancel=st.columns(2)
+    with col_remove:
+        if st.button("Remove from list",key="confirm_remove_project",type="primary",width="stretch"):
+            try:
+                if st.session_state.get("selected_project_id")==project_id:
+                    switch_project(manager,"")
+                manager.project_store().archive(project_id)
+                st.session_state.ui_dialog="projects"
+                st.session_state.project_created_notice=row["name"]+" removed from saved projects. The project files were kept."
+                st.rerun()
+            except Exception as error:problem(error)
+    with col_cancel:
+        if st.button("Cancel",key="cancel_remove_project",width="stretch"):
+            st.session_state.ui_dialog="projects";st.rerun()
 
 
 def project_sync_dialog(manager):
@@ -114,6 +160,9 @@ def project_panel_dialog(manager):
         elif view=="project_settings":
             st.subheader("Project details",anchor=False)
             project_settings_dialog(manager)
+        elif view=="project_remove":
+            st.subheader("Remove project",anchor=False)
+            project_remove_dialog(manager)
         elif view=="project_git":
             from agent.interfaces.git_panel import render_git_review
             render_git_review(manager)
@@ -125,9 +174,13 @@ def project_panel_dialog(manager):
 
 
 def render_project_dialogs(manager):
+    if st.session_state.get("ui_dialog") == "project_terminal":
+        from agent.interfaces.project_terminal import render_project_terminal
+        render_project_terminal(manager)
+        return
     if st.session_state.get("ui_dialog")=="project_files":
         from agent.interfaces.project_files import render_project_files
         render_project_files(manager)
         return
-    if st.session_state.get("ui_dialog") in {"projects","project_setup","folder_picker","project_settings","project_sync","project_git"}:
+    if st.session_state.get("ui_dialog") in {"projects","project_setup","folder_picker","project_settings","project_remove","project_sync","project_git"}:
         project_panel_dialog(manager)

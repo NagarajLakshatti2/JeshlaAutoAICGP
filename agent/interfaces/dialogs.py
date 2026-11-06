@@ -27,8 +27,11 @@ def memory_dialog(backend):
 @st.dialog("Settings",on_dismiss=dismiss_dialog,width="medium",icon=":material/settings:")
 def settings_dialog(backend):
     from agent.interfaces.provider_panel import render_provider_panel
-    provider_tab,connections_tab=st.tabs(["Providers","Connections"])
-    with provider_tab:render_provider_panel(backend,inline=True)
-    with connections_tab:
+    st.session_state.setdefault("settings_section","Providers")
+    section=st.segmented_control("Settings section",["Providers","Connections"],
+                                 key="settings_section",selection_mode="single",label_visibility="collapsed")
+    if section=="Connections":
         from agent.interfaces.connection_panel import render_connections
         render_connections(backend)
+    else:
+        render_provider_panel(backend,inline=True)

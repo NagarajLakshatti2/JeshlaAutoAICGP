@@ -50,7 +50,7 @@ class ConnectionCatalog:
                 env_name TEXT,sealed TEXT,status TEXT,details TEXT,checked_at TEXT,
                 PRIMARY KEY(user,space,id))""")
 
-    def save(self,kind,label,endpoint,*,env_name="",token=""):
+    def save(self,kind,label,endpoint,*,env_name="",token="",details=None):
         if kind not in KINDS:raise ProjectConfigurationError("Choose a supported connection type.")
         if not isinstance(label,str) or not 1<=len(label.strip())<=100:
             raise ProjectConfigurationError("Enter a connection name of 1–100 characters.")
@@ -59,11 +59,13 @@ class ConnectionCatalog:
         if env_name and token:raise ProjectConfigurationError("Choose one credential source.")
         if token and (len(token)>16000 or any(ord(c)<32 for c in token)):
             raise ProjectConfigurationError("Enter a valid access token.")
+        if details is not None and not isinstance(details,dict):
+            raise ProjectConfigurationError("Connection details must be structured metadata.")
         sealed=base64.b64encode(protect_token(token)).decode() if token else ""
         key="connection-"+uuid.uuid4().hex
         with closing(sqlite3.connect(self.path)) as db,db:
             db.execute("INSERT INTO connections VALUES(?,?,?,?,?,?,?,?,?,?,?)",
-                       (key,self.user,self.space,kind,label.strip(),endpoint,env_name,sealed,"configured","{}",""))
+                       (key,self.user,self.space,kind,label.strip(),endpoint,env_name,sealed,"configured",json.dumps(details or {}),""))
         return self.get(key)
 
     def _row(self,key):
@@ -102,6 +104,35 @@ class ConnectionCatalog:
         with closing(sqlite3.connect(self.path)) as db,db:
             db.execute("UPDATE connections SET status='verified',details=?,checked_at=? WHERE user=? AND space=? AND id=?",
                        (json.dumps(details),datetime.now(timezone.utc).isoformat(),self.user,self.space,key))
+
+    def replace_credential(self,key,value):
+        """Replace a connection secret without returning or logging its plaintext."""
+        row=self._row(key)
+        if not row:raise ProjectConfigurationError("Connection not found in this workspace.")
+        if not isinstance(value,str) or not value or len(value)>16000 or any(ord(c)<32 for c in value):
+            raise ProjectConfigurationError("The connection credential is invalid.")
+        sealed=base64.b64encode(protect_token(value)).decode("ascii")
+        with closing(sqlite3.connect(self.path)) as db,db:
+            changed=db.execute("UPDATE connections SET env_name='',sealed=?,status='configured',details='{}',checked_at='' WHERE user=? AND space=? AND id=?",
+                               (sealed,self.user,self.space,key)).rowcount
+        if changed!=1:raise ProjectConfigurationError("Connection not found in this workspace.")
+        return self.get(key)
+
+    def update_jira_oauth_data(self,key,value):
+        """Persist refreshed Jira OAuth material without erasing site/verification metadata."""
+        row=self._row(key)
+        if not row or row["kind"]!="jira_mcp":
+            raise ProjectConfigurationError("Choose a Jira MCP connection in this workspace.")
+        if row["env_name"]:
+            raise ProjectConfigurationError("This Jira profile uses a different credential source.")
+        if not isinstance(value,str) or not value or len(value)>16000 or any(ord(c)<32 for c in value):
+            raise ProjectConfigurationError("The Jira OAuth data is invalid.")
+        sealed=base64.b64encode(protect_token(value)).decode("ascii")
+        with closing(sqlite3.connect(self.path)) as db,db:
+            changed=db.execute("UPDATE connections SET sealed=? WHERE user=? AND space=? AND id=? AND kind='jira_mcp'",
+                               (sealed,self.user,self.space,key)).rowcount
+        if changed!=1:raise ProjectConfigurationError("Connection not found in this workspace.")
+        return self.get(key)
 
     def disconnect(self,key):
         with closing(sqlite3.connect(self.path)) as db,db:

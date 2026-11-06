@@ -95,7 +95,7 @@ The user console trace confirms one saved-file read on the project route and a c
 
 ## Next step — remaining scope, without repeating accepted CI
 
-Selected API/web CI is Y. Full 9.8 and WS9 remain P because Android Java/iOS runtime, causal repair/live rerun and unverified interface/export gates are still open. Optional Jira stays parked. Resume a blocked track only after a concrete prerequisite changes, or explicitly agree a narrower API/web preview release with its limitations. No smaller full-release scope has been silently accepted.
+Selected API/web CI is Y. The controlled fault-injection/repair/rerun workflow is also Y in an isolated fixture; no natural target defect or target-project repair was found. Full 9.8 and WS9 remain P because Android Java/iOS runtime, Firefox/Safari and physical-mobile acceptance, natural target-defect repair when a suitable failure exists, and broader core-scope gates remain open. Optional Jira stays parked. A narrower desktop Chromium/API-web preview is a candidate scope, not an accepted deployment or full release.
 
 The new CI run repeats the selected four cases in GitHub; it does not add new coverage cases or change the historical 9.7 matrix (4 passed, 11 not run, 1 incomplete Android command). Existing WS1–WS8 release limits retain their recorded status.
 
@@ -110,4 +110,4 @@ Evidence root: `outputs/acceptance/ws9-ci-release-20261024/`.
 
 Current publication evidence: `outputs/acceptance/ws9-ci-publication-20261024/{candidate.json,publication.json,dispatch.json,run.json,jobs.json,artifacts.json,acceptance.json,review.md,evidence-manifest.json,published-source/}` plus both downloaded lane ZIPs and extracted folders. Earlier `ws9-ci-release-20261024/acceptance.json` remains historical local-preparation evidence.
 
-**Selected actual API/web CI: Y. Overall 9.8/full release: P** for remaining mobile/repair/interface and core scope gates. Optional Jira stays parked. WS9 ends at 9.8. Markdown is current; the Word snapshot was not changed in this task.
+**Selected actual API/web CI: Y. Controlled repair workflow: Y at isolated-fixture scope. Overall 9.8/full release: P** for remaining mobile/cross-browser and core scope gates; natural target-defect repair remains unverified because no suitable real failure was available. Optional Jira stays parked. WS9 ends at 9.8. Markdown is current; the Word snapshot was not changed in this task.

@@ -49,6 +49,19 @@ class BrowserBackend(WorkspaceSupport):
             raise ProjectConfigurationError("Project configuration changed. Select it again before continuing.")
         scope={"memory_user_id":self.user,"memory_namespace":self.space,
                "project_id":self.project_id,"bound_project_root":current["root"]}
+        jira_binding=self.project_store().bindings(self.project_id).get("jira_mcp")
+        scope["jira_scope"]=None
+        if jira_binding:
+            profile=self.connection_store().get(jira_binding.get("connection_id",""))
+            if not profile or profile.get("kind")!="jira_mcp":
+                raise ProjectConfigurationError("The Jira profile assigned to this project is unavailable. Review Project details.")
+            scope["jira_scope"]={
+                "connection_id":profile["id"],
+                "site_url":profile.get("details",{}).get("jira_site_url",""),
+                "project_key":jira_binding.get("options",{}).get("project_key",""),
+                "connection_namespace":getattr(self,"base_space",self.space),
+                "connected":profile.get("status")=="verified",
+            }
         validate_request_scope(scope)
         return scope
 
@@ -121,7 +134,7 @@ class BrowserBackend(WorkspaceSupport):
         with LongTermMemory(ROOT/"outputs/memory/long_term_memory.sqlite3") as store:
             return store.list(self.user,self.space)
 
-    def submit_selected(self,session,question,provider):
+    def submit_selected(self,session,question,provider,agent_mode="autogen"):
         """Apply this browser choice only for the lifetime of one request."""
         from agent.runtime.chat_shortcuts import is_shortcut
         if is_shortcut(question):return self.submit(session,question)
@@ -130,7 +143,9 @@ class BrowserBackend(WorkspaceSupport):
         info=self.provider_info(provider)
         if not info["supported"] or not info["model"] or (not info["local"] and not info["key_present"]):
             raise ProviderError(provider,"CONFIGURATION","Configure the selected provider key and default model locally before using it.",attempts=0)
-        with provider_selection(provider):return self.submit(session,question)
+        if agent_mode not in {"autogen","langgraph"}:raise ValueError("Select AutoGen or LangGraph agent mode.")
+        from integrations.autogen.selection import agent_mode_selection
+        with provider_selection(provider),agent_mode_selection(agent_mode):return self.submit(session,question)
 
     def submit(self,session,question):
         if not self.catalog.get(session):raise ValueError("Chat not found.")

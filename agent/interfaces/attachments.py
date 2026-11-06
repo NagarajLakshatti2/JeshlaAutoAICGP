@@ -131,7 +131,7 @@ def chat_attachments(session):
     return [legacy] if legacy else []
 
 
-def render_upload_menu(session,project_selected=False):
+def render_upload_menu(session,project_selected=False,backend=None):
     import hashlib
     import streamlit as st
     with st.popover(":material/add:",help="Add to chat",key="add_to_chat"):
@@ -141,8 +141,13 @@ def render_upload_menu(session,project_selected=False):
         if st.button("Browse project files",icon=":material/folder_open:",type="tertiary",
                      key="browse_project_files",width="stretch",disabled=not project_selected):
             st.session_state.ui_dialog="project_files"
+        if st.button("Project terminal", icon=":material/terminal:", type="tertiary",
+                     key="open_project_terminal", disabled=not project_selected):
+            st.session_state.ui_dialog = "project_terminal"
         from agent.interfaces.chat_shortcuts import render_shortcut_menu
         render_shortcut_menu(session,project_selected=project_selected)
+        from agent.interfaces.skills import render_skills
+        render_skills(backend, session)
         mode=st.session_state.get("upload_kind")
         if mode:
             st.caption("Supported text documents only; 1 MB per file, up to five files per chat. Folder selection reads supported files; it does not connect a project.")
